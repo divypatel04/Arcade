@@ -1,9 +1,10 @@
 import { Image, ImageBackground, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { colors, fonts, fontSizes, sizes } from '../theme';
 
 const HomeScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={'#feac4577'}
@@ -11,7 +12,7 @@ const HomeScreen = () => {
 
       {/* AGENT BOX */}
       <View style={styles.agentcontainer}>
-        <ImageBackground source={{uri: 'https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/background.png'}} style={styles.agentbackgroudimage}>
+        <ImageBackground source={{uri: 'https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/background.png'}} style={styles.agentbackgroundimage}>
         </ImageBackground>
         <ImageBackground source={require('../assets/images/raze.png')} style={styles.agentimage}>
         </ImageBackground>
@@ -50,21 +51,27 @@ const HomeScreen = () => {
             adjustsFontSizeToFit={true}>
             Ascent
           </Text>
+          <View style={styles.mapmetadetails}>
+            <Text style={styles.agentmetatitle}>Win/Rate:</Text><Text style={styles.agentmetavalue}>60%</Text>
+          </View>
         </View>
       </View>
 
       {/* GUN BOX */}
       <View style={styles.guncontainer}>
         <View style={styles.gunmetacontainer}>
-          <Text style={styles.gunsubtext}>Best Agent</Text>
+          <Text style={styles.gunsubtext}>Best Gun</Text>
           <Text
             style={styles.gunname}
             numberOfLines={1}
             adjustsFontSizeToFit={true}>
-            Raze
+            Vandal
           </Text>
+          <View style={styles.gunmetadetails}>
+            <Text style={styles.agentmetatitle}>Total Kills:</Text><Text style={styles.agentmetavalue}>1076</Text>
+          </View>
         </View>
-        <View>
+        <View style={styles.gunimagecontainer}>
           <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/weapon%2Fvandal.png?alt=media&token=858dd763-6723-4f37-8f5b-3c9b57125bd6"}} style={styles.gunimage}/>
         </View>
       </View>
@@ -75,131 +82,155 @@ const HomeScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  // AGENT BOX
-  agentcontainer: {
-    backgroundColor: '#feac4577',
-    height:330,
+
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+    marginBottom: sizes.marginExtraLarge,
   },
-  agentimage:{
-    height:330,
-    aspectRatio: 7.6/9,
+  agentcontainer: {
+    backgroundColor: colors.primary,
+    flex: 3,
+  },
+  agentimage: {
+    height: '100%',
+    aspectRatio: 7.6 / 9,
     resizeMode: 'contain',
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     position: 'absolute',
   },
-  agentbackgroundimage:{
-    height:350,
-    width:130,
+  agentbackgroundimage: {
+    height: '100%',
+    width: 130,
     resizeMode: 'contain',
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     position: 'absolute',
     opacity: 0.6,
   },
-  agentmetacontainer:{
-    paddingTop: 60,
-    paddingLeft: 24,
+  agentmetacontainer: {
+    paddingTop: sizes.paddingLarge,
+    paddingLeft: sizes.paddingLarge,
   },
   agentmetadetails: {
-    paddingBottom:4,
-    flexDirection:'row',
+    paddingBottom: sizes.marginSmall,
+    flexDirection: 'row',
   },
   agentmetatitle: {
-    fontFamily: 'ProximaNova-Bold',
-    color: '#000',
+    fontFamily: fonts.proximaNovaBold,
+    color: colors.textPrimary,
   },
   agentmetavalue: {
-    paddingLeft:4,
-    fontFamily: 'ProximaNova-Bold',
-    color: '#686B71',
+    paddingLeft: sizes.marginSmall,
+    fontFamily: fonts.proximaNovaBold,
+    color: colors.textSecondary,
   },
-  agentbutton:{
-    marginTop:20,
+  agentbutton: {
+    marginTop: sizes.marginMedium,
     alignItems: 'flex-start',
-    marginLeft: -24,
+    marginLeft: -sizes.marginLarge,
   },
   agentbuttontext: {
-    fontFamily: 'ProximaNova-Semibold',
-    fontSize: 13,
-    letterSpacing:0.3,
-    textTransform:'uppercase',
-    backgroundColor: '#fff',
-    padding:10,
+    fontFamily: fonts.proximaNovaSemibold,
+    fontSize: fontSizes.small,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+    backgroundColor: colors.background,
+    padding: sizes.paddingSmall,
   },
   agentsubtext: {
-    paddingTop: 6,
-    fontFamily: 'ProximaNova-Semibold',
-    fontSize: 16,
+    paddingTop: sizes.marginSmall,
+    fontFamily: fonts.proximaNovaSemibold,
+    fontSize: fontSizes.medium,
     textTransform: 'uppercase',
-    color: '#686B71',
+    color: colors.textSecondary,
   },
   agentname: {
-    fontFamily: 'Novecentosansnarrow-UltraBold',
-    fontSize: 58,
-    lineHeight: 58,
+    fontFamily: fonts.novecentosansUltraBold,
+    fontSize: fontSizes.extraLarge,
+    lineHeight: fontSizes.extraLarge,
     letterSpacing: -0.8,
-    color: '#000',
-    marginBottom:20,
+    color: colors.textPrimary,
+    marginBottom: sizes.marginMedium,
   },
-
-  // MAP BOX
   mapsubtext: {
-    paddingTop: 6,
-    fontFamily: 'ProximaNova-Semibold',
-    fontSize: 16,
+    paddingTop: sizes.marginSmall,
+    fontFamily: fonts.proximaNovaSemibold,
+    fontSize: fontSizes.medium,
     textTransform: 'uppercase',
-    color: '#686B71',
+    color: colors.textSecondary,
   },
   mapname: {
-    fontFamily: 'Novecentosansnarrow-UltraBold',
-    fontSize: 50,
-    lineHeight: 50,
+    fontFamily: fonts.novecentosansUltraBold,
+    fontSize: fontSizes.large,
+    lineHeight: fontSizes.large,
     letterSpacing: -0.8,
-    color: '#000',
-    marginBottom:20,
+    color: colors.textPrimary,
+    marginBottom: sizes.marginMedium,
   },
   mapcontainer: {
-    backgroundColor: '#C28E7B80',
+    backgroundColor: colors.secondary,
     height: 180,
-    borderTopColor:"#000",
-    borderTopWidth:1,
-    flexDirection:'row',
+    borderTopColor: colors.textPrimary,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    flex: 1.7,
   },
-  mapimage:{
-    height:180,
-    width:150,
-    marginLeft:25,
+  mapimage: {
+    height: 180,
+    width: 150,
+    marginLeft: 25,
     resizeMode: 'center',
-
   },
-  mapmetacontainer:{
-    paddingRight: 24,
-    alignItems:'flex-end',
+  mapmetacontainer: {
+    paddingRight: 30,
+    paddingTop: sizes.paddingMedium,
+    alignItems: 'flex-end',
     flex: 1,
-    alignSelf:'flex-end',
   },
-
-  // GUN BOX
+  mapmetadetails: {
+    paddingBottom: sizes.marginSmall,
+    flexDirection: 'row',
+  },
   guncontainer: {
-    backgroundColor: '#C28E7B80',
+    backgroundColor: colors.accent,
     height: 180,
-    borderTopColor:"#000",
-    borderTopWidth:1,
-    flexDirection:'row',
+    borderTopColor: colors.textPrimary,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    flex: 1.7,
   },
   gunmetacontainer: {
-    paddingLeft: 24,
-
-    // flex: 1,
-    // alignItems:'flex-end',
-    alignSelf:'flex-end',
+    paddingLeft: sizes.paddingLarge,
+    paddingTop: sizes.paddingMedium,
+  },
+  gunimagecontainer: {
+    alignItems: 'flex-end',
+    flex: 1,
   },
   gunimage: {
-    height:180,
-    position:'absolute',
-    left: 0,
-    width:220,
+    height: 180,
+    width: 230,
     resizeMode: 'center',
-  }
+  },
+  gunsubtext: {
+    paddingTop: sizes.marginSmall,
+    fontFamily: fonts.proximaNovaSemibold,
+    fontSize: fontSizes.medium,
+    textTransform: 'uppercase',
+    color: colors.textSecondary,
+  },
+  gunname: {
+    fontFamily: fonts.novecentosansUltraBold,
+    fontSize: fontSizes.large,
+    lineHeight: fontSizes.large,
+    letterSpacing: -0.8,
+    color: colors.textPrimary,
+    marginBottom: sizes.marginMedium,
+  },
+  gunmetadetails: {
+    paddingBottom: sizes.marginSmall,
+    flexDirection: 'row',
+  },
 });
 
 export default HomeScreen
