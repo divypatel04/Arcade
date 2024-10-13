@@ -14,6 +14,29 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-Arcade-ArcadeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Arcade-ArcadeTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		665E458B71594853AAFD5725 /* Novecentosansnarrow-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C18CC5D33C8F44C992638CCB /* Novecentosansnarrow-Bold.ttf */; };
+		5606A55551E74BAF96065DD4 /* Novecentosansnarrow-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECA39E9E4EA74CAF939E0E6E /* Novecentosansnarrow-Book.ttf */; };
+		DD27A7A11B2343FDB76D2445 /* Novecentosansnarrow-DemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C8001C1B0A4C466DA818C856 /* Novecentosansnarrow-DemiBold.ttf */; };
+		BAEB042759224A2EB5EAD932 /* Novecentosansnarrow-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEFCA7AE62944369BA9A4991 /* Novecentosansnarrow-Light.ttf */; };
+		6CD133F483A240A48485078D /* Novecentosansnarrow-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6BAD759B2754FD0BBB08435 /* Novecentosansnarrow-Medium.ttf */; };
+		EC8D5AD981A14B689B0A918A /* Novecentosansnarrow-Normal.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D6FC8353C0DF46C1A4B91DE2 /* Novecentosansnarrow-Normal.ttf */; };
+		1316C100966545E8A79288C7 /* Novecentosansnarrow-UltraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE932E68354847C185CA4096 /* Novecentosansnarrow-UltraBold.ttf */; };
+		79516686FF2B4CB686C197E9 /* Novecentosansnarrow-UltrLt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48BBD511D2604962B0A9284A /* Novecentosansnarrow-UltrLt.ttf */; };
+		98B080C48D104874A99303FB /* ProximaNova-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50CD81F3A5B44CD6832EF783 /* ProximaNova-Black.ttf */; };
+		30BAEC55C709466C8DC96C12 /* ProximaNova-BlackIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50BDE1E8E41748FC9ABE49B9 /* ProximaNova-BlackIt.ttf */; };
+		68C13A96FD9D46908144F63F /* ProximaNova-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59DB42F908484050A215FD03 /* ProximaNova-Bold.ttf */; };
+		42F4B5716EE94C568F96C620 /* ProximaNova-BoldIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD4829107D87411FA267C132 /* ProximaNova-BoldIt.ttf */; };
+		2E2F3B00C3654301AEBBFFF7 /* ProximaNova-Extrabld.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 924033ECACF247FCB85195E0 /* ProximaNova-Extrabld.ttf */; };
+		70FC6B14627242ECAC2D2FF3 /* ProximaNova-ExtrabldIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2023E4BCB6B242B4814D4E4D /* ProximaNova-ExtrabldIt.ttf */; };
+		3AE69B6853644C11B52059AE /* ProximaNova-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 07321030B86642B68D69C795 /* ProximaNova-Light.ttf */; };
+		017C32A8594E4D71B51D70CA /* ProximaNova-LightIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E05B2FC619214A768FED7B93 /* ProximaNova-LightIt.ttf */; };
+		0FED35A6E0E3498281A8CF12 /* ProximaNova-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B77A4EAF912497DA4C51A2E /* ProximaNova-Regular.ttf */; };
+		7D6557FEECB94CFFB88BA628 /* ProximaNova-RegularIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F436738C3B95499FAA1E43A0 /* ProximaNova-RegularIt.ttf */; };
+		A7C357C05A5A4C259768A943 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38543FB548B34FEB9D1754FD /* ProximaNova-Semibold.ttf */; };
+		30DECE4818E943C198C60B4B /* ProximaNova-SemiboldIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 369CE046858E4388A5620456 /* ProximaNova-SemiboldIt.ttf */; };
+		8A1B82A5B4274CB2B922E77C /* ProximaNova-ThinIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E152DB1DE064D4982B7C536 /* ProximaNova-ThinIt.ttf */; };
+		563F21FCA0B74FB0B656C990 /* ProximaNovaT-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8E9C61B5CB24B139376A61D /* ProximaNovaT-Thin.ttf */; };
+		62595BD5EC19451AAECA1B46 /* raze.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F617E875F2E459882944B27 /* raze.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +68,29 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Arcade/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Arcade-ArcadeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Arcade-ArcadeTests.release.xcconfig"; path = "Target Support Files/Pods-Arcade-ArcadeTests/Pods-Arcade-ArcadeTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		C18CC5D33C8F44C992638CCB /* Novecentosansnarrow-Bold.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-Bold.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		ECA39E9E4EA74CAF939E0E6E /* Novecentosansnarrow-Book.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-Book.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-Book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C8001C1B0A4C466DA818C856 /* Novecentosansnarrow-DemiBold.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-DemiBold.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-DemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EEFCA7AE62944369BA9A4991 /* Novecentosansnarrow-Light.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-Light.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B6BAD759B2754FD0BBB08435 /* Novecentosansnarrow-Medium.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-Medium.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D6FC8353C0DF46C1A4B91DE2 /* Novecentosansnarrow-Normal.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-Normal.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-Normal.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EE932E68354847C185CA4096 /* Novecentosansnarrow-UltraBold.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-UltraBold.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-UltraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		48BBD511D2604962B0A9284A /* Novecentosansnarrow-UltrLt.ttf */ = {isa = PBXFileReference; name = "Novecentosansnarrow-UltrLt.ttf"; path = "../src/assets/fonts/Novecentosansnarrow-UltrLt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		50CD81F3A5B44CD6832EF783 /* ProximaNova-Black.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Black.ttf"; path = "../src/assets/fonts/ProximaNova-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		50BDE1E8E41748FC9ABE49B9 /* ProximaNova-BlackIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-BlackIt.ttf"; path = "../src/assets/fonts/ProximaNova-BlackIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		59DB42F908484050A215FD03 /* ProximaNova-Bold.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Bold.ttf"; path = "../src/assets/fonts/ProximaNova-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AD4829107D87411FA267C132 /* ProximaNova-BoldIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-BoldIt.ttf"; path = "../src/assets/fonts/ProximaNova-BoldIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		924033ECACF247FCB85195E0 /* ProximaNova-Extrabld.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Extrabld.ttf"; path = "../src/assets/fonts/ProximaNova-Extrabld.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2023E4BCB6B242B4814D4E4D /* ProximaNova-ExtrabldIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-ExtrabldIt.ttf"; path = "../src/assets/fonts/ProximaNova-ExtrabldIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		07321030B86642B68D69C795 /* ProximaNova-Light.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Light.ttf"; path = "../src/assets/fonts/ProximaNova-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E05B2FC619214A768FED7B93 /* ProximaNova-LightIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-LightIt.ttf"; path = "../src/assets/fonts/ProximaNova-LightIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2B77A4EAF912497DA4C51A2E /* ProximaNova-Regular.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Regular.ttf"; path = "../src/assets/fonts/ProximaNova-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F436738C3B95499FAA1E43A0 /* ProximaNova-RegularIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-RegularIt.ttf"; path = "../src/assets/fonts/ProximaNova-RegularIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		38543FB548B34FEB9D1754FD /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; name = "ProximaNova-Semibold.ttf"; path = "../src/assets/fonts/ProximaNova-Semibold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		369CE046858E4388A5620456 /* ProximaNova-SemiboldIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-SemiboldIt.ttf"; path = "../src/assets/fonts/ProximaNova-SemiboldIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6E152DB1DE064D4982B7C536 /* ProximaNova-ThinIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-ThinIt.ttf"; path = "../src/assets/fonts/ProximaNova-ThinIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A8E9C61B5CB24B139376A61D /* ProximaNovaT-Thin.ttf */ = {isa = PBXFileReference; name = "ProximaNovaT-Thin.ttf"; path = "../src/assets/fonts/ProximaNovaT-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4F617E875F2E459882944B27 /* raze.png */ = {isa = PBXFileReference; name = "raze.png"; path = "../src/assets/images/raze.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +170,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				5C93552CDA504C97BF0161B5 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -149,6 +196,37 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		5C93552CDA504C97BF0161B5 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				C18CC5D33C8F44C992638CCB /* Novecentosansnarrow-Bold.ttf */,
+				ECA39E9E4EA74CAF939E0E6E /* Novecentosansnarrow-Book.ttf */,
+				C8001C1B0A4C466DA818C856 /* Novecentosansnarrow-DemiBold.ttf */,
+				EEFCA7AE62944369BA9A4991 /* Novecentosansnarrow-Light.ttf */,
+				B6BAD759B2754FD0BBB08435 /* Novecentosansnarrow-Medium.ttf */,
+				D6FC8353C0DF46C1A4B91DE2 /* Novecentosansnarrow-Normal.ttf */,
+				EE932E68354847C185CA4096 /* Novecentosansnarrow-UltraBold.ttf */,
+				48BBD511D2604962B0A9284A /* Novecentosansnarrow-UltrLt.ttf */,
+				50CD81F3A5B44CD6832EF783 /* ProximaNova-Black.ttf */,
+				50BDE1E8E41748FC9ABE49B9 /* ProximaNova-BlackIt.ttf */,
+				59DB42F908484050A215FD03 /* ProximaNova-Bold.ttf */,
+				AD4829107D87411FA267C132 /* ProximaNova-BoldIt.ttf */,
+				924033ECACF247FCB85195E0 /* ProximaNova-Extrabld.ttf */,
+				2023E4BCB6B242B4814D4E4D /* ProximaNova-ExtrabldIt.ttf */,
+				07321030B86642B68D69C795 /* ProximaNova-Light.ttf */,
+				E05B2FC619214A768FED7B93 /* ProximaNova-LightIt.ttf */,
+				2B77A4EAF912497DA4C51A2E /* ProximaNova-Regular.ttf */,
+				F436738C3B95499FAA1E43A0 /* ProximaNova-RegularIt.ttf */,
+				38543FB548B34FEB9D1754FD /* ProximaNova-Semibold.ttf */,
+				369CE046858E4388A5620456 /* ProximaNova-SemiboldIt.ttf */,
+				6E152DB1DE064D4982B7C536 /* ProximaNova-ThinIt.ttf */,
+				A8E9C61B5CB24B139376A61D /* ProximaNovaT-Thin.ttf */,
+				4F617E875F2E459882944B27 /* raze.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -245,6 +323,29 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				665E458B71594853AAFD5725 /* Novecentosansnarrow-Bold.ttf in Resources */,
+				5606A55551E74BAF96065DD4 /* Novecentosansnarrow-Book.ttf in Resources */,
+				DD27A7A11B2343FDB76D2445 /* Novecentosansnarrow-DemiBold.ttf in Resources */,
+				BAEB042759224A2EB5EAD932 /* Novecentosansnarrow-Light.ttf in Resources */,
+				6CD133F483A240A48485078D /* Novecentosansnarrow-Medium.ttf in Resources */,
+				EC8D5AD981A14B689B0A918A /* Novecentosansnarrow-Normal.ttf in Resources */,
+				1316C100966545E8A79288C7 /* Novecentosansnarrow-UltraBold.ttf in Resources */,
+				79516686FF2B4CB686C197E9 /* Novecentosansnarrow-UltrLt.ttf in Resources */,
+				98B080C48D104874A99303FB /* ProximaNova-Black.ttf in Resources */,
+				30BAEC55C709466C8DC96C12 /* ProximaNova-BlackIt.ttf in Resources */,
+				68C13A96FD9D46908144F63F /* ProximaNova-Bold.ttf in Resources */,
+				42F4B5716EE94C568F96C620 /* ProximaNova-BoldIt.ttf in Resources */,
+				2E2F3B00C3654301AEBBFFF7 /* ProximaNova-Extrabld.ttf in Resources */,
+				70FC6B14627242ECAC2D2FF3 /* ProximaNova-ExtrabldIt.ttf in Resources */,
+				3AE69B6853644C11B52059AE /* ProximaNova-Light.ttf in Resources */,
+				017C32A8594E4D71B51D70CA /* ProximaNova-LightIt.ttf in Resources */,
+				0FED35A6E0E3498281A8CF12 /* ProximaNova-Regular.ttf in Resources */,
+				7D6557FEECB94CFFB88BA628 /* ProximaNova-RegularIt.ttf in Resources */,
+				A7C357C05A5A4C259768A943 /* ProximaNova-Semibold.ttf in Resources */,
+				30DECE4818E943C198C60B4B /* ProximaNova-SemiboldIt.ttf in Resources */,
+				8A1B82A5B4274CB2B922E77C /* ProximaNova-ThinIt.ttf in Resources */,
+				563F21FCA0B74FB0B656C990 /* ProximaNovaT-Thin.ttf in Resources */,
+				62595BD5EC19451AAECA1B46 /* raze.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
