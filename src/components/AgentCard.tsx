@@ -1,40 +1,42 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon';
-import { colors, fonts } from '../theme';
+import { colors, fonts, sizes } from '../theme';
 
 
 interface AgentBoxProps {
   isPremium: boolean,
   item: {
-    agent: any,
+    agent: any, //TODO: change agent type
     seasonName: string,
     value: string,
   },
   onPress: () => void;
 }
 
-
-const AgentCard = ({isPremium, item, onPress}: AgentBoxProps) => {
+//TODO: Add Premium Icon here
+const AgentCard = ({ isPremium, item, onPress }: AgentBoxProps) => {
   return (
-    <View key={item.seasonName}>
+    <View>
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.5}
-        style={styles.agentcard}>
+        style={styles.card}>
         <Image
-          style={styles.agentimage}
-          source={{uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/agentIcon%2Fraze_icon.jpg?alt=media&token=1552f893-d7da-455b-99f1-4d3a5b2ef524'}}
+          style={styles.icon}
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/agentIcon%2Fraze_icon.jpg?alt=media&token=1552f893-d7da-455b-99f1-4d3a5b2ef524' }}
         />
         <View style={styles.metacontainer}>
-          <View style={{flexDirection:'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>
               <Text style={styles.metatitle}>Raze</Text>
               <Text style={styles.metasubtext}>Duelist</Text>
             </View>
-            <View style={{justifyContent: 'center',}}>
-              <Text>Lock</Text>
-            </View>
+            {isPremium && (
+              <View style={{ justifyContent: 'center', }}>
+                <Text>Lock</Text>
+              </View>
+            )}
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
@@ -49,16 +51,16 @@ const AgentCard = ({isPremium, item, onPress}: AgentBoxProps) => {
 }
 
 const styles = StyleSheet.create({
-  agentcard: {
+  card: {
     backgroundColor: colors.primary,
-    marginBottom: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    marginBottom: sizes['2xl'],
+    paddingVertical: sizes.xl,
+    paddingHorizontal: sizes.xl,
     flexDirection: 'row',
     zIndex: 1,
-    flex:1,
+    flex: 1,
   },
-  agentimage: {
+  icon: {
     width: '18%',
     aspectRatio: 1 / 1,
     borderRadius: 3,
@@ -66,25 +68,25 @@ const styles = StyleSheet.create({
   },
   metacontainer: {
     flexDirection: 'row',
-    flex:1,
+    flex: 1,
   },
   meta: {
-    paddingLeft: 11,
+    paddingLeft: sizes.xl,
     justifyContent: 'center',
   },
   metatitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 24,
-    lineHeight: 28,
+    fontSize: fonts.sizes['5xl'],
+    lineHeight: fonts.sizes['7xl'],
     letterSpacing: -0.3,
     color: colors.black,
-    paddingRight: 10,
+    paddingRight: sizes.xl,
   },
   metasubtext: {
     fontFamily: fonts.family.proximaBold,
     letterSpacing: 0.3,
-    fontSize: 13,
-    lineHeight: 13,
+    fontSize: fonts.sizes.md,
+    lineHeight: fonts.sizes.md,
     color: colors.darkGray,
   },
   rightmeta: {
@@ -94,11 +96,11 @@ const styles = StyleSheet.create({
   },
   rightmetatext: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: 12,
+    fontSize: fonts.sizes.md,
     marginBottom: -2,
     textTransform: 'uppercase',
     color: colors.darkGray,
-    paddingRight: 10,
+    paddingRight: sizes.xl,
   },
 });
 

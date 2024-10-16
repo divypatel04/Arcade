@@ -22,7 +22,7 @@ const WeaponListScreen = () => {
         seasonName: "Winter",
         value: "1000",
       },
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       isPremium: false,
@@ -35,7 +35,7 @@ const WeaponListScreen = () => {
         seasonName: "Spring",
         value: "850",
       },
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       isPremium: true,
@@ -48,7 +48,7 @@ const WeaponListScreen = () => {
         seasonName: "Summer",
         value: "1500",
       },
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       isPremium: false,
@@ -61,7 +61,7 @@ const WeaponListScreen = () => {
         seasonName: "Fall",
         value: "700",
       },
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       isPremium: true,
@@ -74,7 +74,7 @@ const WeaponListScreen = () => {
         seasonName: "Winter",
         value: "1200",
       },
-      onPress: () => {},
+      onPress: () => { },
     },
   ];
 
@@ -84,40 +84,32 @@ const WeaponListScreen = () => {
     <View style={styles.container}>
 
       <View style={styles.header}>
-        <TouchableOpacity hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+        <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <FontAwesome
-              name="angles-left"
-              color={colors.darkGray}
-              size={20}
-              style={styles.backicon}
-            />
+            name="angles-left"
+            color={colors.darkGray}
+            size={20}
+            style={styles.backicon}
+          />
         </TouchableOpacity>
         <Text style={styles.headertitle}>Weapons</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
-              list={ses}
-              name="Act"
-              value={selectedAct}
-              onSelect={item => setSelectedAct(item)}
-            />
+            list={ses}
+            name="Act"
+            value={selectedAct}
+            onSelect={item => setSelectedAct(item)}
+          />
         </View>
       </View>
 
       <FlatList
         data={agentList}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <GunCard
             isPremium={item.isPremium}
             item={item.item}
-            onPress={() => {
-              // if (loaded) {
-              //   showAd();
-              // }
-              // navigation.navigate('AgentDetailsScreen', {
-              //   agent: item.agent,
-              //   seasonName: item.seasonName,
-              // });
-            }}
+            onPress={() => {}}
           />
         )}
         // keyExtractor={item => item}
@@ -133,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: sizes.xl,
   },
-  header:{
+  header: {
     paddingVertical: sizes.xl,
   },
   headertitle: {
@@ -144,13 +136,13 @@ const styles = StyleSheet.create({
   },
   dropdowncontainer: {
     flexDirection: 'row',
-    marginTop: 16,
+    marginTop: sizes['4xl'],
     alignItems: 'center',
-    paddingBottom: 5,
+    paddingBottom: sizes.md,
   },
   backicon: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: sizes.md,
+    paddingBottom: sizes.md,
   },
 });
 

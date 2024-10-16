@@ -1,35 +1,38 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon'
-import { colors, fonts } from '../theme'
+import { colors, fonts, sizes } from '../theme'
 
 interface MapBoxProps {
   isPremium: boolean;
   item: {
-    map: any;
+    map: any; //TODO: Change Map Type
     seasonName: string;
     value: string;
   };
   onPress: () => void;
 }
 
-const MapCard = ({isPremium,item, onPress}: MapBoxProps) => {
+//TODO: Add Premium Icon here
+const MapCard = ({ isPremium, item, onPress }: MapBoxProps) => {
   return (
     <View>
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.5}
-        style={styles.mapbox}>
-        <Image style={styles.mapimage} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a'}} />
-        <View style={styles.mapmetacontainer}>
-          <View style={{flexDirection:'row'}}>
+        style={styles.card}>
+        <Image style={styles.icon} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a' }} />
+        <View style={styles.metacontainer}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>
               <Text style={styles.metatitle}>Ascent</Text>
               <Text style={styles.metasubtext}>Morocco</Text>
             </View>
-            <View style={{justifyContent: 'center',}}>
-              <Text>Lock</Text>
-            </View>
+            {isPremium && (
+              <View style={{ justifyContent: 'center', }}>
+                <Text>Lock</Text>
+              </View>
+            )}
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
@@ -44,41 +47,42 @@ const MapCard = ({isPremium,item, onPress}: MapBoxProps) => {
 }
 
 const styles = StyleSheet.create({
-  mapbox: {
+  card: {
     backgroundColor: colors.primary,
-    marginBottom: 12,
-    padding: 10,
+    marginBottom: sizes['2xl'],
+    paddingVertical: sizes.xl,
+    paddingHorizontal: sizes.xl,
     flexDirection: 'row',
     zIndex: 1,
+    flex: 1,
   },
-  mapimage: {
+  icon: {
     width: '22%',
     aspectRatio: 1 / 1,
     borderRadius: 3,
     resizeMode: 'contain',
   },
-  mapmetacontainer: {
+  metacontainer: {
     flexDirection: 'row',
-    // width: '78%',
-    flex:1,
+    flex: 1,
   },
   meta: {
-    paddingLeft: 11,
+    paddingLeft: sizes.xl,
     justifyContent: 'center',
   },
   metatitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 24,
-    lineHeight: 28,
+    fontSize: fonts.sizes['5xl'],
+    lineHeight: fonts.sizes['7xl'],
     letterSpacing: -0.3,
     color: colors.black,
-    paddingRight: 10,
+    paddingRight: sizes.xl,
   },
   metasubtext: {
     fontFamily: fonts.family.proximaBold,
     letterSpacing: 0.3,
-    fontSize: 13,
-    lineHeight: 13,
+    fontSize: fonts.sizes.md,
+    lineHeight: fonts.sizes.md,
     color: colors.darkGray,
   },
   rightmeta: {
@@ -88,11 +92,11 @@ const styles = StyleSheet.create({
   },
   rightmetatext: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: 12,
+    fontSize: fonts.sizes.md,
     marginBottom: -2,
     textTransform: 'uppercase',
     color: colors.darkGray,
-    paddingRight: 10,
+    paddingRight: sizes.xl,
   },
 });
 

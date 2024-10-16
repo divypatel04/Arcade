@@ -37,6 +37,8 @@
 		8A1B82A5B4274CB2B922E77C /* ProximaNova-ThinIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E152DB1DE064D4982B7C536 /* ProximaNova-ThinIt.ttf */; };
 		563F21FCA0B74FB0B656C990 /* ProximaNovaT-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8E9C61B5CB24B139376A61D /* ProximaNovaT-Thin.ttf */; };
 		62595BD5EC19451AAECA1B46 /* raze.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F617E875F2E459882944B27 /* raze.png */; };
+		9F2768EBDA0C4D2C8C22325B /* remixicon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CFE2DB1A4B7BBD7AEB8C /* remixicon.ttf */; };
+		6C7A038E895940F9BC1092AA /* gylphmap.json in Resources */ = {isa = PBXBuildFile; fileRef = 9D9A97AC032D4D2D956A8806 /* gylphmap.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +93,8 @@
 		6E152DB1DE064D4982B7C536 /* ProximaNova-ThinIt.ttf */ = {isa = PBXFileReference; name = "ProximaNova-ThinIt.ttf"; path = "../src/assets/fonts/ProximaNova-ThinIt.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		A8E9C61B5CB24B139376A61D /* ProximaNovaT-Thin.ttf */ = {isa = PBXFileReference; name = "ProximaNovaT-Thin.ttf"; path = "../src/assets/fonts/ProximaNovaT-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		4F617E875F2E459882944B27 /* raze.png */ = {isa = PBXFileReference; name = "raze.png"; path = "../src/assets/images/raze.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DAB2CFE2DB1A4B7BBD7AEB8C /* remixicon.ttf */ = {isa = PBXFileReference; name = "remixicon.ttf"; path = "../src/assets/icons/remixicon.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9D9A97AC032D4D2D956A8806 /* gylphmap.json */ = {isa = PBXFileReference; name = "gylphmap.json"; path = "../src/assets/icons/gylphmap.json"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +227,8 @@
 				6E152DB1DE064D4982B7C536 /* ProximaNova-ThinIt.ttf */,
 				A8E9C61B5CB24B139376A61D /* ProximaNovaT-Thin.ttf */,
 				4F617E875F2E459882944B27 /* raze.png */,
+				DAB2CFE2DB1A4B7BBD7AEB8C /* remixicon.ttf */,
+				9D9A97AC032D4D2D956A8806 /* gylphmap.json */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -346,6 +352,8 @@
 				8A1B82A5B4274CB2B922E77C /* ProximaNova-ThinIt.ttf in Resources */,
 				563F21FCA0B74FB0B656C990 /* ProximaNovaT-Thin.ttf in Resources */,
 				62595BD5EC19451AAECA1B46 /* raze.png in Resources */,
+				9F2768EBDA0C4D2C8C22325B /* remixicon.ttf in Resources */,
+				6C7A038E895940F9BC1092AA /* gylphmap.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

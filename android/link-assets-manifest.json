@@ -90,6 +90,14 @@
       "sha1": "50da793fbe00e865c4a0bb887aee4129154955fb"
     },
     {
+      "path": "src/assets/icons/gylphmap.json",
+      "sha1": "3f810e42264eab7e6a048184bf939b7b54759e24"
+    },
+    {
+      "path": "src/assets/icons/remixicon.ttf",
+      "sha1": "c11e2709171f141e730e4e4b98dbc4d34ead5643"
+    },
+    {
       "path": "src/assets/images/raze.png",
       "sha1": "6d779d788d114f6cbe634f2ff713be1476bf6a79"
     }
