@@ -1,11 +1,13 @@
 import React from 'react';
 import {
-  SafeAreaView,
   StatusBar,
   useColorScheme,
 } from 'react-native';
 
 import HomeScreen from './src/screens/HomeScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabs from './src/navigation/BottomTabs';
+import AgentListScreen from './src/screens/AgentListScreen';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -16,13 +18,16 @@ function App(): React.JSX.Element {
 
   return (
     <>
+    <NavigationContainer>
     {/* <SafeAreaView style={backgroundStyle}> */}
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={'rgba(52, 52, 52, 0)'}
       />
-      <HomeScreen/>
+      <AgentListScreen/>
+      {/* <BottomTabs/> */}
     {/* </SafeAreaView> */}
+    </NavigationContainer>
     </>
   );
 }
