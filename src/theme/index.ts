@@ -1,5 +1,5 @@
-import { fonts, fontSizes } from "./font";
-import { colors } from "./color";
-import { sizes } from "./size";
+import fonts from "./font";
+import colors from "./color";
+import sizes from "./size";
 
-export {fonts, fontSizes, colors, sizes};
+export {fonts, colors, sizes};

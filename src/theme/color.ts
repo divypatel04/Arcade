@@ -1,10 +1,10 @@
 const colors = {
-  primary: '#feac4577',
-  secondary: '#ff956577',
-  accent: '#D8F1A0',
-  textPrimary: '#000',
-  textSecondary: '#686B71',
-  background: '#fff',
+  primary: '#EEF0F5',
+  secondary: '#2ecc71',
+  black: '#000000',
+  white: '#ffffff',
+  darkGray: '#686B71',
+  transparent: 'rgba(0, 0, 0, 0)',
 };
 
-export { colors };
+export default colors;

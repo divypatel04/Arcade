@@ -18,8 +18,8 @@ function App(): React.JSX.Element {
     <>
     {/* <SafeAreaView style={backgroundStyle}> */}
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        barStyle={'dark-content'}
+        backgroundColor={'rgba(52, 52, 52, 0)'}
       />
       <HomeScreen/>
     {/* </SafeAreaView> */}
