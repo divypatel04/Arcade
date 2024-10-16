@@ -1,36 +1,31 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from './lcon';
-import { colors, fonts } from '../theme';
+import { Icon } from './lcon'
+import { colors, fonts } from '../theme'
 
-
-interface AgentBoxProps {
-  isPremium: boolean,
+interface MapBoxProps {
+  isPremium: boolean;
   item: {
-    agent: any,
-    seasonName: string,
-    value: string,
-  },
+    map: any;
+    seasonName: string;
+    value: string;
+  };
   onPress: () => void;
 }
 
-
-const AgentCard = ({isPremium, item, onPress}: AgentBoxProps) => {
+const MapCard = ({isPremium,item, onPress}: MapBoxProps) => {
   return (
-    <View key={item.seasonName}>
+    <View>
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.5}
-        style={styles.agentcard}>
-        <Image
-          style={styles.agentimage}
-          source={{uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/agentIcon%2Fraze_icon.jpg?alt=media&token=1552f893-d7da-455b-99f1-4d3a5b2ef524'}}
-        />
-        <View style={styles.metacontainer}>
+        style={styles.mapbox}>
+        <Image style={styles.mapimage} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a'}} />
+        <View style={styles.mapmetacontainer}>
           <View style={{flexDirection:'row'}}>
             <View style={styles.meta}>
-              <Text style={styles.metatitle}>Raze</Text>
-              <Text style={styles.metasubtext}>Duelist</Text>
+              <Text style={styles.metatitle}>Ascent</Text>
+              <Text style={styles.metasubtext}>Morocco</Text>
             </View>
             <View style={{justifyContent: 'center',}}>
               <Text>Lock</Text>
@@ -38,7 +33,7 @@ const AgentCard = ({isPremium, item, onPress}: AgentBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches: {item.value}
+              Matches- {item.value}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>
@@ -49,23 +44,22 @@ const AgentCard = ({isPremium, item, onPress}: AgentBoxProps) => {
 }
 
 const styles = StyleSheet.create({
-  agentcard: {
+  mapbox: {
     backgroundColor: colors.primary,
     marginBottom: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    padding: 10,
     flexDirection: 'row',
     zIndex: 1,
-    flex:1,
   },
-  agentimage: {
-    width: '18%',
+  mapimage: {
+    width: '22%',
     aspectRatio: 1 / 1,
     borderRadius: 3,
     resizeMode: 'contain',
   },
-  metacontainer: {
+  mapmetacontainer: {
     flexDirection: 'row',
+    // width: '78%',
     flex:1,
   },
   meta: {
@@ -102,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AgentCard
+export default MapCard

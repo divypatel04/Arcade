@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import BottomTabs from './src/navigation/BottomTabs';
 import AgentListScreen from './src/screens/AgentListScreen';
+import MapListScreen from './src/screens/MapListScreen';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,7 +25,8 @@ function App(): React.JSX.Element {
         barStyle={'dark-content'}
         backgroundColor={'rgba(52, 52, 52, 0)'}
       />
-      <AgentListScreen/>
+      {/* <AgentListScreen/> */}
+      <MapListScreen />
       {/* <BottomTabs/> */}
     {/* </SafeAreaView> */}
     </NavigationContainer>
