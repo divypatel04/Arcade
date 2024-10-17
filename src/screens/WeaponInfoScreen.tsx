@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentBox from '../components/AgentBox';
 import TabBar from '../components/TabBar';
 
-const AgentInfoScreen = () => {
+const WeaponInfoScreen = () => {
 
   const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
   const [selectedAct, setSelectedAct] = useState(ses[0]);
@@ -24,7 +24,7 @@ const AgentInfoScreen = () => {
       <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={require('../assets/images/raze.png')}
+            source={{ uri: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/weapon%2Fvandal.png?alt=media&token=858dd763-6723-4f37-8f5b-3c9b57125bd6" }}
           />
       </View>
       <View style={styles.meta}>
@@ -37,8 +37,8 @@ const AgentInfoScreen = () => {
           />
         </TouchableOpacity>
         <View style={{marginTop:'auto'}}>
-        <Text style={styles.subtext}>Agent</Text>
-        <Text style={styles.title}>Raze</Text>
+        <Text style={styles.subtext}>Gun</Text>
+        <Text style={styles.title}>Vandal</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={ses}
@@ -108,13 +108,15 @@ const styles = StyleSheet.create({
     width: '60%',
     position: 'absolute',
     right: 0,
-    marginRight: -sizes.xl,
+    bottom:'20%',
+    paddingBottom:sizes['6xl'],
+    marginRight: sizes['4xl'],
   },
   image: {
     width: '100%',
-    height: 260,
+    height: 100,
     resizeMode: 'contain',
   },
 });
 
-export default AgentInfoScreen
+export default WeaponInfoScreen

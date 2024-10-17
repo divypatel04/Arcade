@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentBox from '../components/AgentBox';
 import TabBar from '../components/TabBar';
 
-const AgentInfoScreen = () => {
+const MapInfoScreen = () => {
 
   const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
   const [selectedAct, setSelectedAct] = useState(ses[0]);
@@ -24,7 +24,7 @@ const AgentInfoScreen = () => {
       <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={require('../assets/images/raze.png')}
+            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a' }}
           />
       </View>
       <View style={styles.meta}>
@@ -37,8 +37,8 @@ const AgentInfoScreen = () => {
           />
         </TouchableOpacity>
         <View style={{marginTop:'auto'}}>
-        <Text style={styles.subtext}>Agent</Text>
-        <Text style={styles.title}>Raze</Text>
+        <Text style={styles.subtext}>Map</Text>
+        <Text style={styles.title}>Ascent</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={ses}
@@ -108,13 +108,15 @@ const styles = StyleSheet.create({
     width: '60%',
     position: 'absolute',
     right: 0,
-    marginRight: -sizes.xl,
+    bottom:0,
+    paddingBottom:sizes['6xl'],
+    alignItems:'flex-end',
   },
   image: {
-    width: '100%',
-    height: 260,
+    width: '90%',
+    height: 180,
     resizeMode: 'contain',
   },
 });
 
-export default AgentInfoScreen
+export default MapInfoScreen
