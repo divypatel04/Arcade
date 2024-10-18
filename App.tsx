@@ -13,6 +13,7 @@ import WeaponListScreen from './src/screens/WeaponListScreen';
 import AgentInfoScreen from './src/screens/AgentInfoScreen';
 import MapInfoScreen from './src/screens/MapInfoScreen';
 import WeaponInfoScreen from './src/screens/WeaponInfoScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -31,7 +32,8 @@ function App(): React.JSX.Element {
       />
       {/* <AgentListScreen/> */}
       {/* <AgentInfoScreen/> */}
-      <WeaponInfoScreen/>
+      {/* <WeaponInfoScreen/> */}
+      <ProfileScreen/>
       {/* <MapListScreen/> */}
       {/* <BottomTabs/> */}
     {/* </SafeAreaView> */}

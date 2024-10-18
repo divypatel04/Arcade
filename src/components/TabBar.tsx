@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderColor: colors.black,
+    zIndex:0,
   },
   tabText: {
     fontFamily: fonts.family.proximaBold,
