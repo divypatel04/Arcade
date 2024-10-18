@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -12,7 +12,7 @@ interface TabBarProps {
   tabs: { label: string; content: JSX.Element }[];
 }
 
-export default function TabBar({tabs}: TabBarProps) {
+export default function TabBar({ tabs }: TabBarProps) {
   const [selectedTab, setSelectedTab] = useState(tabs[0].label);
 
   const onSelectTab = (tabLabel: string) => {
@@ -26,6 +26,7 @@ export default function TabBar({tabs}: TabBarProps) {
 
   return (
     <View style={styles.container}>
+      {/* Scrollable tabs area */}
       <ScrollView
         overScrollMode="never"
         showsHorizontalScrollIndicator={false}
@@ -54,36 +55,43 @@ export default function TabBar({tabs}: TabBarProps) {
         ))}
       </ScrollView>
 
-      <View style={styles.tabContentContainer}>
+      {/* Scrollable content for the selected tab */}
+      <ScrollView
+        contentContainerStyle={[
+          styles.tabContentScrollContainer,
+          { flexGrow: renderTabContent() ? 0 : 1 }, // Adjust flexGrow if no content
+        ]}>
         {renderTabContent()}
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // paddingVertical: 5,
+    // flex: 1, // Ensure the container fills the available space
   },
   scrollContentContainer: {
     alignItems: 'center',
+    flexGrow: 0, // Prevent tabs from stretching vertically
   },
   tabContainer: {
     borderColor: colors.black,
+    flex: 1, // Distribute space equally among the tabs
   },
   tabInnerContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingVertical: 12, // Reduced padding for smaller tab height
+    paddingHorizontal: 16, // Adjusted padding for better layout
     borderColor: colors.black,
-    zIndex:0,
+    zIndex: 0,
   },
   tabText: {
     fontFamily: fonts.family.proximaBold,
     color: colors.darkGray,
-    fontSize:14,
+    fontSize: 14,
     letterSpacing: -0.2,
     textTransform: 'capitalize',
-    lineHeight: 22,
+    lineHeight: 20,
   },
   selectedTab: {
     borderBottomWidth: 2,
@@ -92,8 +100,11 @@ const styles = StyleSheet.create({
   selectedTabText: {
     color: colors.black,
   },
-  tabContentContainer: {
-    marginVertical: 12,
-    marginHorizontal: 14,
+  tabContentScrollContainer: {
+    flexGrow: 1, // Ensures content fills available space
+    paddingVertical: 5,
+
+    paddingHorizontal: 14,
+    // minHeight: 100, // Prevents the tab from growing too much for small content
   },
 });

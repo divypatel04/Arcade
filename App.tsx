@@ -32,10 +32,10 @@ function App(): React.JSX.Element {
       />
       {/* <AgentListScreen/> */}
       {/* <AgentInfoScreen/> */}
-      {/* <WeaponInfoScreen/> */}
-      <ProfileScreen/>
+      {/* <MapInfoScreen/> */}
+      {/* <ProfileScreen/> */}
       {/* <MapListScreen/> */}
-      {/* <BottomTabs/> */}
+      <BottomTabs/>
     {/* </SafeAreaView> */}
     </NavigationContainer>
     </>

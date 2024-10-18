@@ -45,14 +45,15 @@ const styles = StyleSheet.create({
   },
   stattitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['3xl'],
-    lineHeight: fonts.sizes['5xl'],
+    fontSize: fonts.sizes['7xl'],
+    lineHeight: fonts.sizes['7xl'],
+    textTransform:'uppercase',
     color: colors.black,
     textAlign: 'center',
   },
   statsubtext: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.sm,
+    fontSize: fonts.sizes.md,
     textTransform: 'uppercase',
     color: colors.darkGray,
     paddingTop: sizes.sm,

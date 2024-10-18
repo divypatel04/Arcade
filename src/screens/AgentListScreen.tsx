@@ -4,8 +4,12 @@ import { colors, fonts, sizes } from '../theme';
 import DropDown from '../components/DropDown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentCard from '../components/AgentCard';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const AgentListScreen = () => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
   const [selectedAct, setSelectedAct] = useState(ses[0]);
@@ -82,7 +86,7 @@ const AgentListScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <FontAwesome
             name="angles-left"
             color={colors.darkGray}

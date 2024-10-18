@@ -4,6 +4,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../theme';
 import { Icon } from '../components/lcon';
 import HomeScreen from '../screens/HomeScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import AgentListScreen from '../screens/AgentListScreen';
+import MapListScreen from '../screens/MapListScreen';
+import WeaponListScreen from '../screens/WeaponListScreen';
+import AgentInfoScreen from '../screens/AgentInfoScreen';
+import MapInfoScreen from '../screens/MapInfoScreen';
+import WeaponInfoScreen from '../screens/WeaponInfoScreen';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -17,6 +24,12 @@ function HomeStackScreen() {
         headerShown: false,
       }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="AgentListScreen" component={AgentListScreen} />
+      <Stack.Screen name="MapListScreen" component={MapListScreen} />
+      <Stack.Screen name="WeaponListScreen" component={WeaponListScreen} />
+      <Stack.Screen name="AgentInfoScreen" component={AgentInfoScreen} />
+      <Stack.Screen name="MapInfoScreen" component={MapInfoScreen} />
+      <Stack.Screen name="WeaponInfoScreen" component={WeaponInfoScreen} />
     </Stack.Navigator>
   );
 }
@@ -55,7 +68,7 @@ function ProfileStackScreen() {
         presentation: 'modal',
         headerShown: false,
       }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     </Stack.Navigator>
   );
 }

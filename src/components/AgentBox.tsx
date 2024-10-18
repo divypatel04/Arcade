@@ -1,10 +1,15 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const AgentBox = () => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.agentcontainer}>
+    <TouchableOpacity onPress={() => navigation.navigate('AgentListScreen')} activeOpacity={0.6} style={styles.agentcontainer}>
       <View style={styles.agentimagecontainer}>
         <ImageBackground source={require('../assets/images/raze.png')} style={styles.agentimage}>
         </ImageBackground>

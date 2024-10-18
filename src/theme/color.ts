@@ -5,6 +5,8 @@ const colors = {
   white: '#ffffff',
   darkGray: '#686B71',
   transparent: 'rgba(0, 0, 0, 0)',
+  win: '#5067B8',
+  lose: '#d75c59',
 };
 
 export default colors;
