@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   stattitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['7xl'],
+    fontSize: fonts.sizes['8xl'],
     textTransform: 'uppercase',
     color: colors.black,
     textAlign: 'center',

@@ -10,22 +10,24 @@ interface Stat {
 const StatsSummary = ({ stats }: { stats: Stat[] }) => {
   return (
     <View style={styles.container}>
-      {stats &&
-        stats.map((item: Stat, index: number) => {
-          return (
-            <View key={index} style={styles.stat}>
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit={true}
-                style={styles.stattitle}>
-                {item.value || 0}
-              </Text>
-              <Text style={styles.statsubtext}>
-                {item.name || 'NA'}
-              </Text>
-            </View>
-          );
-        })}
+      <View style={styles.stats}>
+        {stats != undefined &&
+          stats.map((item: any, index: number) => {
+            return (
+              <View key={index} style={styles.stat}>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit={true}
+                  style={styles.stattitle}>
+                  {item?.value ? item?.value : 0}
+                </Text>
+                <Text style={styles.statsubtext}>
+                  {item?.name ? item?.name : 'NA'}
+                </Text>
+              </View>
+            );
+          })}
+      </View>
     </View>
   );
 };

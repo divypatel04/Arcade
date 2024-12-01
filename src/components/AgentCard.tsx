@@ -34,7 +34,11 @@ const AgentCard = ({ isPremium, item, onPress }: AgentBoxProps) => {
             </View>
             {isPremium && (
               <View style={{ justifyContent: 'center', }}>
-                <Text>Lock</Text>
+                <Icon
+                  name={'star-fill'}
+                  size={15}
+                  color={colors.darkGray}
+                />
               </View>
             )}
           </View>
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.proximaBold,
     letterSpacing: 0.3,
     fontSize: fonts.sizes.md,
-    lineHeight: fonts.sizes.md,
+    lineHeight: fonts.sizes.lg,
     color: colors.darkGray,
   },
   rightmeta: {

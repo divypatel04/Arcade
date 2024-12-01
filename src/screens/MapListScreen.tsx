@@ -84,7 +84,7 @@ const MapListScreen = () => {
           <FontAwesome
             name="angles-left"
             color={colors.darkGray}
-            size={20}
+            size={18}
             style={styles.backicon}
           />
         </TouchableOpacity>
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     padding: sizes.xl,
+    backgroundColor: colors.white,
   },
   header: {
     paddingVertical: sizes.xl,

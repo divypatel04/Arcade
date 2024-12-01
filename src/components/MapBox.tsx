@@ -1,11 +1,17 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const MapBox = () => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
+
   return (
     <TouchableOpacity
-      // onPress={() => navigation.navigate('MapListScreen')}
+      onPress={() => navigation.navigate('MapListScreen')}
       activeOpacity={0.6}
       style={styles.mapcontainer}>
       <View style={styles.mapimagecontainer}>

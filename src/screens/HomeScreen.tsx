@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { sizes } from '../theme';
+import { colors, sizes } from '../theme';
 import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
 import GunBox from '../components/GunBox';
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     padding: sizes.xl,
+    backgroundColor: colors.white,
   },
   twoboxcontainer: {
     paddingVertical: sizes['3xl'],

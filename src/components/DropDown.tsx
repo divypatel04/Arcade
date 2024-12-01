@@ -34,7 +34,7 @@ export default function DropDown({list, name, value, onSelect}: DropDownProps) {
             </Text>
             <Text style={styles.text}>{!!value ? value : name}</Text>
           </Text>
-          <Icon style={styles.icon} name="chevron-down" size={20} />
+          <Icon style={styles.icon} name="chevron-down" size={22} />
         </View>
       </TouchableOpacity>
 
@@ -80,17 +80,17 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.darkGray,
-    fontSize: 11,
+    fontSize: 13,
     lineHeight: 15,
     margin: 0,
     textAlignVertical: 'center',
-    fontFamily: fonts.family.proximaBold,
+    fontFamily: fonts.family.novecentoUltraBold,
     textTransform: 'uppercase',
     paddingRight: 3,
   },
   text: {
     color: colors.darkGray,
-    fontSize: 11,
+    fontSize: 13,
     lineHeight: 15,
     margin: 0,
     textAlignVertical: 'center',
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   listText: {
     color: colors.black,
-    fontSize: 11,
+    fontSize: 13,
     fontFamily: fonts.family.proximaBold,
   },
   dropdownList: {

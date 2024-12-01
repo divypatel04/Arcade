@@ -1,4 +1,9 @@
 {
   "name": "Arcade",
-  "displayName": "Arcade"
+  "displayName": "Arcade",
+  "extra": {
+    "eas": {
+      "projectId": "73c51238-8b20-48f4-9ba5-4abe27508619"
+    }
+  }
 }

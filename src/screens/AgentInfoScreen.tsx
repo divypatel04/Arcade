@@ -8,8 +8,12 @@ import TabBar from '../components/TabBar';
 import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
 import BestMapTab from '../components/Tabs/BestMapTab';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const AgentInfoScreen = () => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
   const [selectedAct, setSelectedAct] = useState(ses[0]);
@@ -86,11 +90,11 @@ const AgentInfoScreen = () => {
           />
       </View>
       <View style={styles.meta}>
-      <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+      <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} onPress={() => navigation.goBack()}>
           <FontAwesome
             name="angles-left"
             color={colors.darkGray}
-            size={20}
+            size={18}
             style={styles.backicon}
           />
         </TouchableOpacity>
