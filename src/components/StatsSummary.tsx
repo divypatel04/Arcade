@@ -2,32 +2,34 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, sizes } from '../theme';
 
+interface Stat {
+  value: number;
+  name: string;
+}
 
-//TODO: Add Stats Type
-const StatsSummary = ({ stats }: any) => {
+const StatsSummary = ({ stats }: { stats: Stat[] }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.stats}>
-        {stats != undefined &&
-          stats.map((item: any, index: number) => {
-            return (
-              <View key={index} style={styles.stat}>
-                <Text
-                  numberOfLines={1}
-                  adjustsFontSizeToFit={true}
-                  style={styles.stattitle}>
-                  {item?.value ? item?.value : 0}
-                </Text>
-                <Text style={styles.statsubtext}>
-                  {item?.name ? item?.name : 'NA'}
-                </Text>
-              </View>
-            );
-          })}
-      </View>
+      {stats &&
+        stats.map((item: Stat, index: number) => {
+          return (
+            <View key={index} style={styles.stat}>
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit={true}
+                style={styles.stattitle}>
+                {item.value || 0}
+              </Text>
+              <Text style={styles.statsubtext}>
+                {item.name || 'NA'}
+              </Text>
+            </View>
+          );
+        })}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.primary,
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.novecentoUltraBold,
     fontSize: fonts.sizes['7xl'],
     lineHeight: fonts.sizes['7xl'],
-    textTransform:'uppercase',
+    textTransform: 'uppercase',
     color: colors.black,
     textAlign: 'center',
   },
