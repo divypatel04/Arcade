@@ -106,10 +106,7 @@ const MapInfoScreen = () => {
         </View>
         </View>
       </View>
-
     </View>
-
-
     <View>
       <TabBar tabs={tabs}/>
     </View>

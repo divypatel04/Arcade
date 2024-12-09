@@ -105,7 +105,9 @@ const MapListScreen = () => {
           <MapCard
             isPremium={item.isPremium}
             item={item.item}
-            onPress={() => { }}
+            onPress={() => {
+
+            }}
           />
         )}
         // keyExtractor={item => item}

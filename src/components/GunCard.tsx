@@ -34,7 +34,11 @@ const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
             </View>
             {isPremium && (
               <View style={{ justifyContent: 'center', }}>
-                <Text>Lock</Text>
+                <Icon
+                  name={'star-fill'}
+                  size={15}
+                  color={colors.darkGray}
+                />
               </View>
             )}
           </View>

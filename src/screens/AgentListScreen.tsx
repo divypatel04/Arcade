@@ -116,7 +116,7 @@ const AgentListScreen = () => {
             }}
           />
         )}
-        // keyExtractor={item => item}
+        keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
       />
     </View>

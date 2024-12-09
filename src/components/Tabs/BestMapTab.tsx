@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 
+
 interface mapListType {
   mapName: string,
   mapImage: string,

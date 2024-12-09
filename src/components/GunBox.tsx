@@ -1,11 +1,17 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const GunBox = () => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
+
   return (
     <TouchableOpacity
-      // onPress={() => navigation.navigate('WeaponListScreen')}
+      onPress={() => navigation.navigate('WeaponListScreen')}
       activeOpacity={0.6}
       style={styles.weaponcontainer}>
       <View style={styles.weaponimagecontainer}>

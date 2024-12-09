@@ -19,24 +19,24 @@ const AgentInfoScreen = () => {
   const [selectedAct, setSelectedAct] = useState(ses[0]);
 
   const firstStatBoxData = [
-    {name: 'Matches', value: 50},
-    {name: 'Hours', value: '1h 54m'},
-    {name: 'Win Rate', value: `45.9%`},
+    { name: 'Matches', value: 50 },
+    { name: 'Hours', value: '1h 54m' },
+    { name: 'Win Rate', value: `45.9%` },
   ];
 
   const secondStatBoxData = [
-    {name: 'Kills', value: 300},
-    {name: 'M.Wins', value: 30},
-    {name: 'M.Lose', value: 13},
+    { name: 'Kills', value: 300 },
+    { name: 'M.Wins', value: 30 },
+    { name: 'M.Lose', value: 13 },
   ];
 
   const statBoxTwoData = [
-    {name: 'K/D', value: 2.67},
-    {name: 'Damage/R', value: 156.78},
-    {name: 'Plants', value: 5},
-    {name: 'Aces', value: 2},
-    {name: 'First Blood', value: 38},
-    {name: 'Defuse', value: 2},
+    { name: 'K/D', value: 2.67 },
+    { name: 'Damage/R', value: 156.78 },
+    { name: 'Plants', value: 5 },
+    { name: 'Aces', value: 2 },
+    { name: 'First Blood', value: 38 },
+    { name: 'Defuse', value: 2 },
   ];
 
   const mapList = [
@@ -81,44 +81,41 @@ const AgentInfoScreen = () => {
   ];
 
   return (
-   <View style={styles.container}>
-    <View style={styles.details}>
-      <View style={styles.imagecontainer}>
+    <View style={styles.container}>
+      <View style={styles.details}>
+        <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
             source={require('../assets/images/raze.png')}
           />
-      </View>
-      <View style={styles.meta}>
-      <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} onPress={() => navigation.goBack()}>
-          <FontAwesome
-            name="angles-left"
-            color={colors.darkGray}
-            size={18}
-            style={styles.backicon}
-          />
-        </TouchableOpacity>
-        <View style={{marginTop:'auto'}}>
-        <Text style={styles.subtext}>Agent</Text>
-        <Text style={styles.title}>Raze</Text>
-        <View style={styles.dropdowncontainer}>
-          <DropDown
-            list={ses}
-            name="Act"
-            value={selectedAct}
-            onSelect={item => setSelectedAct(item)}
-          />
         </View>
+        <View style={styles.meta}>
+          <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} onPress={() => navigation.goBack()}>
+            <FontAwesome
+              name="angles-left"
+              color={colors.darkGray}
+              size={18}
+              style={styles.backicon}
+            />
+          </TouchableOpacity>
+          <View style={{ marginTop: 'auto' }}>
+            <Text style={styles.subtext}>Agent</Text>
+            <Text style={styles.title}>Raze</Text>
+            <View style={styles.dropdowncontainer}>
+              <DropDown
+                list={ses}
+                name="Act"
+                value={selectedAct}
+                onSelect={item => setSelectedAct(item)}
+              />
+            </View>
+          </View>
         </View>
       </View>
-
+      <View style={styles.tabs}>
+        <TabBar tabs={tabs} />
+      </View>
     </View>
-
-
-    <View style={styles.tabs}>
-      <TabBar tabs={tabs}/>
-    </View>
-   </View>
   )
 }
 
@@ -128,10 +125,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   details: {
-    flexDirection:'row',
+    flexDirection: 'row',
     height: 260,
     borderBottomWidth: 0.6,
-    borderBottomColor:colors.black,
+    borderBottomColor: colors.black,
     paddingVertical: sizes['2xl'],
     paddingHorizontal: sizes['4xl'],
   },
@@ -153,10 +150,10 @@ const styles = StyleSheet.create({
   },
   subtext: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.md+1,
+    fontSize: fonts.sizes.md + 1,
     paddingTop: sizes.md,
     marginBottom: -3,
-    lineHeight: fonts.sizes.md+1,
+    lineHeight: fonts.sizes.md + 1,
     textTransform: 'uppercase',
     color: colors.darkGray,
   },
@@ -177,8 +174,8 @@ const styles = StyleSheet.create({
     height: 260,
     resizeMode: 'contain',
   },
-  tabs:{
-    flex:1,
+  tabs: {
+    flex: 1,
   }
 });
 

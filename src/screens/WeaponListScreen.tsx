@@ -3,10 +3,13 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import { colors, fonts, sizes } from '../theme';
 import DropDown from '../components/DropDown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import AgentCard from '../components/AgentCard';
 import GunCard from '../components/GunCard';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const WeaponListScreen = () => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
 
@@ -19,6 +22,7 @@ const WeaponListScreen = () => {
           experience: "5 years",
           specialization: "Cybersecurity",
         },
+        gun: "Gun A",
         seasonName: "Winter",
         value: "1000",
       },
@@ -32,6 +36,7 @@ const WeaponListScreen = () => {
           experience: "3 years",
           specialization: "Data Analysis",
         },
+        gun: "Gun B",
         seasonName: "Spring",
         value: "850",
       },
@@ -45,6 +50,7 @@ const WeaponListScreen = () => {
           experience: "10 years",
           specialization: "Artificial Intelligence",
         },
+        gun: "Gun C",
         seasonName: "Summer",
         value: "1500",
       },
@@ -58,6 +64,7 @@ const WeaponListScreen = () => {
           experience: "2 years",
           specialization: "Cloud Computing",
         },
+        gun: "Gun D",
         seasonName: "Fall",
         value: "700",
       },
@@ -71,6 +78,7 @@ const WeaponListScreen = () => {
           experience: "7 years",
           specialization: "Blockchain",
         },
+        gun: "Gun E",
         seasonName: "Winter",
         value: "1200",
       },
@@ -109,7 +117,9 @@ const WeaponListScreen = () => {
           <GunCard
             isPremium={item.isPremium}
             item={item.item}
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate('WeaponInfoScreen', { weapon: item.item.gun });
+            }}
           />
         )}
         // keyExtractor={item => item}
@@ -124,6 +134,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     padding: sizes.xl,
+    backgroundColor: colors.white,
   },
   header: {
     paddingVertical: sizes.xl,
