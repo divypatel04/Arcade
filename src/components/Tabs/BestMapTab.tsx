@@ -67,7 +67,6 @@ const BestMapTab = ({mapList}:BestMapType) => {
 const styles = StyleSheet.create({
   tabContainer: {
     paddingTop: 8,
-    marginBottom: 100,
     flex:1,
   },
   tabList: {

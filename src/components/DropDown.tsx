@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.primary,
     alignItems: 'center',
+    zIndex: 10,
   },
   label: {
     color: colors.darkGray,
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.novecentoUltraBold,
     textTransform: 'uppercase',
     paddingRight: 3,
+    zIndex: 10,
   },
   text: {
     color: colors.darkGray,
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
     right: '1%',
     flex: 1,
     maxHeight: 170,
+    zIndex: 10,
   },
   listItem: {
     backgroundColor: colors.primary,
@@ -126,5 +129,6 @@ const styles = StyleSheet.create({
     margin: 0,
     borderBottomWidth: 0.6,
     borderColor: colors.darkGray,
+    zIndex: 10,
   },
 });

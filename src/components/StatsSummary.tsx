@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, sizes } from '../theme';
 
 interface Stat {
-  value: number;
+  value: number | string;
   name: string;
 }
 

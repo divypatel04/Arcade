@@ -5,11 +5,18 @@ import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
 import GunBox from '../components/GunBox';
 import SeasonBox from '../components/SeasonBox';
+import { AgentStats } from '../data/dummyData';
+import { AgentStatType } from '../types/AgentStatsType';
+import { getBestPlayer } from '../utils';
+
 
 const HomeScreen = () => {
+
+
+
   return (
     <View style={styles.container}>
-      <AgentBox />
+      <AgentBox/>
       <View style={styles.twoboxcontainer}>
         <MapBox />
         <GunBox />

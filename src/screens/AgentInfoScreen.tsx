@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     marginTop: sizes['4xl'],
     alignItems: 'center',
     paddingBottom: sizes.md,
+    zIndex: 1,
   },
   imagecontainer: {
     width: '60%',
@@ -176,6 +177,7 @@ const styles = StyleSheet.create({
   },
   tabs: {
     flex: 1,
+    zIndex: 0
   }
 });
 

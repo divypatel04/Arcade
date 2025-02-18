@@ -6,23 +6,20 @@ import DetailedStats from '../DetailedStats'
 
 interface Stat {
   name: string;
-  value: number | string;
+  value: string | number;
 }
 
-interface OverviewStats {
+interface UtilityStats {
   stats1: Stat[],
   stats2: Stat[],
   stats3: Stat[],
 }
 
-const OverviewTab = ({stats1,stats2,stats3}:OverviewStats) => {
+const UtilityTab = ({stats1,stats2,stats3}:UtilityStats) => {
   return (
     <View
       // showsVerticalScrollIndicator={false}
       style={styles.tabContainer}>
-      <StatsSummary stats={stats1} />
-      <StatsSummary stats={stats2} />
-      <DetailedStats stats={stats3} />
     </View>
   )
 }
@@ -34,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OverviewTab
+export default UtilityStats

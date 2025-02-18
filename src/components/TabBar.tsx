@@ -70,6 +70,7 @@ export default function TabBar({ tabs }: TabBarProps) {
 const styles = StyleSheet.create({
   container: {
     // flex: 1, // Ensure the container fills the available space
+    zIndex: 1,
   },
   scrollContentContainer: {
     alignItems: 'center',
@@ -78,12 +79,13 @@ const styles = StyleSheet.create({
   tabContainer: {
     borderColor: colors.black,
     flex: 1, // Distribute space equally among the tabs
+    zIndex: 1,
   },
   tabInnerContainer: {
     paddingVertical: 12, // Reduced padding for smaller tab height
     paddingHorizontal: 16, // Adjusted padding for better layout
     borderColor: colors.black,
-    zIndex: 0,
+    zIndex: 1,
   },
   tabText: {
     fontFamily: fonts.family.proximaBold,
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
     textTransform: 'capitalize',
     lineHeight: 20,
+    zIndex: 1,
   },
   selectedTab: {
     borderBottomWidth: 2,
@@ -101,10 +104,8 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   tabContentScrollContainer: {
-    flexGrow: 1, // Ensures content fills available space
-    paddingVertical: 5,
+    // paddingVertical: 5,
 
     paddingHorizontal: 14,
-    // minHeight: 100, // Prevents the tab from growing too much for small content
   },
 });

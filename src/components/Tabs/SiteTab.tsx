@@ -7,7 +7,7 @@ import { colors, fonts } from '../../theme';
 
 interface Stat {
   name: string;
-  value: string | number;
+  value: number | string;
 }
 
 interface OverviewStats {
@@ -53,7 +53,6 @@ const SiteTab = ({stats1,roundwon,roundlose}:OverviewStats) => {
 const styles = StyleSheet.create({
   tabContainer: {
     paddingTop: 8,
-    marginBottom: 100,
     flex:1,
   },
   container: {
