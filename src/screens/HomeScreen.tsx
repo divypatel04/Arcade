@@ -12,11 +12,11 @@ import { getBestPlayer } from '../utils';
 
 const HomeScreen = () => {
 
-
+  const bestAgentStats: AgentStatType = getBestPlayer(AgentStats);
 
   return (
     <View style={styles.container}>
-      <AgentBox/>
+      <AgentBox bestAgent={bestAgentStats}/>
       <View style={styles.twoboxcontainer}>
         <MapBox />
         <GunBox />
