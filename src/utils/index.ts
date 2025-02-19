@@ -1,4 +1,4 @@
-import { getBestPlayer, getActiveOrRecentSeason } from "./agentUtils";
+import { getBestPlayer, getActiveOrRecentSeason, getSeasonNames } from "./agentUtils";
 
 
-export { getBestPlayer, getActiveOrRecentSeason };
+export { getBestPlayer, getActiveOrRecentSeason, getSeasonNames };

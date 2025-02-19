@@ -2,20 +2,17 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
+import { AgentStatType } from '../types/AgentStatsType';
 
 
 interface AgentBoxProps {
   isPremium: boolean,
-  item: {
-    agent: any, //TODO: change agent type
-    seasonName: string,
-    value: string,
-  },
+  agent: AgentStatType,
   onPress: () => void;
 }
 
 //TODO: Add Premium Icon here
-const AgentCard = ({ isPremium, item, onPress }: AgentBoxProps) => {
+const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
   return (
     <View>
       <TouchableOpacity
@@ -24,13 +21,13 @@ const AgentCard = ({ isPremium, item, onPress }: AgentBoxProps) => {
         style={styles.card}>
         <Image
           style={styles.icon}
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/agentIcon%2Fraze_icon.jpg?alt=media&token=1552f893-d7da-455b-99f1-4d3a5b2ef524' }}
+          source={{ uri: agent.agent.iconUrl }}
         />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>
-              <Text style={styles.metatitle}>Raze</Text>
-              <Text style={styles.metasubtext}>Duelist</Text>
+              <Text style={styles.metatitle}>{agent.agent.name}</Text>
+              <Text style={styles.metasubtext}>{agent.agent.role}</Text>
             </View>
             {isPremium && (
               <View style={{ justifyContent: 'center', }}>
@@ -44,7 +41,7 @@ const AgentCard = ({ isPremium, item, onPress }: AgentBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches: {item.value}
+              Matches: {agent.agent.role}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>

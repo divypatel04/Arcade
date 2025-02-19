@@ -6,13 +6,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentCard from '../components/AgentCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { getSeasonNames } from '../utils';
+import { AgentStats } from '../data/dummyData';
 
 const AgentListScreen = () => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
-  const [selectedAct, setSelectedAct] = useState(ses[0]);
+  const seasonNames = getSeasonNames(AgentStats);
+  const [selectedAct, setSelectedAct] = useState(seasonNames[0]);
 
   const agentList = [
     {
@@ -97,7 +99,7 @@ const AgentListScreen = () => {
         <Text style={styles.headertitle}>Agents</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
-            list={ses}
+            list={seasonNames}
             name="Act"
             value={selectedAct}
             onSelect={item => setSelectedAct(item)}
@@ -106,13 +108,13 @@ const AgentListScreen = () => {
       </View>
 
       <FlatList
-        data={agentList}
+        data={AgentStats}
         renderItem={({ item }) => (
           <AgentCard
-            isPremium={item.isPremium}
-            item={item.item}
+            isPremium={true}
+            agent={item}
             onPress={() => {
-              navigation.navigate('AgentInfoScreen', { agent: item.item.agent });
+              navigation.navigate('AgentInfoScreen', { agent: item });
             }}
           />
         )}

@@ -47,3 +47,29 @@ export const getActiveOrRecentSeason = (agentStat: AgentStatType) => {
 
   return CurrentSeason;
 }
+
+
+
+export const getSeasonNames = (agentStats: AgentStatType[]) => {
+  const seasonSet: any = {};
+
+  for (const agent of agentStats) {
+    for (const season of agent.performanceBySeason) {
+      if (!seasonSet[season.season.id]) {
+        seasonSet[season.season.id] = {
+          seasonId: season.season.id,
+          seasonName: season.season.name,
+          seasonActive: season.season.isActive,
+        };
+      }
+    }
+  }
+
+  const seasonList = Object.values(seasonSet);
+
+  const final = seasonList
+    .map((season: any) => season.seasonName)
+    .sort((a, b) => b.localeCompare(a));
+
+  return final;
+};
