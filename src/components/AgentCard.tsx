@@ -7,11 +7,14 @@ import { AgentStatType } from '../types/AgentStatsType';
 
 interface AgentBoxProps {
   isPremium: boolean,
-  agent: AgentStatType,
+  agent: {
+    agentStat: AgentStatType,
+    seasonName: string,
+    numberOfMatches: number
+  },
   onPress: () => void;
 }
 
-//TODO: Add Premium Icon here
 const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
   return (
     <View>
@@ -21,13 +24,13 @@ const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
         style={styles.card}>
         <Image
           style={styles.icon}
-          source={{ uri: agent.agent.iconUrl }}
+          source={{ uri: agent.agentStat.agent.iconUrl }}
         />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>
-              <Text style={styles.metatitle}>{agent.agent.name}</Text>
-              <Text style={styles.metasubtext}>{agent.agent.role}</Text>
+              <Text style={styles.metatitle}>{agent.agentStat.agent.name}</Text>
+              <Text style={styles.metasubtext}>{agent.agentStat.agent.role}</Text>
             </View>
             {isPremium && (
               <View style={{ justifyContent: 'center', }}>
@@ -41,7 +44,7 @@ const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches: {agent.agent.role}
+              Matches: {agent.numberOfMatches}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>

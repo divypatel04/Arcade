@@ -71,5 +71,63 @@ export const getSeasonNames = (agentStats: AgentStatType[]) => {
     .map((season: any) => season.seasonName)
     .sort((a, b) => b.localeCompare(a));
 
+  final.unshift('All Act');
+
   return final;
 };
+
+
+export function filterAndSortByMatches(
+  agentStats: AgentStatType[],
+  seasonName: string,
+) {
+  let allSortedStats = [];
+
+  if (seasonName === 'All Act') {
+    // Handle the "All Act" case
+    allSortedStats = agentStats.map(agentStat => {
+      const numberOfMatches = agentStat.performanceBySeason.map(
+        stat => stat.stats.matchesWon + stat.stats.matchesLost,
+      );
+
+      return {
+        agentStat: agentStat,
+        seasonName: seasonName,
+        numberOfMatches:
+          numberOfMatches.length > 0
+            ? numberOfMatches.reduce((a, b) => a + b)
+            : 0,
+      };
+    });
+  } else {
+    // Handle individual seasons
+    allSortedStats = agentStats.map(agentStat => {
+      const filteredStats = agentStat.performanceBySeason.filter(
+        stat => stat.season.name === seasonName,
+      );
+
+      const numberOfMatches = filteredStats.map(stat => stat.stats.matchesWon + stat.stats.matchesLost);
+
+      return {
+        agentStat: agentStat,
+        seasonName: seasonName,
+        numberOfMatches:
+          numberOfMatches.length > 0
+            ? numberOfMatches.reduce((a, b) => a + b)
+            : 0,
+      };
+    });
+  }
+
+  // Filter out agents with numberOfMatches equal to 0
+  const filteredSortedStats = allSortedStats.filter(
+    stat => stat.numberOfMatches > 0,
+  );
+
+  // Sort all remaining agents by the number of matches in descending order
+  const finalSortedStats = filteredSortedStats.sort(
+    (a, b) => b.numberOfMatches - a.numberOfMatches,
+  );
+
+  return finalSortedStats;
+}

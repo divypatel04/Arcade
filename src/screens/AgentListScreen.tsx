@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import DropDown from '../components/DropDown';
@@ -8,6 +8,15 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { getSeasonNames } from '../utils';
 import { AgentStats } from '../data/dummyData';
+import { AgentStatType } from '../types/AgentStatsType';
+import { filterAndSortByMatches } from '../utils/agentUtils';
+
+interface AgentListProps {
+  agentStat: AgentStatType,
+  seasonName: string,
+  numberOfMatches: number
+}
+
 
 const AgentListScreen = () => {
 
@@ -16,74 +25,11 @@ const AgentListScreen = () => {
   const seasonNames = getSeasonNames(AgentStats);
   const [selectedAct, setSelectedAct] = useState(seasonNames[0]);
 
-  const agentList = [
-    {
-      isPremium: true,
-      item: {
-        agent: {
-          name: "Agent X1",
-          experience: "5 years",
-          specialization: "Cybersecurity",
-        },
-        seasonName: "Winter",
-        value: "1000",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: false,
-      item: {
-        agent: {
-          name: "Agent Y2",
-          experience: "3 years",
-          specialization: "Data Analysis",
-        },
-        seasonName: "Spring",
-        value: "850",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: true,
-      item: {
-        agent: {
-          name: "Agent Z3",
-          experience: "10 years",
-          specialization: "Artificial Intelligence",
-        },
-        seasonName: "Summer",
-        value: "1500",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: false,
-      item: {
-        agent: {
-          name: "Agent W4",
-          experience: "2 years",
-          specialization: "Cloud Computing",
-        },
-        seasonName: "Fall",
-        value: "700",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: true,
-      item: {
-        agent: {
-          name: "Agent V5",
-          experience: "7 years",
-          specialization: "Blockchain",
-        },
-        seasonName: "Winter",
-        value: "1200",
-      },
-      onPress: () => { },
-    },
-  ];
+  const [agentList,setAgentList] = useState<any>();
 
+  useEffect(() => {
+    setAgentList(filterAndSortByMatches(AgentStats, selectedAct));
+  }, [selectedAct]);
 
   return (
     <View style={styles.container}>
@@ -108,7 +54,7 @@ const AgentListScreen = () => {
       </View>
 
       <FlatList
-        data={AgentStats}
+        data={agentList}
         renderItem={({ item }) => (
           <AgentCard
             isPremium={true}
