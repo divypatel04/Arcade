@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDown from '../components/DropDown'
 import { colors, fonts, sizes } from '../theme'
@@ -9,14 +9,35 @@ import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
 import BestMapTab from '../components/Tabs/BestMapTab';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { getSeasonNames } from '../utils';
+import { AgentStatType } from '../types/AgentStatsType';
 
 const AgentInfoScreen = () => {
-
+  const routeParams: any = useRoute().params;
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
-  const [selectedAct, setSelectedAct] = useState(ses[0]);
+  const agent: AgentStatType = routeParams.agent;
+  const selectedSeasonName = routeParams.seasonName;
+
+  const [agentStat, setAgentStat] = useState<any>();
+
+  const seasonNames = getSeasonNames([agent]);
+  const [selectedSeason, setSeason] = useState(selectedSeasonName);
+
+
+  useEffect(() => {
+    const selectedSeasonData = agent.performanceBySeason.find(
+      (season) => season.season.name === selectedSeason,
+    );
+
+    if (selectedSeasonData) {
+      setAgentStat(selectedSeasonData);
+    } else {
+      setAgentStats(aggregateStatsForAllActs(agentData));
+    }
+  }, [selectedSeason]);
+
 
   const firstStatBoxData = [
     { name: 'Matches', value: 50 },
@@ -103,10 +124,10 @@ const AgentInfoScreen = () => {
             <Text style={styles.title}>Raze</Text>
             <View style={styles.dropdowncontainer}>
               <DropDown
-                list={ses}
+                list={seasonNames}
                 name="Act"
-                value={selectedAct}
-                onSelect={item => setSelectedAct(item)}
+                value={selectedSeason}
+                onSelect={item => setSeason(item)}
               />
             </View>
           </View>

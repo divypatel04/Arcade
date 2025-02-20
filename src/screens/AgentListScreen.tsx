@@ -25,10 +25,11 @@ const AgentListScreen = () => {
   const seasonNames = getSeasonNames(AgentStats);
   const [selectedAct, setSelectedAct] = useState(seasonNames[0]);
 
-  const [agentList,setAgentList] = useState<any>();
+  const [agentList,setAgentList] = useState<AgentListProps[]>();
 
   useEffect(() => {
-    setAgentList(filterAndSortByMatches(AgentStats, selectedAct));
+    const agentList = filterAndSortByMatches(AgentStats, selectedAct);
+    setAgentList(agentList);
   }, [selectedAct]);
 
   return (
@@ -60,7 +61,7 @@ const AgentListScreen = () => {
             isPremium={true}
             agent={item}
             onPress={() => {
-              navigation.navigate('AgentInfoScreen', { agent: item });
+              navigation.navigate('AgentInfoScreen', { agent: item.agentStat, seasonName: selectedAct });
             }}
           />
         )}
