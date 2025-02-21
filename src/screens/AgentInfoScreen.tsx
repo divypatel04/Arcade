@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getSeasonNames } from '../utils';
 import { AgentStatType } from '../types/AgentStatsType';
+import { aggregateStatsForAllActs } from '../utils/agentUtils';
 
 const AgentInfoScreen = () => {
   const routeParams: any = useRoute().params;
@@ -34,7 +35,7 @@ const AgentInfoScreen = () => {
     if (selectedSeasonData) {
       setAgentStat(selectedSeasonData);
     } else {
-      setAgentStats(aggregateStatsForAllActs(agentData));
+      setAgentStat(aggregateStatsForAllActs(agentStat));
     }
   }, [selectedSeason]);
 
