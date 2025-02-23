@@ -11,8 +11,9 @@ import BestMapTab from '../components/Tabs/BestMapTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getSeasonNames } from '../utils';
-import { AgentStatType } from '../types/AgentStatsType';
-import { aggregateStatsForAllActs } from '../utils/agentUtils';
+import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
+import { aggregateStatsForAllActs, convertMillisToTime } from '../utils/agentUtils';
+import { AgentStats } from '../data/dummyData';
 
 const AgentInfoScreen = () => {
   const routeParams: any = useRoute().params;
@@ -21,7 +22,7 @@ const AgentInfoScreen = () => {
   const agent: AgentStatType = routeParams.agent;
   const selectedSeasonName = routeParams.seasonName;
 
-  const [agentStat, setAgentStat] = useState<any>();
+  const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
 
   const seasonNames = getSeasonNames([agent]);
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
@@ -33,32 +34,32 @@ const AgentInfoScreen = () => {
     );
 
     if (selectedSeasonData) {
-      setAgentStat(selectedSeasonData);
+      setSeasonStat(selectedSeasonData);
     } else {
-      setAgentStat(aggregateStatsForAllActs(agentStat));
+      setSeasonStat(aggregateStatsForAllActs(agent));
     }
   }, [selectedSeason]);
 
 
-  const firstStatBoxData = [
-    { name: 'Matches', value: 50 },
-    { name: 'Hours', value: '1h 54m' },
-    { name: 'Win Rate', value: `45.9%` },
+  const firstStatBox = [
+    { name: 'Matches', value: (seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0) },
+    { name: 'Hours', value: convertMillisToTime(seasonStat?.stats.playtimeMillis ?? 0) },
+    { name: 'Win Rate', value: ((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100 + '%' },
   ];
 
-  const secondStatBoxData = [
-    { name: 'Kills', value: 300 },
-    { name: 'M.Wins', value: 30 },
-    { name: 'M.Lose', value: 13 },
+  const secondStatBox = [
+    { name: 'Kills', value: seasonStat?.stats.kills ?? 0 },
+    { name: 'M.Wins', value: seasonStat?.stats.matchesWon ?? 0 },
+    { name: 'M.Lose', value: seasonStat?.stats.matchesLost ?? 0 },
   ];
 
-  const statBoxTwoData = [
-    { name: 'K/D', value: 2.67 },
-    { name: 'Damage/R', value: 156.78 },
-    { name: 'Plants', value: 5 },
-    { name: 'Aces', value: 2 },
-    { name: 'First Blood', value: 38 },
-    { name: 'Defuse', value: 2 },
+  const thridStatBox = [
+    { name: 'K/D', value: (seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1) },
+    { name: 'Damage/R', value: seasonStat?.stats.deaths },
+    { name: 'Plants', value: seasonStat?.stats.plants },
+    { name: 'Aces', value: seasonStat?.stats.aces },
+    { name: 'First Blood', value: seasonStat?.stats.firstKills },
+    { name: 'Defuse', value: seasonStat?.stats.defuses },
   ];
 
   const mapList = [
@@ -96,9 +97,9 @@ const AgentInfoScreen = () => {
 
 
   const tabs = [
-    { label: 'Overview', content: <OverviewTab stats1={firstStatBoxData} stats2={secondStatBoxData} stats3={statBoxTwoData} /> },
-    { label: 'On Attack', content: <SiteTab stats1={firstStatBoxData} roundwon={50} roundlose={100} /> },
-    { label: 'On Defense', content: <SiteTab stats1={firstStatBoxData} roundwon={50} roundlose={100} /> },
+    { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
+    { label: 'On Attack', content: <SiteTab stats1={firstStatBox} roundwon={50} roundlose={100} /> },
+    { label: 'On Defense', content: <SiteTab stats1={firstStatBox} roundwon={50} roundlose={100} /> },
     { label: 'Best Map', content: <BestMapTab mapList={mapList} /> },
   ];
 

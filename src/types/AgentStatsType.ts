@@ -21,7 +21,7 @@ type Ability = {
   cost: number;
 };
 
-type SeasonPerformance = {
+export type SeasonPerformance = {
   season: Season;
   stats: Stats;
   mapStats: MapStat[];

@@ -228,8 +228,8 @@ export const aggregateStatsForAllActs = (agentStat: AgentStatType) => {
     acc.stats.firstKills += curr.stats.firstKills;
 
     curr.mapStats.forEach((map) => {
-      if (!acc.mapPerformance[map.id]) {
-        acc.mapPerformance[map.id] = {
+      if (!acc.mapStats[map.id]) {
+        acc.mapStats[map.id] = {
           id: map.id,
           imageUrl: map.imageUrl,
           name: map.name,
@@ -238,8 +238,8 @@ export const aggregateStatsForAllActs = (agentStat: AgentStatType) => {
           wins: map.wins,
         };
       }
-      acc.mapPerformance[map.id].wins += map.wins;
-      acc.mapPerformance[map.id].losses += map.losses;
+      acc.mapStats[map.id].wins += map.wins;
+      acc.mapStats[map.id].losses += map.losses;
     });
 
     acc.attackStats.deaths += curr.attackStats.deaths;
@@ -284,3 +284,15 @@ export const aggregateStatsForAllActs = (agentStat: AgentStatType) => {
   return aggregatedStats
 
 }
+
+
+export const convertMillisToTime = (ms: number) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const remainingSeconds = totalSeconds % 60;
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return `${hours}h ${minutes}m`;
+};

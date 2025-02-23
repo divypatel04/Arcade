@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '../theme';
 
 interface Stat {
   name: string;
-  value: string | number;
+  value: string | number | undefined;
 }
 
 interface StatBoxTwoProps {
