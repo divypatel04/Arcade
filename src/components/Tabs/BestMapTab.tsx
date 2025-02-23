@@ -1,14 +1,13 @@
 import React from 'react';
 import {
-  FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
-
 
 interface mapListType {
   id: string;
@@ -30,7 +29,7 @@ const BestMapTab = ({mapList}:BestMapType) => {
   };
 
   const renderMapBox = (item: mapListType) => (
-    <View key={item.name}>
+    <View key={item.id}>
       <TouchableOpacity activeOpacity={0.5} style={styles.mapBox}>
         <Image style={styles.mapImage} source={{uri: item.imageUrl}} />
         <View style={styles.metaContainer}>
@@ -56,12 +55,9 @@ const BestMapTab = ({mapList}:BestMapType) => {
 
   return (
     <View style={styles.tabContainer}>
-      <FlatList
-        style={styles.tabList}
-        data={sortedMapData}
-        renderItem={({item}) => renderMapBox(item)}
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView style={styles.tabList} showsVerticalScrollIndicator={false}>
+        {sortedMapData.map(item => renderMapBox(item))}
+      </ScrollView>
     </View>
   );
 };
