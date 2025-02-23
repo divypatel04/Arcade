@@ -12,13 +12,15 @@ interface Stat {
 
 interface OverviewStats {
   stats1: Stat[],
-  roundwon: number,
-  roundlose: number
+  roundwon: number | undefined,
+  roundlose: number | undefined
 }
 
 const SiteTab = ({stats1,roundwon,roundlose}:OverviewStats) => {
 
-  const roundWinPercentage = (roundwon / (roundwon + roundlose)) * 100;
+  const roundWinPercentage = (roundwon !== undefined && roundlose !== undefined)
+    ? (roundwon / (roundwon + roundlose)) * 100
+    : 0;
 
   return (
     <View

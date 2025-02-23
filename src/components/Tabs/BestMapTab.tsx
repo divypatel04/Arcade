@@ -11,31 +11,33 @@ import { colors, fonts } from '../../theme';
 
 
 interface mapListType {
-  mapName: string,
-  mapImage: string,
-  mapWins: number,
-  mapLose: number,
+  id: string;
+  imageUrl: string;
+  name: string;
+  location: string;
+  wins: number;
+  losses: number;
 }
 
 interface BestMapType {
-  mapList: mapListType[]
+  mapList: mapListType[] | undefined
 }
 
 const BestMapTab = ({mapList}:BestMapType) => {
   const calculateWinRate = (item: mapListType) => {
-    const winRate = ((item.mapWins / (item.mapWins + item.mapLose)) * 100).toFixed(2);
+    const winRate = ((item.wins / (item.wins + item.losses)) * 100).toFixed(2);
     return `WinRate- ${winRate}%`;
   };
 
   const renderMapBox = (item: mapListType) => (
-    <View key={item.mapName}>
+    <View key={item.name}>
       <TouchableOpacity activeOpacity={0.5} style={styles.mapBox}>
-        <Image style={styles.mapImage} source={{uri: item.mapImage}} />
+        <Image style={styles.mapImage} source={{uri: item.imageUrl}} />
         <View style={styles.metaContainer}>
           <View style={styles.meta}>
-            <Text style={styles.metaTitle}>{item.mapName}</Text>
+            <Text style={styles.metaTitle}>{item.name}</Text>
             <Text style={styles.metaSubText}>
-              Wins: {item.mapWins} | Lose: {item.mapLose}
+              Wins: {item.wins} | Lose: {item.losses}
             </Text>
           </View>
           <View style={styles.rightMeta}>
@@ -46,11 +48,11 @@ const BestMapTab = ({mapList}:BestMapType) => {
     </View>
   );
 
-  const sortedMapData = [...mapList].sort((a, b) => {
-    const winRateA = a.mapWins / (a.mapWins + a.mapLose);
-    const winRateB = b.mapWins / (b.mapWins + b.mapLose);
+  const sortedMapData = mapList ? [...mapList].sort((a, b) => {
+    const winRateA = a.wins / (a.wins + a.losses);
+    const winRateB = b.wins / (b.wins + b.losses);
     return winRateB - winRateA;
-  });
+  }) : [];
 
   return (
     <View style={styles.tabContainer}>

@@ -42,25 +42,37 @@ const AgentInfoScreen = () => {
 
 
   const firstStatBox = [
-    { name: 'Matches', value: (seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0) },
+    { name: 'Matches', value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
     { name: 'Hours', value: convertMillisToTime(seasonStat?.stats.playtimeMillis ?? 0) },
-    { name: 'Win Rate', value: ((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100 + '%' },
+    { name: 'Win Rate', value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
   ];
 
   const secondStatBox = [
-    { name: 'Kills', value: seasonStat?.stats.kills ?? 0 },
-    { name: 'M.Wins', value: seasonStat?.stats.matchesWon ?? 0 },
-    { name: 'M.Lose', value: seasonStat?.stats.matchesLost ?? 0 },
+    { name: 'Kills', value: String(seasonStat?.stats.kills ?? 0) },
+    { name: 'M.Wins', value: String(seasonStat?.stats.matchesWon ?? 0) },
+    { name: 'M.Lose', value: String(seasonStat?.stats.matchesLost ?? 0) },
   ];
 
   const thridStatBox = [
-    { name: 'K/D', value: (seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1) },
-    { name: 'Damage/R', value: seasonStat?.stats.deaths },
-    { name: 'Plants', value: seasonStat?.stats.plants },
-    { name: 'Aces', value: seasonStat?.stats.aces },
-    { name: 'First Blood', value: seasonStat?.stats.firstKills },
-    { name: 'Defuse', value: seasonStat?.stats.defuses },
+    { name: 'K/D', value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1)).toFixed(1)) },
+    { name: 'Damage/R', value: String(seasonStat?.stats.deaths) },
+    { name: 'Plants', value: String(seasonStat?.stats.plants) },
+    { name: 'Aces', value: String(seasonStat?.stats.aces) },
+    { name: 'First Blood', value: String(seasonStat?.stats.firstKills) },
+    { name: 'Defuse', value: String(seasonStat?.stats.defuses) },
   ];
+
+  const onAttackStats = [
+    { name: 'Round Win%', value: String((((seasonStat?.attackStats.roundsWon ?? 0) + (seasonStat?.attackStats.roundsLost ?? 0)) / (seasonStat?.attackStats.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
+    { name: 'Atk. Kills', value: String(seasonStat?.attackStats.kills ?? 0) },
+    { name: 'Atk. K/D', value: String(((seasonStat?.attackStats.kills ?? 0) / (seasonStat?.attackStats.deaths ?? 1)).toFixed(1)) },
+  ];
+
+  const onDefenceStats = [
+    { name: 'Round Win%', value: String((((seasonStat?.defenseStats.roundsWon ?? 0) + (seasonStat?.defenseStats.roundsLost ?? 0)) / (seasonStat?.defenseStats.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
+    { name: 'Atk. Kills', value: String(seasonStat?.defenseStats.kills ?? 0) },
+    { name: 'Atk. K/D', value: String(((seasonStat?.defenseStats.kills ?? 0) / (seasonStat?.defenseStats.deaths ?? 1)).toFixed(1)) },
+  ]
 
   const mapList = [
     {
@@ -98,9 +110,9 @@ const AgentInfoScreen = () => {
 
   const tabs = [
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
-    { label: 'On Attack', content: <SiteTab stats1={firstStatBox} roundwon={50} roundlose={100} /> },
-    { label: 'On Defense', content: <SiteTab stats1={firstStatBox} roundwon={50} roundlose={100} /> },
-    { label: 'Best Map', content: <BestMapTab mapList={mapList} /> },
+    { label: 'On Attack', content: <SiteTab stats1={onAttackStats} roundwon={seasonStat?.attackStats.roundsWon} roundlose={seasonStat?.attackStats.roundsLost} /> },
+    { label: 'On Defense', content: <SiteTab stats1={onDefenceStats} roundwon={seasonStat?.defenseStats.roundsWon} roundlose={seasonStat?.defenseStats.roundsLost} /> },
+    { label: 'Best Map', content: <BestMapTab mapList={seasonStat?.mapStats} /> },
   ];
 
   return (
