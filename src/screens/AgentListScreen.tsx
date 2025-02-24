@@ -23,7 +23,7 @@ const AgentListScreen = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const seasonNames = getSeasonNames(AgentStats);
-  const [selectedAct, setSelectedAct] = useState(seasonNames[0]);
+  const [selectedAct, setSelectedAct] = useState(seasonNames[1]);
 
   const [agentList,setAgentList] = useState<AgentListProps[]>();
 

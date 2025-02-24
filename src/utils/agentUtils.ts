@@ -296,3 +296,68 @@ export const convertMillisToTime = (ms: number) => {
 
   return `${hours}h ${minutes}m`;
 };
+
+
+export function getRecentlyPlayedMatch(matchDetails: MatchDetails[]) {
+  // Sort matchStats by gameStartMillis in descending order
+  const sortedMatch = matchDetails.sort(
+    (a, b) => b.matchInfo.gameStartMillis - a.matchInfo.gameStartMillis,
+  );
+
+  // Get the most recent matchStat
+  const recentlyPlayedMatch = sortedMatch[0];
+
+  return recentlyPlayedMatch;
+}
+
+export function findNewMatchIds(newMatchIds: string[], oldMatchIds: string) {
+  const MatchIds = newMatchIds.filter(id => !oldMatchIds.includes(id));
+
+  return MatchIds;
+}
+
+export const checkUpdateNeeded = async () => {
+  VersionCheck.needUpdate({ignoreErrors: true}).then(async res => {
+    if (res.isNeeded) {
+      Alert.alert(
+        'Please Update',
+        'You will have to update your app to the latest version to continue using.',
+        [
+          {
+            text: 'Update Now',
+            onPress: () => {
+              BackHandler.exitApp();
+              Linking.openURL(res.storeUrl);
+            },
+          },
+          {
+            text: 'ok',
+            onPress: () => {},
+          },
+        ],
+      );
+    }
+  });
+};
+
+export const fetchRemoteConfig = () => {
+  remoteConfig()
+    .setDefaults({
+      API_KEY: 'RGAPI-a4528241-112f-4272-8c84-8a667317b135',
+      AD_FREQUENCY: 0.4,
+      REWARD_AD_FREQUENCY: 0.4,
+      HOMESCREEN_AD: false,
+      STATSCREEN_AD: true,
+      PROFILE_AD: true,
+    })
+    .then(() => remoteConfig().fetchAndActivate())
+    .then(fetchedRemotely => {
+      if (fetchedRemotely) {
+        console.log('Configs were retrieved from the backend and activated.');
+      } else {
+        console.log(
+          'No configs were fetched from the backend, and the local configs were already activated',
+        );
+      }
+    });
+};
