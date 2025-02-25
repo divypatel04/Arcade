@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
   scrollContentContainer: {
     alignItems: 'center',
     flexGrow: 0, // Prevent tabs from stretching vertically
+    zIndex: 1,
   },
   tabContainer: {
     borderColor: colors.black,

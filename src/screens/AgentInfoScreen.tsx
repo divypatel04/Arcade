@@ -133,7 +133,7 @@ const AgentInfoScreen = () => {
               style={styles.backicon}
             />
           </TouchableOpacity>
-          <View style={{ marginTop: 'auto' }}>
+          <View style={{ marginTop: 'auto', zIndex: 100 }}>
             <Text style={styles.subtext}>Agent</Text>
             <Text style={styles.title}>Raze</Text>
             <View style={styles.dropdowncontainer}>
@@ -146,10 +146,12 @@ const AgentInfoScreen = () => {
             </View>
           </View>
         </View>
+
       </View>
       <View style={styles.tabs}>
         <TabBar tabs={tabs} />
       </View>
+
     </View>
   )
 }
@@ -169,6 +171,7 @@ const styles = StyleSheet.create({
   },
   meta: {
     paddingTop: sizes['3xl'],
+    zIndex: 100,
   },
   backicon: {
     paddingTop: sizes.md,
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
     marginTop: sizes['4xl'],
     alignItems: 'center',
     paddingBottom: sizes.md,
-    zIndex: 1,
+    zIndex: 100,
   },
   imagecontainer: {
     width: '60%',
@@ -211,8 +214,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   tabs: {
+    zIndex: -1,
     flex: 1,
-    zIndex: 0
+    backgroundColor: colors.white,
   }
 });
 

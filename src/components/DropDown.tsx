@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
 import {colors, fonts} from '../theme';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import {ScrollView} from 'react-native-gesture-handler';
 
 interface DropDownProps {
   list: string[];
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 255, 0, 0)',
     paddingVertical: 0,
     paddingRight: 0,
-    zIndex: 10,
+    zIndex: 100, // Increased zIndex
   },
   option: {
     display: 'flex',
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.primary,
     alignItems: 'center',
-    zIndex: 10,
+    zIndex: 100, // Increased zIndex
   },
   label: {
     color: colors.darkGray,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.novecentoUltraBold,
     textTransform: 'uppercase',
     paddingRight: 3,
-    zIndex: 10,
+    zIndex: 14,
   },
   text: {
     color: colors.darkGray,
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     right: '1%',
     flex: 1,
     maxHeight: 170,
-    zIndex: 10,
+    zIndex: 100, // Increased zIndex
   },
   listItem: {
     backgroundColor: colors.primary,
@@ -129,6 +130,6 @@ const styles = StyleSheet.create({
     margin: 0,
     borderBottomWidth: 0.6,
     borderColor: colors.darkGray,
-    zIndex: 10,
+    zIndex: 100, // Increased zIndex
   },
 });
