@@ -1,4 +1,5 @@
-import { getBestPlayer, getActiveOrRecentSeason, getSeasonNames, convertMillisToTime } from "./agentUtils";
+import { getBestAgent, getActiveOrRecentSeason, getSeasonNames, convertMillisToTime } from "./agentUtils";
+import { getBestMap } from "./mapUtils";
 
 
-export { getBestPlayer, getActiveOrRecentSeason, getSeasonNames, convertMillisToTime };
+export { getBestAgent, getActiveOrRecentSeason, getSeasonNames, convertMillisToTime, getBestMap };

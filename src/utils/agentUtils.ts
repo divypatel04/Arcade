@@ -1,6 +1,6 @@
 import { AgentStatType } from "../types/AgentStatsType";
 
-export const getBestPlayer = (agentStats: AgentStatType[]): AgentStatType => {
+export const getBestAgent = (agentStats: AgentStatType[]): AgentStatType => {
 
   const agentHighestKills: {agent: AgentStatType; kills: number}[] = [];
 

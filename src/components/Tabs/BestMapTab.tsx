@@ -94,11 +94,13 @@ const styles = StyleSheet.create({
   },
   metaTitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 26,
+    lineHeight: 28,
     letterSpacing: -0.3,
     color: colors.black,
     paddingRight: 10,
+    paddingBottom: 5,
+    textTransform: 'lowercase',
   },
   metaSubText: {
     fontFamily: fonts.family.proximaBold,

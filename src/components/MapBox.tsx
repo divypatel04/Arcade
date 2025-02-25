@@ -3,11 +3,15 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { MapStatsType } from '../types/MapStatsType';
 
-const MapBox = () => {
+interface MapBoxProps {
+  bestMap: MapStatsType;
+}
+
+const MapBox = ({bestMap}:MapBoxProps) => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
-
 
   return (
     <TouchableOpacity
@@ -16,7 +20,7 @@ const MapBox = () => {
       style={styles.mapcontainer}>
       <View style={styles.mapimagecontainer}>
         <Image
-          source={{ uri: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a" }}
+          source={{ uri: bestMap.map.imageUrl }}
           resizeMode="cover"
           style={styles.mapimage}
         />
@@ -27,7 +31,7 @@ const MapBox = () => {
           style={styles.mapname}
           numberOfLines={1}
           adjustsFontSizeToFit={true}>
-          Ascent
+          {bestMap.map.name}
         </Text>
       </View>
     </TouchableOpacity>

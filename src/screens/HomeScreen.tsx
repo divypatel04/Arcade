@@ -5,20 +5,22 @@ import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
 import GunBox from '../components/GunBox';
 import SeasonBox from '../components/SeasonBox';
-import { AgentStats } from '../data/dummyData';
+import { AgentStats, MapStats } from '../data/dummyData';
 import { AgentStatType } from '../types/AgentStatsType';
-import { getBestPlayer } from '../utils';
+import { MapStatsType } from '../types/MapStatsType';
+import { getBestAgent, getBestMap } from '../utils';
 
 
 const HomeScreen = () => {
 
-  const bestAgentStats: AgentStatType = getBestPlayer(AgentStats);
+  const bestAgentStats: AgentStatType = getBestAgent(AgentStats);
+  const bestMapStats: MapStatsType = getBestMap(MapStats);
 
   return (
     <View style={styles.container}>
       <AgentBox bestAgent={bestAgentStats}/>
       <View style={styles.twoboxcontainer}>
-        <MapBox />
+        <MapBox bestMap={bestMapStats} />
         <GunBox />
       </View>
       <SeasonBox />

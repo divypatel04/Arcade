@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, // Adjusted padding for better layout
     borderColor: colors.black,
     zIndex: 1,
+    // borderBottomWidth: 1,
+    backgroundColor: colors.primary,
+    opacity: 0.6,
   },
   tabText: {
     fontFamily: fonts.family.proximaBold,
@@ -100,6 +103,7 @@ const styles = StyleSheet.create({
   selectedTab: {
     borderBottomWidth: 2,
     backgroundColor: colors.primary,
+    opacity: 1,
   },
   selectedTabText: {
     color: colors.black,

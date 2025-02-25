@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: 'row',
     height: 260,
-    borderBottomWidth: 0.6,
-    borderBottomColor: colors.black,
+    // borderBottomWidth: 0.6,
+    // borderBottomColor: colors.black,
     paddingVertical: sizes['2xl'],
     paddingHorizontal: sizes['4xl'],
   },
