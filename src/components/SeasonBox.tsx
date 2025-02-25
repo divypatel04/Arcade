@@ -64,9 +64,9 @@ const styles = StyleSheet.create({
   ranktitle: {
     fontFamily: fonts.family.novecentoUltraBold,
     fontSize: fonts.sizes['7xl'],
-    lineHeight: fonts.sizes['7xl'],
-    letterSpacing: -0.3,
-    textTransform: 'capitalize',
+    lineHeight: fonts.sizes['5xl'],
+    letterSpacing: -0.1,
+    textTransform: 'lowercase',
     color: colors.black,
     textAlignVertical: 'center',
   },

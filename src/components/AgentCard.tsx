@@ -80,11 +80,13 @@ const styles = StyleSheet.create({
   },
   metatitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['5xl'],
-    lineHeight: fonts.sizes['7xl'],
-    letterSpacing: -0.3,
+    fontSize: fonts.sizes['6xl'],
+    lineHeight: fonts.sizes['8xl'],
+    letterSpacing: -0.1,
     color: colors.black,
     paddingRight: sizes.xl,
+    paddingBottom: sizes.xs,
+    textTransform: 'lowercase',
   },
   metasubtext: {
     fontFamily: fonts.family.proximaBold,

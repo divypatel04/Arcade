@@ -67,11 +67,11 @@ const styles = StyleSheet.create({
   },
   weaponname: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['11xl'] + 2,
-    lineHeight: fonts.sizes['11xl'] + 2,
-    letterSpacing: -0.8,
+    fontSize: fonts.sizes['12xl'],
+    lineHeight: fonts.sizes['11xl'],
+    letterSpacing: -0.4,
     color: colors.black,
-    textTransform: 'capitalize',
+    textTransform: 'lowercase',
   },
 });
 
