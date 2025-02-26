@@ -1,32 +1,59 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
 import DetailedStats from '../DetailedStats'
-import { colors, fonts } from '../../theme';
+import { colors, fonts, sizes } from '../../theme';
+import DropDown from '../DropDown';
 
 
-interface Stat {
-  name: string;
-  value: number | string;
+type Stats = {
+  deaths: number;
+  kills: number;
+  roundsLost: number;
+  roundsWon: number;
 }
 
-interface OverviewStats {
-  stats1: Stat[],
-  roundwon: number | undefined,
-  roundlose: number | undefined
-}
+type AttackDefenseStats = {
+  attackStats: Stats | undefined,
+  defenceStats: Stats | undefined
+};
 
-const SiteTab = ({stats1,roundwon,roundlose}:OverviewStats) => {
+const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
 
-  const roundWinPercentage = (roundwon !== undefined && roundlose !== undefined)
-    ? (roundwon / (roundwon + roundlose)) * 100
+  const siteNames = ['Attack','Defence'];
+  const [siteStat, setSiteStat] = useState<Stats>();
+  const [selectedSite, setSelectedSite] = useState(siteNames[0]);
+
+  const Stats = [
+    { name: 'Round Win%', value: String((((siteStat?.roundsWon ?? 0) + (siteStat?.roundsLost ?? 0)) / (siteStat?.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
+    { name: 'Atk. Kills', value: String(siteStat?.kills ?? 0) },
+    { name: 'Atk. K/D', value: String(((siteStat?.kills ?? 0) / (siteStat?.deaths ?? 1)).toFixed(1)) },
+  ];
+
+  const roundWinPercentage = (siteStat?.roundsWon !== undefined && siteStat?.roundsLost !== undefined)
+    ? (siteStat?.roundsWon / (siteStat?.roundsWon + siteStat?.roundsLost)) * 100
     : 0;
+
+  useEffect(() => {
+    if(selectedSite === 'Attack'){
+      setSiteStat(attackStats);
+    }else{
+      setSiteStat(defenceStats);
+    }
+  }, [selectedSite]);
 
   return (
     <View
       // showsVerticalScrollIndicator={false}
       style={styles.tabContainer}>
-
+        <View style={styles.dropdowncontainer}>
+          <DropDown
+            list={siteNames}
+            name="Site"
+            value={selectedSite}
+            onSelect={item => setSelectedSite(item)}
+          />
+        </View>
       <View style={styles.container}>
         <Text style={styles.roundText}>Rounds</Text>
         <View style={styles.progressContainer}>
@@ -39,15 +66,15 @@ const SiteTab = ({stats1,roundwon,roundlose}:OverviewStats) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.roundResult}>
-            {roundwon} R.Wins
+            {siteStat?.roundsWon} R.Wins
           </Text>
           <Text style={styles.roundResult}>
-            {roundlose} R.Lose
+            {siteStat?.roundsLost} R.Lose
           </Text>
         </View>
       </View>
 
-      <StatsSummary stats={stats1} />
+      <StatsSummary stats={Stats} />
     </View>
   )
 }
@@ -62,6 +89,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 20,
     marginBottom: 14,
+  },
+  dropdowncontainer: {
+    flexDirection: 'row',
+
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: sizes.md,
   },
   roundText: {
     fontFamily: fonts.family.proximaBold,

@@ -9,7 +9,7 @@ import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getMapsSeasonNames } from '../utils';
+import { convertMillisToTime, getMapsSeasonNames } from '../utils';
 import { MapStats } from '../data/dummyData';
 import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 
@@ -38,26 +38,26 @@ const MapInfoScreen = () => {
       }
     }, [selectedSeason]);
 
-  const firstStatBoxData = [
-    {name: 'Matches', value: 50},
-    {name: 'Hours', value: '1h 54m'},
-    {name: 'Win Rate', value: `45.9%`},
-  ];
+  const firstStatBox = [
+      { name: 'Matches', value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
+      { name: 'Hours', value: convertMillisToTime(seasonStat?.stats.playtimeMillis ?? 0) },
+      { name: 'Win Rate', value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
+    ];
 
-  const secondStatBoxData = [
-    {name: 'Kills', value: 300},
-    {name: 'M.Wins', value: 30},
-    {name: 'M.Lose', value: 13},
-  ];
+    const secondStatBox = [
+      { name: 'Kills', value: String(seasonStat?.stats.kills ?? 0) },
+      { name: 'M.Wins', value: String(seasonStat?.stats.matchesWon ?? 0) },
+      { name: 'M.Lose', value: String(seasonStat?.stats.matchesLost ?? 0) },
+    ];
 
-  const statBoxTwoData = [
-    {name: 'K/D', value: 2.67},
-    {name: 'Damage/R', value: 156.78},
-    {name: 'Plants', value: 5},
-    {name: 'Aces', value: 2},
-    {name: 'First Blood', value: 38},
-    {name: 'Defuse', value: 2},
-  ];
+    const thridStatBox = [
+      { name: 'K/D', value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1)).toFixed(1)) },
+      { name: 'Damage/R', value: String(seasonStat?.stats.deaths) },
+      { name: 'Plants', value: String(seasonStat?.stats.plants) },
+      { name: 'Aces', value: String(seasonStat?.stats.aces) },
+      { name: 'First Blood', value: String(seasonStat?.stats.firstKills) },
+      { name: 'Defuse', value: String(seasonStat?.stats.defuses) },
+    ];
 
   const mapList = [
     {
@@ -94,9 +94,9 @@ const MapInfoScreen = () => {
 
 
   const tabs = [
-    { label: 'Overview', content: <OverviewTab stats1={firstStatBoxData} stats2={secondStatBoxData} stats3={statBoxTwoData} /> },
-    { label: 'On Attack', content: <SiteTab stats1={firstStatBoxData} roundwon={50} roundlose={100} /> },
-    { label: 'On Defense', content: <SiteTab stats1={firstStatBoxData} roundwon={50} roundlose={100} /> },
+    { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
+    { label: 'Site Stat', content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
+    // { label: 'On Defense', content: <SiteTab stats1={firstStatBoxData} roundwon={50} roundlose={100} /> },
     // { label: 'Best Map', content: <BestMapTab mapList={mapList} /> },
   ];
 
