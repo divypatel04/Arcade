@@ -25,7 +25,7 @@ type AttackDefenseStats = {
   roundsWon: number;
 };
 
-type SeasonPerformance = {
+export type SeasonPerformance = {
   season: {
     id: string;
     name: string;

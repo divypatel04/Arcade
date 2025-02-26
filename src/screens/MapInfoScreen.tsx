@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDown from '../components/DropDown'
 import { colors, fonts, sizes } from '../theme'
@@ -7,11 +7,36 @@ import AgentBox from '../components/AgentBox';
 import TabBar from '../components/TabBar';
 import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { getMapsSeasonNames } from '../utils';
+import { MapStats } from '../data/dummyData';
+import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 
 const MapInfoScreen = () => {
 
-  const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
-  const [selectedAct, setSelectedAct] = useState(ses[0]);
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const routeParams: any = useRoute().params;
+  const map: MapStatsType = routeParams.map;
+  const selectedSeasonName = routeParams.seasonName;
+
+  const seasonNames = getMapsSeasonNames(MapStats);
+  const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
+  const [selectedSeason, setSelectedSeason] = useState(selectedSeasonName);
+
+
+  useEffect(() => {
+      const selectedSeasonData = map.performanceBySeason.find(
+        (season) => season.season.name === selectedSeason,
+      );
+
+      if (selectedSeasonData) {
+        setSeasonStat(selectedSeasonData);
+      } else {
+        // setSeasonStat(aggregateStatsForAllActs(agent));
+
+      }
+    }, [selectedSeason]);
 
   const firstStatBoxData = [
     {name: 'Matches', value: 50},
@@ -85,7 +110,7 @@ const MapInfoScreen = () => {
           />
       </View>
       <View style={styles.meta}>
-      <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+      <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <FontAwesome
             name="angles-left"
             color={colors.darkGray}
@@ -98,10 +123,10 @@ const MapInfoScreen = () => {
         <Text style={styles.title}>Ascent</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
-            list={ses}
+            list={seasonNames}
             name="Act"
-            value={selectedAct}
-            onSelect={item => setSelectedAct(item)}
+            value={selectedSeason}
+            onSelect={item => setSelectedSeason(item)}
           />
         </View>
         </View>
@@ -122,8 +147,6 @@ const styles = StyleSheet.create({
   details: {
     flexDirection:'row',
     height: 260,
-    borderBottomWidth: 0.6,
-    borderBottomColor:colors.black,
     paddingVertical: sizes['2xl'],
     paddingHorizontal: sizes['4xl'],
   },
