@@ -110,8 +110,9 @@ const AgentInfoScreen = () => {
 
   const tabs = [
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
-    { label: 'On Attack', content: <SiteTab stats1={onAttackStats} roundwon={seasonStat?.attackStats.roundsWon} roundlose={seasonStat?.attackStats.roundsLost} /> },
-    { label: 'On Defense', content: <SiteTab stats1={onDefenceStats} roundwon={seasonStat?.defenseStats.roundsWon} roundlose={seasonStat?.defenseStats.roundsLost} /> },
+    // { label: 'On Attack', content: <SiteTab stats1={onAttackStats} roundwon={seasonStat?.attackStats.roundsWon} roundlose={seasonStat?.attackStats.roundsLost} /> },
+    // { label: 'On Defense', content: <SiteTab stats1={onDefenceStats} roundwon={seasonStat?.defenseStats.roundsWon} roundlose={seasonStat?.defenseStats.roundsLost} /> },
+    { label: 'Site Stat', content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
     { label: 'Best Map', content: <BestMapTab mapList={seasonStat?.mapStats} /> },
   ];
 

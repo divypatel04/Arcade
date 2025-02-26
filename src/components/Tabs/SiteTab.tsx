@@ -49,7 +49,7 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={siteNames}
-            name="Site"
+            name="Side"
             value={selectedSite}
             onSelect={item => setSelectedSite(item)}
           />
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingBottom: sizes.md,
+    paddingBottom: sizes.lg,
   },
   roundText: {
     fontFamily: fonts.family.proximaBold,
