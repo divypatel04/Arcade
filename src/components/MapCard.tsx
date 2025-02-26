@@ -2,13 +2,14 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon'
 import { colors, fonts, sizes } from '../theme'
+import { MapStatsType } from '../types/MapStatsType';
 
 interface MapBoxProps {
   isPremium: boolean;
   item: {
-    map: any; //TODO: Change Map Type
+    mapStat: MapStatsType;
     seasonName: string;
-    value: string;
+    numberOfMatches: number;
   };
   onPress: () => void;
 }
@@ -21,12 +22,12 @@ const MapCard = ({ isPremium, item, onPress }: MapBoxProps) => {
         onPress={onPress}
         activeOpacity={0.5}
         style={styles.card}>
-        <Image style={styles.icon} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a' }} />
+        <Image style={styles.icon} source={{ uri: item.mapStat.map.imageUrl }} />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>
-              <Text style={styles.metatitle}>Ascent</Text>
-              <Text style={styles.metasubtext}>Morocco</Text>
+              <Text style={styles.metatitle}>{item.mapStat.map.name}</Text>
+              <Text style={styles.metasubtext}>{item.mapStat.map.location}</Text>
             </View>
             {isPremium && (
               <View style={{ justifyContent: 'center', }}>
@@ -40,7 +41,7 @@ const MapCard = ({ isPremium, item, onPress }: MapBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches- {item.value}
+              Matches- {item.numberOfMatches}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>
@@ -76,11 +77,13 @@ const styles = StyleSheet.create({
   },
   metatitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['5xl'],
-    lineHeight: fonts.sizes['7xl'],
+    fontSize: fonts.sizes['6xl'],
+    lineHeight: fonts.sizes['8xl'],
     letterSpacing: -0.3,
     color: colors.black,
     paddingRight: sizes.xl,
+    paddingBottom: sizes.xs,
+    textTransform: 'lowercase',
   },
   metasubtext: {
     fontFamily: fonts.family.proximaBold,

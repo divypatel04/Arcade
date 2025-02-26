@@ -23,14 +23,14 @@ const AgentListScreen = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const seasonNames = getSeasonNames(AgentStats);
-  const [selectedAct, setSelectedAct] = useState(seasonNames[1]);
+  const [selectedSeason, setselectedSeason] = useState(seasonNames[1]);
 
   const [agentList,setAgentList] = useState<AgentListProps[]>();
 
   useEffect(() => {
-    const agentList = filterAndSortByMatches(AgentStats, selectedAct);
+    const agentList = filterAndSortByMatches(AgentStats, selectedSeason);
     setAgentList(agentList);
-  }, [selectedAct]);
+  }, [selectedSeason]);
 
   return (
     <View style={styles.container}>
@@ -48,8 +48,8 @@ const AgentListScreen = () => {
           <DropDown
             list={seasonNames}
             name="Act"
-            value={selectedAct}
-            onSelect={item => setSelectedAct(item)}
+            value={selectedSeason}
+            onSelect={item => setselectedSeason(item)}
           />
         </View>
       </View>
@@ -61,7 +61,7 @@ const AgentListScreen = () => {
             isPremium={true}
             agent={item}
             onPress={() => {
-              navigation.navigate('AgentInfoScreen', { agent: item.agentStat, seasonName: selectedAct });
+              navigation.navigate('AgentInfoScreen', { agent: item.agentStat, seasonName: selectedSeason });
             }}
           />
         )}

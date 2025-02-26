@@ -121,7 +121,7 @@ const AgentInfoScreen = () => {
         <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={require('../assets/images/raze.png')}
+            source={{uri: agent.agent.imageUrl}}
           />
         </View>
         <View style={styles.meta}>
@@ -135,7 +135,7 @@ const AgentInfoScreen = () => {
           </TouchableOpacity>
           <View style={{ marginTop: 'auto', zIndex: 100 }}>
             <Text style={styles.subtext}>Agent</Text>
-            <Text style={styles.title}>Raze</Text>
+            <Text style={styles.title}>{agent.agent.name}</Text>
             <View style={styles.dropdowncontainer}>
               <DropDown
                 list={seasonNames}
