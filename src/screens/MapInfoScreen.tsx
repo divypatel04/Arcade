@@ -12,6 +12,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { convertMillisToTime, getMapsSeasonNames } from '../utils';
 import { MapStats } from '../data/dummyData';
 import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
+import MapHeatmap from '../components/Tabs/MapHeatmap';
 
 const MapInfoScreen = () => {
 
@@ -97,7 +98,7 @@ const MapInfoScreen = () => {
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
     { label: 'Site Stat', content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
     // { label: 'On Defense', content: <SiteTab stats1={firstStatBoxData} roundwon={50} roundlose={100} /> },
-    // { label: 'Best Map', content: <BestMapTab mapList={mapList} /> },
+    { label: 'Heatmap', content: <MapHeatmap seasonStats={seasonStat} mapImage={map.map.imageUrl} mapCoordinate={map.map.mapCoordinate} /> },
   ];
 
   return (
@@ -106,7 +107,7 @@ const MapInfoScreen = () => {
       <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a' }}
+            source={{ uri: map.map.imageUrl }}
           />
       </View>
       <View style={styles.meta}>
@@ -120,7 +121,7 @@ const MapInfoScreen = () => {
         </TouchableOpacity>
         <View style={{marginTop:'auto'}}>
         <Text style={styles.subtext}>Map</Text>
-        <Text style={styles.title}>Ascent</Text>
+        <Text style={styles.title}>{map.map.name}</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={seasonNames}

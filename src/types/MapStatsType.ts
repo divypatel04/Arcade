@@ -23,6 +23,10 @@ type AttackDefenseStats = {
   kills: number;
   roundsLost: number;
   roundsWon: number;
+  HeatmapLocation: {
+    "killsLocation":Location[];
+    "deathLocation":Location[];
+  };
 };
 
 export type SeasonPerformance = {
@@ -32,7 +36,6 @@ export type SeasonPerformance = {
     isActive: boolean;
   };
   stats: Stats;
-  deathLocation: Location[];
   attackStats: AttackDefenseStats;
   defenseStats: AttackDefenseStats;
 };
@@ -42,10 +45,12 @@ type MapDetails = {
   name: string;
   location: string;
   imageUrl: string;
-  xMultiplier: number;
-  yMultiplier: number;
-  xScalarToAdd: number;
-  yScalarToAdd: number;
+  mapCoordinate: {
+    xMultiplier: number;
+    yMultiplier: number;
+    xScalarToAdd: number;
+    yScalarToAdd: number;
+  }
 };
 
 export type MapStatsType = {

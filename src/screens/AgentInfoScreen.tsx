@@ -62,56 +62,8 @@ const AgentInfoScreen = () => {
     { name: 'Defuse', value: String(seasonStat?.stats.defuses) },
   ];
 
-  const onAttackStats = [
-    { name: 'Round Win%', value: String((((seasonStat?.attackStats.roundsWon ?? 0) + (seasonStat?.attackStats.roundsLost ?? 0)) / (seasonStat?.attackStats.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
-    { name: 'Atk. Kills', value: String(seasonStat?.attackStats.kills ?? 0) },
-    { name: 'Atk. K/D', value: String(((seasonStat?.attackStats.kills ?? 0) / (seasonStat?.attackStats.deaths ?? 1)).toFixed(1)) },
-  ];
-
-  const onDefenceStats = [
-    { name: 'Round Win%', value: String((((seasonStat?.defenseStats.roundsWon ?? 0) + (seasonStat?.defenseStats.roundsLost ?? 0)) / (seasonStat?.defenseStats.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
-    { name: 'Atk. Kills', value: String(seasonStat?.defenseStats.kills ?? 0) },
-    { name: 'Atk. K/D', value: String(((seasonStat?.defenseStats.kills ?? 0) / (seasonStat?.defenseStats.deaths ?? 1)).toFixed(1)) },
-  ]
-
-  const mapList = [
-    {
-      mapName: "Ascent",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 15,
-      mapLose: 8,
-    },
-    {
-      mapName: "Bind",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 12,
-      mapLose: 10,
-    },
-    {
-      mapName: "Haven",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 20,
-      mapLose: 5,
-    },
-    {
-      mapName: "Split",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 7,
-      mapLose: 14,
-    },
-    {
-      mapName: "Icebox",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 11,
-      mapLose: 9,
-    }
-  ];
-
-
   const tabs = [
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
-    // { label: 'On Attack', content: <SiteTab stats1={onAttackStats} roundwon={seasonStat?.attackStats.roundsWon} roundlose={seasonStat?.attackStats.roundsLost} /> },
-    // { label: 'On Defense', content: <SiteTab stats1={onDefenceStats} roundwon={seasonStat?.defenseStats.roundsWon} roundlose={seasonStat?.defenseStats.roundsLost} /> },
     { label: 'Site Stat', content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
     { label: 'Best Map', content: <BestMapTab mapList={seasonStat?.mapStats} /> },
   ];
