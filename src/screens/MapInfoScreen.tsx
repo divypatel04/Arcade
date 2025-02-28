@@ -9,7 +9,7 @@ import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { convertMillisToTime, getMapsSeasonNames } from '../utils';
+import { aggregateStatsForAllActs, convertMillisToTime, getMapsSeasonNames } from '../utils';
 import { MapStats } from '../data/dummyData';
 import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 import MapHeatmap from '../components/Tabs/MapHeatmap';
@@ -34,7 +34,7 @@ const MapInfoScreen = () => {
       if (selectedSeasonData) {
         setSeasonStat(selectedSeasonData);
       } else {
-        // setSeasonStat(aggregateStatsForAllActs(agent));
+        setSeasonStat(aggregateStatsForAllActs(map));
 
       }
     }, [selectedSeason]);
@@ -59,40 +59,6 @@ const MapInfoScreen = () => {
       { name: 'First Blood', value: String(seasonStat?.stats.firstKills) },
       { name: 'Defuse', value: String(seasonStat?.stats.defuses) },
     ];
-
-  const mapList = [
-    {
-      mapName: "Ascent",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 15,
-      mapLose: 8,
-    },
-    {
-      mapName: "Bind",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 12,
-      mapLose: 10,
-    },
-    {
-      mapName: "Haven",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 20,
-      mapLose: 5,
-    },
-    {
-      mapName: "Split",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 7,
-      mapLose: 14,
-    },
-    {
-      mapName: "Icebox",
-      mapImage: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/map%2Fascent.png?alt=media&token=c466d351-e16e-4f00-bce7-44aa63d58c7a",
-      mapWins: 11,
-      mapLose: 9,
-    }
-  ];
-
 
   const tabs = [
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
