@@ -1,7 +1,6 @@
 import { AgentStatType } from "../types/AgentStatsType";
 
-export const getBestAgent = (agentStats: AgentStatType[]): AgentStatType => {
-
+export const getTopAgentByKills = (agentStats: AgentStatType[]): AgentStatType => {
   const agentHighestKills: {agent: AgentStatType; kills: number}[] = [];
 
   // Loop through each agent to find the active season and calculate the highest kills
@@ -13,7 +12,7 @@ export const getBestAgent = (agentStats: AgentStatType[]): AgentStatType => {
     }
   }
 
-  // If n o active season was found, try to find the season with the highest kills
+  // If no active season was found, try to find the season with the highest kills
   if (agentHighestKills.length === 0) {
     for (const agent of agentStats) {
       const highestKillsSeason = agent.performanceBySeason.reduce(
@@ -30,8 +29,7 @@ export const getBestAgent = (agentStats: AgentStatType[]): AgentStatType => {
   return agentHighestKills[0].agent;
 };
 
-
-export const getActiveOrRecentSeason = (agentStat: AgentStatType) => {
+export const getCurrentOrMostRecentSeason = (agentStat: AgentStatType) => {
   let CurrentSeason = agentStat?.performanceBySeason?.find(
     (seasonPerformace: any) => seasonPerformace.season.isActive,
   );
@@ -48,9 +46,7 @@ export const getActiveOrRecentSeason = (agentStat: AgentStatType) => {
   return CurrentSeason;
 }
 
-
-
-export const getSeasonNames = (agentStats: AgentStatType[]) => {
+export const getAllAgentSeasonNames = (agentStats: AgentStatType[]) => {
   const seasonSet: any = {};
 
   for (const agent of agentStats) {
@@ -76,8 +72,7 @@ export const getSeasonNames = (agentStats: AgentStatType[]) => {
   return final;
 };
 
-
-export function filterAndSortByMatches(
+export function sortAgentsByMatches(
   agentStats: AgentStatType[],
   seasonName: string,
 ) {
@@ -132,10 +127,7 @@ export function filterAndSortByMatches(
   return finalSortedStats;
 }
 
-
-
-export const aggregateStatsForAllActs = (agentStat: AgentStatType) => {
-
+export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
   const seasonStat = {
     season: {
       id: "0",
@@ -212,7 +204,6 @@ export const aggregateStatsForAllActs = (agentStat: AgentStatType) => {
     }
   };
 
-
   const aggregatedStats = agentStat.performanceBySeason.reduce((acc: any, curr) => {
     acc.stats.kills += curr.stats.kills;
     acc.stats.deaths += curr.stats.deaths;
@@ -280,13 +271,10 @@ export const aggregateStatsForAllActs = (agentStat: AgentStatType) => {
     return acc;
   }, seasonStat);
 
-
   return aggregatedStats
-
 }
 
-
-export const convertMillisToTime = (ms: number) => {
+export const convertMillisToReadableTime = (ms: number) => {
   const totalSeconds = Math.floor(ms / 1000);
   const totalMinutes = Math.floor(totalSeconds / 60);
   const remainingSeconds = totalSeconds % 60;

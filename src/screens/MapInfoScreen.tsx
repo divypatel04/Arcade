@@ -9,10 +9,10 @@ import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { aggregateStatsForAllActs, convertMillisToTime, getMapsSeasonNames } from '../utils';
 import { MapStats } from '../data/dummyData';
 import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 import MapHeatmap from '../components/Tabs/MapHeatmap';
+import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames } from '../utils';
 
 const MapInfoScreen = () => {
 
@@ -21,7 +21,7 @@ const MapInfoScreen = () => {
   const map: MapStatsType = routeParams.map;
   const selectedSeasonName = routeParams.seasonName;
 
-  const seasonNames = getMapsSeasonNames(MapStats);
+  const seasonNames = getAllMapSeasonNames(MapStats);
   const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
   const [selectedSeason, setSelectedSeason] = useState(selectedSeasonName);
 
@@ -34,14 +34,14 @@ const MapInfoScreen = () => {
       if (selectedSeasonData) {
         setSeasonStat(selectedSeasonData);
       } else {
-        setSeasonStat(aggregateStatsForAllActs(map));
+        setSeasonStat(aggregateMapStatsForAllActs(map));
 
       }
     }, [selectedSeason]);
 
   const firstStatBox = [
       { name: 'Matches', value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
-      { name: 'Hours', value: convertMillisToTime(seasonStat?.stats.playtimeMillis ?? 0) },
+      { name: 'Hours', value: convertMillisToReadableTime(seasonStat?.stats.playtimeMillis ?? 0) },
       { name: 'Win Rate', value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
     ];
 

@@ -6,9 +6,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import MapCard from '../components/MapCard';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { filterAndSortByMapMatches, getMapsSeasonNames } from '../utils';
 import { MapStats } from '../data/dummyData';
 import { MapStatsType } from '../types/MapStatsType';
+import { getAllMapSeasonNames, sortMapsByMatches } from '../utils';
 
 
 interface MapListProps {
@@ -21,12 +21,12 @@ const MapListScreen = () => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getMapsSeasonNames(MapStats);
+  const seasonNames = getAllMapSeasonNames(MapStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
   const [mapList,setMapList] = useState<MapListProps[]>();
 
   useEffect(() => {
-      const maplist = filterAndSortByMapMatches(MapStats, selectedSeason);
+      const maplist = sortMapsByMatches(MapStats, selectedSeason);
       setMapList(maplist);
     }, [selectedSeason]);
 

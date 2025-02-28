@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
-import DetailedStats from '../DetailedStats'
 import { colors, fonts, sizes } from '../../theme';
 import DropDown from '../DropDown';
 

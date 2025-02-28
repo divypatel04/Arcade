@@ -10,10 +10,9 @@ import SiteTab from '../components/Tabs/SiteTab';
 import BestMapTab from '../components/Tabs/BestMapTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getSeasonNames } from '../utils';
 import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
-import { aggregateStatsForAllActs, convertMillisToTime } from '../utils/agentUtils';
 import { AgentStats } from '../data/dummyData';
+import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames } from '../utils';
 
 const AgentInfoScreen = () => {
   const routeParams: any = useRoute().params;
@@ -24,7 +23,7 @@ const AgentInfoScreen = () => {
 
   const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
 
-  const seasonNames = getSeasonNames([agent]);
+  const seasonNames = getAllAgentSeasonNames([agent]);
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
 
 
@@ -36,14 +35,14 @@ const AgentInfoScreen = () => {
     if (selectedSeasonData) {
       setSeasonStat(selectedSeasonData);
     } else {
-      setSeasonStat(aggregateStatsForAllActs(agent));
+      setSeasonStat(aggregateAgentStatsForAllActs(agent));
     }
   }, [selectedSeason]);
 
 
   const firstStatBox = [
     { name: 'Matches', value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
-    { name: 'Hours', value: convertMillisToTime(seasonStat?.stats.playtimeMillis ?? 0) },
+    { name: 'Hours', value: convertMillisToReadableTime(seasonStat?.stats.playtimeMillis ?? 0) },
     { name: 'Win Rate', value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
   ];
 

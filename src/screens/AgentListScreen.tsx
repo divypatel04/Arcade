@@ -6,10 +6,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentCard from '../components/AgentCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { getSeasonNames } from '../utils';
 import { AgentStats } from '../data/dummyData';
 import { AgentStatType } from '../types/AgentStatsType';
-import { filterAndSortByMatches } from '../utils/agentUtils';
+import { getAllAgentSeasonNames, sortAgentsByMatches } from '../utils';
 
 interface AgentListProps {
   agentStat: AgentStatType,
@@ -22,13 +21,13 @@ const AgentListScreen = () => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getSeasonNames(AgentStats);
+  const seasonNames = getAllAgentSeasonNames(AgentStats);
   const [selectedSeason, setselectedSeason] = useState(seasonNames[1]);
 
   const [agentList,setAgentList] = useState<AgentListProps[]>();
 
   useEffect(() => {
-    const agentList = filterAndSortByMatches(AgentStats, selectedSeason);
+    const agentList = sortAgentsByMatches(AgentStats, selectedSeason);
     setAgentList(agentList);
   }, [selectedSeason]);
 

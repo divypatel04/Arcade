@@ -1,6 +1,6 @@
 import {MapStatsType, SeasonPerformance} from '../types/MapStatsType';
 
-export const getBestMap = (mapStats: MapStatsType[]): MapStatsType => {
+export const getTopMapByWinRate = (mapStats: MapStatsType[]): MapStatsType => {
   let bestMap: MapStatsType | undefined;
   let highestWinRate: number = 0;
 
@@ -46,7 +46,7 @@ export const getBestMap = (mapStats: MapStatsType[]): MapStatsType => {
   return bestMap;
 };
 
-export const getMapsSeasonNames = (mapStats: MapStatsType[]) => {
+export const getAllMapSeasonNames = (mapStats: MapStatsType[]) => {
   const seasonSet: any = {};
 
   for (const map of mapStats) {
@@ -78,7 +78,7 @@ interface MapListProps {
   numberOfMatches: number;
 }
 
-export function filterAndSortByMapMatches(
+export function sortMapsByMatches(
   mapStats: MapStatsType[],
   seasonName: string,
 ) {
@@ -135,7 +135,7 @@ export function filterAndSortByMapMatches(
   return finalSortedStats;
 }
 
-export const aggregateStatsForAllActs = (mapStat: MapStatsType) => {
+export const aggregateMapStatsForAllActs = (mapStat: MapStatsType) => {
   const seasonStat: SeasonPerformance = {
     season: {
       id: 'All',

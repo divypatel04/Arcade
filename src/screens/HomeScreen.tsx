@@ -8,13 +8,13 @@ import SeasonBox from '../components/SeasonBox';
 import { AgentStats, MapStats } from '../data/dummyData';
 import { AgentStatType } from '../types/AgentStatsType';
 import { MapStatsType } from '../types/MapStatsType';
-import { getBestAgent, getBestMap } from '../utils';
+import { getTopAgentByKills, getTopMapByWinRate } from '../utils';
 
 
 const HomeScreen = () => {
 
-  const bestAgentStats: AgentStatType = getBestAgent(AgentStats);
-  const bestMapStats: MapStatsType = getBestMap(MapStats);
+  const bestAgentStats: AgentStatType = getTopAgentByKills(AgentStats);
+  const bestMapStats: MapStatsType = getTopMapByWinRate(MapStats);
 
   return (
     <View style={styles.container}>

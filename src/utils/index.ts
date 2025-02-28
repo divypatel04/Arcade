@@ -1,5 +1,27 @@
-import { getBestAgent, getActiveOrRecentSeason, getSeasonNames, convertMillisToTime } from "./agentUtils";
-import { getBestMap, getMapsSeasonNames, filterAndSortByMapMatches, aggregateStatsForAllActs } from "./mapUtils";
+import {
+  getAllAgentSeasonNames,
+  aggregateAgentStatsForAllActs,
+  convertMillisToReadableTime,
+  getCurrentOrMostRecentSeason,
+  getTopAgentByKills,
+  sortAgentsByMatches,
+} from './agentUtils';
+import {
+  aggregateMapStatsForAllActs,
+  getAllMapSeasonNames,
+  getTopMapByWinRate,
+  sortMapsByMatches,
+} from './mapUtils';
 
-
-export { getBestAgent, getActiveOrRecentSeason, getSeasonNames, convertMillisToTime, getBestMap, getMapsSeasonNames, filterAndSortByMapMatches, aggregateStatsForAllActs };
+export {
+  getAllAgentSeasonNames,
+  aggregateAgentStatsForAllActs,
+  convertMillisToReadableTime,
+  getCurrentOrMostRecentSeason,
+  getTopAgentByKills,
+  sortAgentsByMatches,
+  aggregateMapStatsForAllActs,
+  getAllMapSeasonNames,
+  getTopMapByWinRate,
+  sortMapsByMatches,
+};
