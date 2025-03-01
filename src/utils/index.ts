@@ -13,6 +13,8 @@ import {
   sortMapsByMatches,
 } from './mapUtils';
 
+import {getTopWeaponByKills, getAllWeaponSeasonNames, sortWeaponsByMatches} from './weaponUtils';
+
 export {
   getAllAgentSeasonNames,
   aggregateAgentStatsForAllActs,
@@ -24,4 +26,7 @@ export {
   getAllMapSeasonNames,
   getTopMapByWinRate,
   sortMapsByMatches,
+  getTopWeaponByKills,
+  getAllWeaponSeasonNames,
+  sortWeaponsByMatches
 };

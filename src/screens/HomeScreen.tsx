@@ -10,7 +10,7 @@ import { AgentStatType } from '../types/AgentStatsType';
 import { MapStatsType } from '../types/MapStatsType';
 import { getTopAgentByKills, getTopMapByWinRate } from '../utils';
 import { WeaponStatType } from '../types/WeaponStatsType';
-import { getTopWeaponByKills } from '../utils/weaponUtilt';
+import { getTopWeaponByKills } from '../utils/weaponUtils';
 
 
 const HomeScreen = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import DropDown from '../components/DropDown';
@@ -6,87 +6,29 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import GunCard from '../components/GunCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { weaponStats } from '../data/dummyData';
+import { getAllWeaponSeasonNames, sortWeaponsByMatches } from '../utils';
+import { WeaponStatType } from '../types/WeaponStatsType';
+
+
+type WeaponListProps = {
+  weapon: WeaponStatType,
+  seasonName: string,
+  numberOfKills: number
+}
 
 const WeaponListScreen = () => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
+  const seasonNames = getAllWeaponSeasonNames(weaponStats);
+  const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
+  const [weaponList,setWeaponList] = useState<WeaponListProps[]>();
 
-  const agentList = [
-    {
-      isPremium: true,
-      item: {
-        agent: {
-          name: "Agent X1",
-          experience: "5 years",
-          specialization: "Cybersecurity",
-        },
-        gun: "Gun A",
-        seasonName: "Winter",
-        value: "1000",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: false,
-      item: {
-        agent: {
-          name: "Agent Y2",
-          experience: "3 years",
-          specialization: "Data Analysis",
-        },
-        gun: "Gun B",
-        seasonName: "Spring",
-        value: "850",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: true,
-      item: {
-        agent: {
-          name: "Agent Z3",
-          experience: "10 years",
-          specialization: "Artificial Intelligence",
-        },
-        gun: "Gun C",
-        seasonName: "Summer",
-        value: "1500",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: false,
-      item: {
-        agent: {
-          name: "Agent W4",
-          experience: "2 years",
-          specialization: "Cloud Computing",
-        },
-        gun: "Gun D",
-        seasonName: "Fall",
-        value: "700",
-      },
-      onPress: () => { },
-    },
-    {
-      isPremium: true,
-      item: {
-        agent: {
-          name: "Agent V5",
-          experience: "7 years",
-          specialization: "Blockchain",
-        },
-        gun: "Gun E",
-        seasonName: "Winter",
-        value: "1200",
-      },
-      onPress: () => { },
-    },
-  ];
-
-  const [selectedAct, setSelectedAct] = useState(ses[0]);
+  useEffect(() => {
+    const weaponlist = sortWeaponsByMatches(weaponStats, selectedSeason);
+    setWeaponList(weaponlist);
+  }, [selectedSeason]);
 
   return (
     <View style={styles.container}>
@@ -103,22 +45,22 @@ const WeaponListScreen = () => {
         <Text style={styles.headertitle}>Weapons</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
-            list={ses}
+            list={seasonNames}
             name="Act"
-            value={selectedAct}
-            onSelect={item => setSelectedAct(item)}
+            value={selectedSeason}
+            onSelect={item => setSelectedSeason(item)}
           />
         </View>
       </View>
 
       <FlatList
-        data={agentList}
+        data={weaponList}
         renderItem={({ item }) => (
           <GunCard
-            isPremium={item.isPremium}
-            item={item.item}
+            isPremium={true}
+            item={item}
             onPress={() => {
-              navigation.navigate('WeaponInfoScreen', { weapon: item.item.gun });
+              navigation.navigate('WeaponInfoScreen', { weapon: item.weapon });
             }}
           />
         )}

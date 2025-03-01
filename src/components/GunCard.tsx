@@ -2,19 +2,20 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
+import { WeaponStatType } from '../types/WeaponStatsType';
 
 
 interface GunBoxProps {
   isPremium: boolean,
   item: {
-    gun: any, //TODO: Change Gun Types
+    weapon: WeaponStatType,
     seasonName: string,
-    value: string,
+    numberOfKills: number,
   },
   onPress: () => void;
 }
 
-//TODO: ADD Premium icon
+
 const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
   return (
     <View>
@@ -24,12 +25,12 @@ const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
         style={styles.card}>
         <Image
           style={styles.icon}
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/weapon%2Fvandal.png?alt=media&token=858dd763-6723-4f37-8f5b-3c9b57125bd6' }}
+          source={{ uri: item.weapon.weapon.imageUrl }}
         />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>
-              <Text style={styles.metatitle}>Vandal</Text>
+              <Text style={styles.metatitle}>{item.weapon.weapon.name}</Text>
               <Text style={styles.metasubtext}>Primary</Text>
             </View>
             {isPremium && (
@@ -44,7 +45,7 @@ const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches: {item.value}
+              Kills: {item.numberOfKills}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>
@@ -83,11 +84,13 @@ const styles = StyleSheet.create({
   },
   metatitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['5xl'],
-    lineHeight: fonts.sizes['7xl'],
+    fontSize: fonts.sizes['6xl'],
+    lineHeight: fonts.sizes['8xl'],
     letterSpacing: -0.3,
     color: colors.black,
     paddingRight: sizes.xl,
+    paddingBottom: sizes.xs,
+    textTransform: 'lowercase',
   },
   metasubtext: {
     fontFamily: fonts.family.proximaBold,
