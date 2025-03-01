@@ -6,23 +6,25 @@ export type WeaponStatType = {
     imageUrl: string;
     type: string;
   };
-  performanceBySeason: {
-    season: {
-      id: string;
-      name: string;
-      isActive: boolean;
-    };
-    stats: {
-      kills: number;
-      damage: number;
-      aces: number;
-      firstKills: number;
-      roundsPlayed: number;
-      avgKillsPerRound: number;
-      avgDamagePerRound: number;
-      legshots: number;
-      headshots: number;
-      bodyshots: number;
-    };
-  }[];
+  performanceBySeason: SeasonPerformance[];
+};
+
+export type SeasonPerformance = {
+  season: {
+    id: string;
+    name: string;
+    isActive: boolean;
+  };
+  stats: {
+    kills: number;
+    damage: number;
+    aces: number;
+    firstKills: number;
+    roundsPlayed: number;
+    avgKillsPerRound: number;
+    avgDamagePerRound: number;
+    legshots: number;
+    headshots: number;
+    bodyshots: number;
+  };
 };

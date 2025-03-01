@@ -60,7 +60,7 @@ const WeaponListScreen = () => {
             isPremium={true}
             item={item}
             onPress={() => {
-              navigation.navigate('WeaponInfoScreen', { weapon: item.weapon });
+              navigation.navigate('WeaponInfoScreen', { weapon: item.weapon, seasonName: selectedSeason });
             }}
           />
         )}

@@ -1,21 +1,57 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDown from '../components/DropDown'
 import { colors, fonts, sizes } from '../theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import AgentBox from '../components/AgentBox';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { SeasonPerformance, WeaponStatType } from '../types/WeaponStatsType';
+import { convertMillisToReadableTime, getAllWeaponSeasonNames } from '../utils';
+import OverviewTab from '../components/Tabs/OverviewTab';
 import TabBar from '../components/TabBar';
 
 const WeaponInfoScreen = () => {
 
-  const ses = ['seso11', 'seso11', 'seso11', 'seso11', 'seso11'];
-  const [selectedAct, setSelectedAct] = useState(ses[0]);
+  const routeParams: any = useRoute().params;
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
+  const weapon: WeaponStatType = routeParams.weapon;
+  const selectedSeasonName = routeParams.seasonName;
+
+  const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
+  const seasonNames = getAllWeaponSeasonNames([weapon]);
+  const [selectedSeason, setSeason] = useState(selectedSeasonName);
+
+  useEffect(() => {
+    const selectedSeasonData = weapon.performanceBySeason.find(
+      (season) => season.season.name === selectedSeason,
+    );
+
+    if (selectedSeasonData) {
+      setSeasonStat(selectedSeasonData);
+    } else {
+      // setSeasonStat(aggregateAgentStatsForAllActs(agent));
+    }
+  }, [selectedSeason]);
+
+  const firstStatBox = [
+      { name: 'Kills', value: String((seasonStat?.stats.kills ?? 0))},
+      { name: 'Kills/R', value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.roundsPlayed ?? 1)).toFixed(2)) },
+      { name: 'Headshot%', value: String((
+        ((seasonStat?.stats.headshots ?? 0) /
+          ((seasonStat?.stats.headshots ?? 0) + (seasonStat?.stats?.bodyshots ?? 0) + (seasonStat?.stats?.legshots ?? 0))) *
+        100
+      ).toFixed(2)) + '%' },
+    ];
+
+    const secondStatBox = [
+      { name: 'Damage/R', value: String(((seasonStat?.stats.damage ?? 0) / (seasonStat?.stats?.roundsPlayed ?? 0)).toFixed(2)) },
+      { name: 'Aces', value: String(seasonStat?.stats.aces ?? 0) },
+      { name: 'M.Lose', value: String(seasonStat?.stats.firstKills ?? 0) },
+    ];
 
   const tabs = [
-    { label: 'Overview', content: <AgentBox /> },
-    { label: 'On Attack', content: <AgentBox /> },
-    { label: 'On Defense', content: <AgentBox /> },
-    { label: 'Best Map', content: <AgentBox /> },
+    { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={null} /> },
   ];
 
   return (
@@ -41,10 +77,10 @@ const WeaponInfoScreen = () => {
         <Text style={styles.title}>Vandal</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
-            list={ses}
+            list={seasonNames}
             name="Act"
-            value={selectedAct}
-            onSelect={item => setSelectedAct(item)}
+            value={selectedSeason}
+            onSelect={item => setSeason(item)}
           />
         </View>
         </View>
@@ -68,8 +104,6 @@ const styles = StyleSheet.create({
   details: {
     flexDirection:'row',
     height: 260,
-    borderBottomWidth: 0.6,
-    borderBottomColor:colors.black,
     paddingVertical: sizes['2xl'],
     paddingHorizontal: sizes['4xl'],
   },

@@ -10,9 +10,9 @@ interface Stat {
 }
 
 interface OverviewStats {
-  stats1: Stat[],
-  stats2: Stat[],
-  stats3: Stat[],
+  stats1: Stat[] | null,
+  stats2: Stat[] | null,
+  stats3: Stat[] | null,
 }
 
 const OverviewTab = ({stats1,stats2,stats3}:OverviewStats) => {
@@ -20,9 +20,9 @@ const OverviewTab = ({stats1,stats2,stats3}:OverviewStats) => {
     <View
       // showsVerticalScrollIndicator={false}
       style={styles.tabContainer}>
-      <StatsSummary stats={stats1} />
-      <StatsSummary stats={stats2} />
-      <DetailedStats stats={stats3} />
+      {stats1 && <StatsSummary stats={stats1} />}
+      {stats2 && <StatsSummary stats={stats2} />}
+      {stats3 && <DetailedStats stats={stats3} />}
     </View>
   )
 }
