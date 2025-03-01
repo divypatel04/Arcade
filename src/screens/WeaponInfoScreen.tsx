@@ -9,6 +9,7 @@ import { SeasonPerformance, WeaponStatType } from '../types/WeaponStatsType';
 import { convertMillisToReadableTime, getAllWeaponSeasonNames } from '../utils';
 import OverviewTab from '../components/Tabs/OverviewTab';
 import TabBar from '../components/TabBar';
+import HitsTab from '../components/Tabs/HitsTab';
 
 const WeaponInfoScreen = () => {
 
@@ -52,6 +53,8 @@ const WeaponInfoScreen = () => {
 
   const tabs = [
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={null} /> },
+    { label: 'Hits', content: <HitsTab stats={seasonStat} /> },
+
   ];
 
   return (
@@ -60,11 +63,11 @@ const WeaponInfoScreen = () => {
       <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={{ uri: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/weapon%2Fvandal.png?alt=media&token=858dd763-6723-4f37-8f5b-3c9b57125bd6" }}
+            source={{ uri: weapon.weapon.imageUrl }}
           />
       </View>
       <View style={styles.meta}>
-      <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+      <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} onPress={() => navigation.goBack()}>
           <FontAwesome
             name="angles-left"
             color={colors.darkGray}
@@ -74,7 +77,7 @@ const WeaponInfoScreen = () => {
         </TouchableOpacity>
         <View style={{marginTop:'auto'}}>
         <Text style={styles.subtext}>Gun</Text>
-        <Text style={styles.title}>Vandal</Text>
+        <Text style={styles.title}>{weapon.weapon.name}</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={seasonNames}

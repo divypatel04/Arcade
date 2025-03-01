@@ -34,7 +34,7 @@ const WeaponListScreen = () => {
     <View style={styles.container}>
 
       <View style={styles.header}>
-        <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+        <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} onPress={() => navigation.goBack()}>
           <FontAwesome
             name="angles-left"
             color={colors.darkGray}
