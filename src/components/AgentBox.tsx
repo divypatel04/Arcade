@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { AgentStatType } from '../types/AgentStatsType';
-import { getActiveOrRecentSeason } from '../utils';
+import { getCurrentOrMostRecentSeason } from '../utils';
 
 interface AgentBoxType {
   bestAgent: AgentStatType;
@@ -13,7 +13,7 @@ interface AgentBoxType {
 const AgentBox = ({bestAgent}: AgentBoxType) => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const currentStats = getActiveOrRecentSeason(bestAgent);
+  const currentStats = getCurrentOrMostRecentSeason(bestAgent);
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate('AgentListScreen')} activeOpacity={0.6} style={styles.agentcontainer}>

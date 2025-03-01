@@ -3,8 +3,13 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { WeaponStatType } from '../types/WeaponStatsType';
 
-const GunBox = () => {
+type GunBoxProps = {
+  bestWeapon: WeaponStatType;
+}
+
+const GunBox = ({bestWeapon}:GunBoxProps) => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -16,7 +21,7 @@ const GunBox = () => {
       style={styles.weaponcontainer}>
       <View style={styles.weaponimagecontainer}>
         <Image
-          source={{ uri: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/weapon%2Fvandal.png?alt=media&token=858dd763-6723-4f37-8f5b-3c9b57125bd6" }}
+          source={{ uri: bestWeapon.weapon.imageUrl }}
           resizeMode="contain"
           style={styles.weaponimage}
         />
@@ -27,7 +32,7 @@ const GunBox = () => {
           style={styles.weaponname}
           numberOfLines={1}
           adjustsFontSizeToFit={true}>
-          Vandal
+          {bestWeapon.weapon.name}
         </Text>
       </View>
     </TouchableOpacity>
