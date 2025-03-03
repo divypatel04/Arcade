@@ -1,8 +1,13 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
+import { SeasonStatsType } from '../types/SeasonStatsType';
 
-const SeasonBox = () => {
+type SeasonBoxProps = {
+  season: SeasonStatsType;
+}
+
+const SeasonBox = ({season}: SeasonBoxProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -18,22 +23,22 @@ const SeasonBox = () => {
 
       <View style={styles.statsdetails}>
         <View>
-          <Text style={styles.stattitle}>25</Text>
+          <Text style={styles.stattitle}>{season.stats.matchesWon}</Text>
           <Text style={styles.statsubtext}>Wins</Text>
         </View>
         <View>
-          <Text style={styles.stattitle}>18</Text>
+          <Text style={styles.stattitle}>{season.stats.matchesLost}</Text>
           <Text style={styles.statsubtext}>Lose</Text>
         </View>
         <View>
           <Text style={styles.stattitle}>
-            1.6
+            {season.stats.kills}
           </Text>
-          <Text style={styles.statsubtext}>K/D</Text>
+          <Text style={styles.statsubtext}>Kills</Text>
         </View>
         <View>
-          <Text style={styles.stattitle}>160</Text>
-          <Text style={styles.statsubtext}>Kills</Text>
+          <Text style={styles.stattitle}>{season.stats.mvps}</Text>
+          <Text style={styles.statsubtext}>MVPs</Text>
         </View>
       </View>
     </TouchableOpacity>

@@ -5,10 +5,10 @@ import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
 import GunBox from '../components/GunBox';
 import SeasonBox from '../components/SeasonBox';
-import { AgentStats, MapStats, weaponStats } from '../data/dummyData';
+import { AgentStats, MapStats, seasonStats, weaponStats } from '../data/dummyData';
 import { AgentStatType } from '../types/AgentStatsType';
 import { MapStatsType } from '../types/MapStatsType';
-import { getTopAgentByKills, getTopMapByWinRate } from '../utils';
+import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate } from '../utils';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { getTopWeaponByKills } from '../utils/weaponUtils';
 
@@ -18,6 +18,7 @@ const HomeScreen = () => {
   const bestAgentStats: AgentStatType = getTopAgentByKills(AgentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(MapStats);
   const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
+  const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
 
   return (
     <View style={styles.container}>
@@ -26,7 +27,7 @@ const HomeScreen = () => {
         <MapBox bestMap={bestMapStats} />
         <GunBox bestWeapon={bestWeaponStats}/>
       </View>
-      <SeasonBox />
+      <SeasonBox season={currentSeason}/>
     </View>
   )
 }
