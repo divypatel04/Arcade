@@ -46,3 +46,56 @@ export const getSeasonNames = (seasonStats: SeasonStatsType[]) => {
 
   return final;
 };
+
+export const aggregateSeasonStatsForAllActs = (seasonStats: SeasonStatsType[]) => {
+  const initialStats = {
+    season: {
+      id: "292f58db-4c17-89a7-b1c0-ba988f0e9d98",
+      name: "EPISODE 9 - ACT 2",
+      isActive: false,
+    },
+    stats: {
+      kills: 0,
+      deaths: 0,
+      roundsWon: 0,
+      roundsLost: 0,
+      totalRounds: 0,
+      plants: 0,
+      defuses: 0,
+      playtimeMillis: 0,
+      matchesWon: 0,
+      matchesLost: 0,
+      matchesPlayed: 0,
+      damage: 0,
+      firstKill: 0,
+      highestRank: 0,
+      aces: 0,
+      mvps: 0,
+    }
+  }
+
+  const aggregatedStats = seasonStats.reduce((acc: any, curr) => {
+
+    acc.stats.matchesPlayed += curr.stats.matchesPlayed;
+    acc.stats.matchesWon += curr.stats.matchesWon;
+    acc.stats.matchesLost += curr.stats.matchesLost;
+    acc.stats.kills += curr.stats.kills;
+    acc.stats.deaths += curr.stats.deaths;
+    acc.stats.roundsWon += curr.stats.roundsWon;
+    acc.stats.roundsLost += curr.stats.roundsLost;
+    acc.stats.totalRounds += curr.stats.totalRounds;
+    acc.stats.playtimeMillis += curr.stats.playtimeMillis;
+    acc.stats.damage += curr.stats.damage;
+    acc.stats.Firstkill += curr.stats.firstKill;
+    acc.stats.plants += curr.stats.plants;
+    acc.stats.defuse += curr.stats.defuses;
+    acc.stats.Aces += curr.stats.aces;
+    acc.stats.mvps += curr.stats.mvps;
+    acc.stats.highestRank =
+      curr.stats.highestRank > acc.stats.highestRank ? curr.stats.highestRank : acc.stats.highestRank;
+
+      return acc;
+  }, initialStats);
+
+  return aggregatedStats;
+}

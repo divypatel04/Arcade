@@ -5,7 +5,7 @@ import { colors, fonts, sizes } from '../theme';
 import StatsSummary from '../components/StatsSummary';
 import DetailedStats from '../components/DetailedStats';
 import { seasonStats } from '../data/dummyData';
-import { convertMillisToReadableTime, getSeasonNames } from '../utils';
+import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '../utils';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 
 
@@ -22,7 +22,7 @@ const SeasonInfoScreen = () => {
     if (selectedseason) {
       setMainSeasonStats(selectedseason);
     } else {
-      setMainSeasonStats(seasonStats[0]);
+      setMainSeasonStats(aggregateSeasonStatsForAllActs(seasonStats));
     }
 
   }, [selectedSeason]);
