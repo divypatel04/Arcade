@@ -80,39 +80,38 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: 8,
+    paddingTop: sizes.lg,
     flex:1,
   },
   container: {
     backgroundColor: colors.primary,
-    paddingHorizontal: 25,
-    paddingVertical: 20,
-    marginBottom: 14,
+    paddingHorizontal: sizes['8xl'],
+    paddingVertical: sizes['6xl'],
+    marginBottom: sizes['4xl'],
   },
   dropdowncontainer: {
     flexDirection: 'row',
-
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: sizes.lg,
   },
   roundText: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: 13,
-    paddingTop: 5,
+    fontSize: fonts.sizes.md + 1,
+    paddingTop: sizes.sm,
     textAlign: 'center',
-    paddingBottom: 3,
-    lineHeight: 13,
+    paddingBottom: sizes.xs,
+    lineHeight: fonts.sizes.md + 1,
     textTransform: 'uppercase',
     color: colors.darkGray,
   },
   progressContainer: {
-    height: 8,
+    height: sizes.lg,
     backgroundColor: colors.lose,
-    marginVertical: 6,
+    marginVertical: sizes.md,
   },
   bar: {
-    height: 8,
+    height: sizes.lg,
     backgroundColor: colors.win,
   },
   textContainer: {
@@ -121,10 +120,10 @@ const styles = StyleSheet.create({
   },
   roundResult: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: 14,
-    paddingTop: 5,
-    paddingBottom: 3,
-    lineHeight: 13,
+    fontSize: fonts.sizes.lg,
+    paddingTop: sizes.sm,
+    paddingBottom: sizes.xs,
+    lineHeight: fonts.sizes.md + 1,
     textTransform: 'uppercase',
     color: colors.black,
   },

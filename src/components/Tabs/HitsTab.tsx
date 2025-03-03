@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
 import DetailedStats from '../DetailedStats'
-import { colors, fonts } from '../../theme';
+import { colors, fonts, sizes } from '../../theme';
 import { SeasonPerformance, WeaponStatType } from '../../types/WeaponStatsType';
 
 
@@ -113,28 +113,28 @@ const HitsTab = ({stats}:HitStats) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: 8,
+    paddingTop: sizes.lg,
     flex:1,
   },
   container: {
     backgroundColor: colors.primary,
-    paddingHorizontal: 25,
-    paddingVertical: 20,
-    marginBottom: 14,
+    paddingHorizontal: sizes['8xl'],
+    paddingVertical: sizes['6xl'],
+    marginBottom: sizes['3xl'],
   },
   bodyHitBox: {
     flexDirection: 'row',
-    marginTop: -20,
+    marginTop: - sizes['6xl'],
   },
   bodyImageContainer: {
     width: '30%',
-    gap: 2,
+    gap: sizes.xs,
     alignItems: 'center',
     justifyContent: 'center',
   },
   bodyImage: {
-    width: 50,
-    height: 50,
+    width: sizes['18xl'] + 2,
+    height: sizes['18xl'] + 2,
   },
   redOverlay: {
     position: 'absolute',
@@ -144,42 +144,38 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     backgroundColor: 'transparent',
     zIndex: 1,
-    width: 50,
-    height: 50,
+    width: sizes['18xl'] + 2,
+    height: sizes['18xl'] + 2,
   },
   shotsMeta: {
-    gap: 22,
-    paddingTop: 34,
+    gap: sizes['5xl'],
+    paddingTop: sizes['13xl'],
   },
   singleShot: {
     flexDirection: 'row',
-    gap: 5,
+    gap: sizes.sm,
   },
   shotCount: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 28,
-    lineHeight: 22,
-    // paddingTop: 5,
-    // paddingBottom: 3,
+    fontSize: fonts.sizes['7xl'],
+    lineHeight: fonts.sizes['4xl'],
     textTransform: 'uppercase',
     color: colors.black,
-
-    minWidth: 35,
+    minWidth: sizes['14xl'],
   },
   shotTitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 20,
-    // paddingTop: 5,
-    lineHeight: 20,
+    fontSize: fonts.sizes['3xl'],
+    lineHeight: fonts.sizes['3xl'],
     textTransform: 'lowercase',
     color: colors.darkGray,
   },
   shotValue: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: 12,
-    paddingTop: 5,
-    paddingBottom: 3,
-    lineHeight: 13,
+    fontSize: fonts.sizes.md,
+    paddingTop: sizes.sm,
+    paddingBottom: sizes.xs,
+    lineHeight: fonts.sizes.md,
     textTransform: 'uppercase',
     color: colors.darkGray,
   },

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { colors, fonts } from '../../theme';
+import { colors, fonts, sizes } from '../../theme';
 
 interface mapListType {
   id: string;
@@ -33,9 +33,9 @@ const BestMapTab = ({mapList}:BestMapType) => {
       <TouchableOpacity activeOpacity={0.5} style={styles.mapBox}>
         <Image style={styles.mapImage} source={{uri: item.imageUrl}} />
         <View style={styles.metaContainer}>
-          <View style={styles.meta}>
+          <View style={styles.mapMeta}>
             <Text style={styles.metaTitle}>{item.name}</Text>
-            <Text style={styles.metaSubText}>
+            <Text style={styles.metaSubTitle}>
               Wins: {item.wins} | Lose: {item.losses}
             </Text>
           </View>
@@ -55,7 +55,7 @@ const BestMapTab = ({mapList}:BestMapType) => {
 
   return (
     <View style={styles.tabContainer}>
-      <ScrollView style={styles.tabList} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.mapLists} showsVerticalScrollIndicator={false}>
         {sortedMapData.map(item => renderMapBox(item))}
       </ScrollView>
     </View>
@@ -64,17 +64,17 @@ const BestMapTab = ({mapList}:BestMapType) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: 8,
+    paddingTop: sizes.lg,
     flex:1,
   },
-  tabList: {
-    paddingTop: 15,
-    marginBottom: 50,
+  mapLists: {
+    paddingTop: sizes['4xl'],
+    marginBottom: sizes['19xl'],
   },
   mapBox: {
     backgroundColor: colors.primary,
-    marginBottom: 12,
-    padding: 10,
+    marginBottom: sizes['2xl'],
+    padding: sizes.xl,
     flexDirection: 'row',
     zIndex: 1,
   },
@@ -88,25 +88,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '78%',
   },
-  meta: {
-    paddingLeft: 11,
+  mapMeta: {
+    paddingLeft: sizes.xl,
     justifyContent: 'center',
   },
   metaTitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 26,
-    lineHeight: 28,
+    fontSize: fonts.sizes['6xl'],
+    lineHeight: fonts.sizes['7xl'],
     letterSpacing: -0.3,
     color: colors.black,
-    paddingRight: 10,
-    paddingBottom: 5,
+    paddingRight: sizes.xl,
+    paddingBottom: sizes.sm,
     textTransform: 'lowercase',
   },
-  metaSubText: {
+  metaSubTitle: {
     fontFamily: fonts.family.proximaBold,
     letterSpacing: 0.3,
-    fontSize: 13,
-    lineHeight: 13,
+    fontSize: fonts.sizes.md,
+    lineHeight: fonts.sizes.lg,
     color: colors.darkGray,
   },
   rightMeta: {
@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
   },
   rightText: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: 12,
+    fontSize: fonts.sizes.md,
     marginBottom: -2,
     textTransform: 'uppercase',
     color: colors.darkGray,
-    paddingRight: 10,
+    paddingRight: sizes.xl,
   },
 });
 

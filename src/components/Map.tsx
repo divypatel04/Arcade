@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {View, Image, StyleSheet, Dimensions} from 'react-native';
-import { colors } from '../theme';
+import { colors, sizes } from '../theme';
 
 interface DeathMapProps {
   locations: {
@@ -62,7 +62,7 @@ const Map: React.FC<DeathMapProps> = ({
 const styles = StyleSheet.create({
   mapContainer: {
     backgroundColor: colors.primary,
-    marginBottom: 14,
+    marginBottom: sizes['3xl'],
     position: 'relative',
   },
   mapImage: {
@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
   },
   redDot: {
     position: 'absolute',
-    width: 5, // Adjust as needed
-    height: 5, // Adjust as needed
-    borderRadius: 50, // Make it circular
-    backgroundColor: 'rgba(255, 0, 0, 0.5)', // Semi-transparent red
+    width: sizes.sm,
+    height: sizes.sm,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
 });
 

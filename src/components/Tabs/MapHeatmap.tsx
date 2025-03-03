@@ -73,8 +73,7 @@ const MapHeatmap: React.FC<{
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: 15,
-    marginBottom: 265,
+    paddingTop: sizes['3xl'],
   },
   dropdowncontainer: {
     flexDirection: 'row',

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
-import {colors, fonts} from '../theme';
+import {colors, fonts, sizes} from '../theme';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
   option: {
     display: 'flex',
     flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingVertical: sizes.xl,
+    paddingHorizontal: sizes['3xl'],
     color: colors.white,
     width: '100%',
     backgroundColor: colors.primary,
@@ -82,32 +82,32 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.darkGray,
-    fontSize: 13,
-    lineHeight: 15,
+    fontSize: fonts.sizes.md,
+    lineHeight: fonts.sizes.lg,
     margin: 0,
     textAlignVertical: 'center',
     fontFamily: fonts.family.novecentoUltraBold,
     textTransform: 'uppercase',
-    paddingRight: 3,
+    paddingRight: sizes.xs,
     zIndex: 14,
   },
   text: {
     color: colors.darkGray,
-    fontSize: 13,
-    lineHeight: 15,
+    fontSize: fonts.sizes.md,
+    lineHeight: fonts.sizes.lg,
     margin: 0,
     textAlignVertical: 'center',
     fontFamily: fonts.family.proximaBold,
     textTransform: 'uppercase',
-    paddingRight: 3,
+    paddingRight: sizes.xs,
   },
   icon: {
     color: colors.darkGray,
-    marginTop: -2,
+    marginTop: - sizes.xs,
   },
   listText: {
     color: colors.black,
-    fontSize: 13,
+    fontSize: fonts.sizes.md,
     fontFamily: fonts.family.proximaBold,
   },
   dropdownList: {
@@ -119,17 +119,17 @@ const styles = StyleSheet.create({
     right: '1%',
     flex: 1,
     maxHeight: 170,
-    zIndex: 100, // Increased zIndex
+    zIndex: 100,
   },
   listItem: {
     backgroundColor: colors.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    paddingLeft: 18,
+    paddingVertical: sizes.xl,
+    paddingHorizontal: sizes['8xl'],
+    paddingLeft: sizes['8xl'],
     flexDirection: 'row',
     margin: 0,
     borderBottomWidth: 0.6,
     borderColor: colors.darkGray,
-    zIndex: 100, // Increased zIndex
+    zIndex: 100,
   },
 });

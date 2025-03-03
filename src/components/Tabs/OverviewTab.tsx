@@ -2,6 +2,7 @@ import React from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
 import DetailedStats from '../DetailedStats'
+import { sizes } from '../../theme';
 
 
 interface Stat {
@@ -29,7 +30,7 @@ const OverviewTab = ({stats1,stats2,stats3}:OverviewStats) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: 8,
+    paddingTop: sizes.lg,
     flex:1,
   },
 });

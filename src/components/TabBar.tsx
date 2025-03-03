@@ -6,7 +6,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts, sizes } from '../theme';
 
 interface TabBarProps {
   tabs: { label: string; content: JSX.Element }[];
@@ -69,22 +69,22 @@ export default function TabBar({ tabs }: TabBarProps) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1, // Ensure the container fills the available space
+    // flex: 1,
     zIndex: 1,
   },
   scrollContentContainer: {
     alignItems: 'center',
-    flexGrow: 0, // Prevent tabs from stretching vertically
+    flexGrow: 0,
     zIndex: 1,
   },
   tabContainer: {
     borderColor: colors.black,
-    flex: 1, // Distribute space equally among the tabs
+    flex: 1,
     zIndex: 1,
   },
   tabInnerContainer: {
-    paddingVertical: 12, // Reduced padding for smaller tab height
-    paddingHorizontal: 16, // Adjusted padding for better layout
+    paddingVertical: sizes['2xl'],
+    paddingHorizontal: sizes['4xl'],
     borderColor: colors.black,
     zIndex: 1,
     // borderBottomWidth: 1,
@@ -94,10 +94,10 @@ const styles = StyleSheet.create({
   tabText: {
     fontFamily: fonts.family.proximaBold,
     color: colors.darkGray,
-    fontSize: 14,
+    fontSize: fonts.sizes.lg,
     letterSpacing: -0.2,
     textTransform: 'capitalize',
-    lineHeight: 20,
+    lineHeight: fonts.sizes['3xl'],
     zIndex: 1,
   },
   selectedTab: {
@@ -109,8 +109,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   tabContentScrollContainer: {
-    // paddingVertical: 5,
-
-    paddingHorizontal: 14,
+    paddingHorizontal: sizes['3xl'],
   },
 });
