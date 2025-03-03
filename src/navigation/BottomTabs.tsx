@@ -11,6 +11,7 @@ import WeaponListScreen from '../screens/WeaponListScreen';
 import AgentInfoScreen from '../screens/AgentInfoScreen';
 import MapInfoScreen from '../screens/MapInfoScreen';
 import WeaponInfoScreen from '../screens/WeaponInfoScreen';
+import SeasonInfoScreen from '../screens/SeasonInfoScreen';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -55,7 +56,7 @@ function ActStackScreen() {
         presentation: 'modal',
         headerShown: false,
       }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="SeasonInfoScreen" component={SeasonInfoScreen} />
     </Stack.Navigator>
   );
 }

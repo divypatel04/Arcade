@@ -15,7 +15,7 @@ import {
 
 import {getTopWeaponByKills, getAllWeaponSeasonNames, sortWeaponsByMatches} from './weaponUtils';
 
-import {getCurrentorRecentSeasonStats} from './seasonUtils';
+import {getCurrentorRecentSeasonStats,getSeasonNames} from './seasonUtils';
 
 export {
   getAllAgentSeasonNames,
@@ -31,5 +31,6 @@ export {
   getTopWeaponByKills,
   getAllWeaponSeasonNames,
   sortWeaponsByMatches,
-  getCurrentorRecentSeasonStats
+  getCurrentorRecentSeasonStats,
+  getSeasonNames
 };

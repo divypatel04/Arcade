@@ -17,3 +17,32 @@ export const getCurrentorRecentSeasonStats = (seasonStats: SeasonStatsType[]) =>
     return sortedSeasons[0];
   }
 };
+
+
+
+
+
+export const getSeasonNames = (seasonStats: SeasonStatsType[]) => {
+  const seasonSet: any = {};
+
+  for (const season of seasonStats) {
+    if (!seasonSet[season.season.id]) {
+      seasonSet[season.season.id] = {
+        seasonId: season.season.id,
+        seasonName: season.season.name,
+        seasonActive: season.season.isActive,
+      };
+    }
+  }
+
+  const seasonList = Object.values(seasonSet);
+
+  const final = seasonList
+    .map((season: any) => season.seasonName)
+    .sort((a, b) => b.localeCompare(a));
+
+
+  final.unshift('All Acts');
+
+  return final;
+};
