@@ -116,3 +116,44 @@ export function sortWeaponsByMatches(
 
   return finalSortedStats;
 }
+
+
+export const aggregateWeaponStatsForAllActs = (weaponStats: WeaponStatType) => {
+  const initialStats = {
+    season: {
+      id: '0',
+      name: 'All Acts',
+      isActive: false,
+    },
+    stats: {
+      kills: 0,
+      damage: 0,
+      aces: 0,
+      firstKills: 0,
+      roundsPlayed: 0,
+      avgKillsPerRound: 0,
+      avgDamagePerRound: 0,
+      legshots: 0,
+      headshots: 0,
+      bodyshots: 0,
+    }
+
+  };
+
+  const aggregatedStats = weaponStats.performanceBySeason.reduce((acc: any, curr) => {
+    acc.stats.kills += curr.stats.kills;
+    acc.stats.damage += curr.stats.damage;
+    acc.stats.aces += curr.stats.aces;
+    acc.stats.firstKills += curr.stats.firstKills;
+    acc.stats.roundsPlayed += curr.stats.roundsPlayed;
+    acc.stats.legshots += curr.stats.legshots;
+    acc.stats.headshots += curr.stats.headshots;
+    acc.stats.bodyshots += curr.stats.bodyshots;
+
+    return acc;
+
+  }, initialStats);
+
+
+  return aggregatedStats;
+};

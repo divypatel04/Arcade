@@ -13,7 +13,7 @@ import {
   sortMapsByMatches,
 } from './mapUtils';
 
-import {getTopWeaponByKills, getAllWeaponSeasonNames, sortWeaponsByMatches} from './weaponUtils';
+import {getTopWeaponByKills, getAllWeaponSeasonNames, sortWeaponsByMatches, aggregateWeaponStatsForAllActs} from './weaponUtils';
 
 import {getCurrentorRecentSeasonStats,getSeasonNames, aggregateSeasonStatsForAllActs} from './seasonUtils';
 
@@ -33,5 +33,6 @@ export {
   sortWeaponsByMatches,
   getCurrentorRecentSeasonStats,
   getSeasonNames,
-  aggregateSeasonStatsForAllActs
+  aggregateSeasonStatsForAllActs,
+  aggregateWeaponStatsForAllActs
 };

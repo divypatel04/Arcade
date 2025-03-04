@@ -6,10 +6,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { SeasonPerformance, WeaponStatType } from '../types/WeaponStatsType';
-import { convertMillisToReadableTime, getAllWeaponSeasonNames } from '../utils';
+import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames } from '../utils';
 import OverviewTab from '../components/Tabs/OverviewTab';
 import TabBar from '../components/TabBar';
 import HitsTab from '../components/Tabs/HitsTab';
+import { weaponStats } from '../data/dummyData';
 
 const WeaponInfoScreen = () => {
 
@@ -31,7 +32,7 @@ const WeaponInfoScreen = () => {
     if (selectedSeasonData) {
       setSeasonStat(selectedSeasonData);
     } else {
-      // setSeasonStat(aggregateAgentStatsForAllActs(agent));
+      setSeasonStat(aggregateWeaponStatsForAllActs(weapon));
     }
   }, [selectedSeason]);
 
