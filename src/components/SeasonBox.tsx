@@ -2,16 +2,21 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import { SeasonStatsType } from '../types/SeasonStatsType';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 type SeasonBoxProps = {
   season: SeasonStatsType;
 }
 
 const SeasonBox = ({season}: SeasonBoxProps) => {
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   return (
     <TouchableOpacity
       activeOpacity={0.6}
-      style={styles.statscontainer}
+      style={styles.statscontainer} onPress={() => navigation.navigate('Act')}
     >
       <View style={styles.rankdetails}>
         <Image style={styles.rankimage} source={{ uri: 'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/18/largeicon.png' }} />
