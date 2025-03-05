@@ -12,6 +12,7 @@ import AgentInfoScreen from '../screens/AgentInfoScreen';
 import MapInfoScreen from '../screens/MapInfoScreen';
 import WeaponInfoScreen from '../screens/WeaponInfoScreen';
 import SeasonInfoScreen from '../screens/SeasonInfoScreen';
+import MatchListScreen from '../screens/MatchListScreen';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -43,7 +44,7 @@ function CareerStackScreen() {
         presentation: 'modal',
         headerShown: false,
       }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="MatchListScreen" component={MatchListScreen} />
     </Stack.Navigator>
   );
 }
