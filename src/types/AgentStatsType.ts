@@ -75,10 +75,7 @@ type ClutchStats = {
   "1v4Wins": number;
 };
 
-type AbilityAndUltimateImpact = {
-  abilityCasts: AbilityCasts;
-  ultimateImpact: UltimateImpact;
-};
+type AbilityAndUltimateImpact = AbilityCasts
 
 type AbilityCasts = {
   grenadeCasts: AbilityCastDetails;
@@ -88,6 +85,7 @@ type AbilityCasts = {
 };
 
 type AbilityCastDetails = {
+  id: string;
   count: number;
   kills: number;
   damage: number;

@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
 import { AgentStats } from '../data/dummyData';
 import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames } from '../utils';
+import UtilityTab from '../components/Tabs/UtilityTab';
 
 const AgentInfoScreen = () => {
   const routeParams: any = useRoute().params;
@@ -65,6 +66,7 @@ const AgentInfoScreen = () => {
     { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
     { label: 'Site Stat', content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
     { label: 'Best Map', content: <BestMapTab mapList={seasonStat?.mapStats} /> },
+    { label: 'Utilities', content: <UtilityTab utilities={seasonStat?.abilityAndUltimateImpact ?? { grenadeCasts: { count: 0, kills: 0, damage: 0 }, ability1Casts: { count: 0, kills: 0, damage: 0 }, ability2Casts: { count: 0, kills: 0, damage: 0 }, ultimateCasts: { count: 0, kills: 0, damage: 0 } }} totalRounds={seasonStat?.stats.totalRounds ?? 0} abilitiesData={agent.agent.abilities}/> },
   ];
 
   return (
