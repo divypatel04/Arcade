@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.novecentoUltraBold,
     fontSize: fonts.sizes['7xl'],
     lineHeight: fonts.sizes['7xl'],
-    textTransform:'uppercase',
+    // textTransform: 'uppercase',
     color: colors.black,
     textAlign: 'center',
   },
