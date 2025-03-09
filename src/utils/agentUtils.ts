@@ -251,22 +251,18 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
     acc.defenseStats.clutchStats["1v3Wins"] += curr.defenseStats.clutchStats["1v3Wins"];
     acc.defenseStats.clutchStats["1v4Wins"] += curr.defenseStats.clutchStats["1v4Wins"];
 
-    acc.abilityAndUltimateImpact.abilityCasts.grenadeCasts.count += curr.abilityAndUltimateImpact.abilityCasts.grenadeCasts.count;
-    acc.abilityAndUltimateImpact.abilityCasts.grenadeCasts.kills += curr.abilityAndUltimateImpact.abilityCasts.grenadeCasts.kills;
-    acc.abilityAndUltimateImpact.abilityCasts.grenadeCasts.damage += curr.abilityAndUltimateImpact.abilityCasts.grenadeCasts.damage;
-    acc.abilityAndUltimateImpact.abilityCasts.ability1Casts.count += curr.abilityAndUltimateImpact.abilityCasts.ability1Casts.count;
-    acc.abilityAndUltimateImpact.abilityCasts.ability1Casts.kills += curr.abilityAndUltimateImpact.abilityCasts.ability1Casts.kills;
-    acc.abilityAndUltimateImpact.abilityCasts.ability1Casts.damage += curr.abilityAndUltimateImpact.abilityCasts.ability1Casts.damage;
-    acc.abilityAndUltimateImpact.abilityCasts.ability2Casts.count += curr.abilityAndUltimateImpact.abilityCasts.ability2Casts.count;
-    acc.abilityAndUltimateImpact.abilityCasts.ability2Casts.kills += curr.abilityAndUltimateImpact.abilityCasts.ability2Casts.kills;
-    acc.abilityAndUltimateImpact.abilityCasts.ability2Casts.damage += curr.abilityAndUltimateImpact.abilityCasts.ability2Casts.damage;
-    acc.abilityAndUltimateImpact.abilityCasts.ultimateCasts.count += curr.abilityAndUltimateImpact.abilityCasts.ultimateCasts.count;
-    acc.abilityAndUltimateImpact.abilityCasts.ultimateCasts.kills += curr.abilityAndUltimateImpact.abilityCasts.ultimateCasts.kills;
-    acc.abilityAndUltimateImpact.abilityCasts.ultimateCasts.damage += curr.abilityAndUltimateImpact.abilityCasts.ultimateCasts.damage;
-
-    acc.abilityAndUltimateImpact.ultimateImpact.killsUsingUltimate += curr.abilityAndUltimateImpact.ultimateImpact.killsUsingUltimate;
-    acc.abilityAndUltimateImpact.ultimateImpact.roundsWonUsingUltimate += curr.abilityAndUltimateImpact.ultimateImpact.roundsWonUsingUltimate;
-    acc.abilityAndUltimateImpact.ultimateImpact.damageUsingUltimate += curr.abilityAndUltimateImpact.ultimateImpact.damageUsingUltimate;
+    acc.abilityAndUltimateImpact.grenadeCasts.count += curr.abilityAndUltimateImpact.grenadeCasts.count;
+    acc.abilityAndUltimateImpact.grenadeCasts.kills += curr.abilityAndUltimateImpact.grenadeCasts.kills;
+    acc.abilityAndUltimateImpact.grenadeCasts.damage += curr.abilityAndUltimateImpact.grenadeCasts.damage;
+    acc.abilityAndUltimateImpact.ability1Casts.count += curr.abilityAndUltimateImpact.ability1Casts.count;
+    acc.abilityAndUltimateImpact.ability1Casts.kills += curr.abilityAndUltimateImpact.ability1Casts.kills;
+    acc.abilityAndUltimateImpact.ability1Casts.damage += curr.abilityAndUltimateImpact.ability1Casts.damage;
+    acc.abilityAndUltimateImpact.ability2Casts.count += curr.abilityAndUltimateImpact.ability2Casts.count;
+    acc.abilityAndUltimateImpact.ability2Casts.kills += curr.abilityAndUltimateImpact.ability2Casts.kills;
+    acc.abilityAndUltimateImpact.ability2Casts.damage += curr.abilityAndUltimateImpact.ability2Casts.damage;
+    acc.abilityAndUltimateImpact.ultimateCasts.count += curr.abilityAndUltimateImpact.ultimateCasts.count;
+    acc.abilityAndUltimateImpact.ultimateCasts.kills += curr.abilityAndUltimateImpact.ultimateCasts.kills;
+    acc.abilityAndUltimateImpact.ultimateCasts.damage += curr.abilityAndUltimateImpact.ultimateCasts.damage;
 
     return acc;
   }, seasonStat);
@@ -286,3 +282,27 @@ export const convertMillisToReadableTime = (ms: number) => {
 };
 
 
+
+export const mergeUtilitiesAndAbilities = (abilitiesData: any, utilities: any) => {
+  console.log(abilitiesData, utilities);
+  return abilitiesData.map((ability: any) => {
+    let data;
+    switch (ability.id) {
+      case utilities?.grenadeCasts.id:
+        data = utilities.grenadeCasts;
+        break;
+      case utilities?.ability1Casts.id:
+        data = utilities.ability1Casts;
+        break;
+      case utilities?.ability2Casts.id:
+        data = utilities.ability2Casts;
+        break;
+      case utilities?.ultimateCasts.id:
+        data = utilities.ultimateCasts;
+        break;
+      default:
+        data = { count: 0, kills: 0, damage: 0 };
+    }
+    return { ...ability, data };
+  });
+};

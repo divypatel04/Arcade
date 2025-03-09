@@ -113,7 +113,7 @@ const HitsTab = ({stats}:HitStats) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: sizes.lg,
+    paddingTop: sizes['3xl'],
     flex:1,
   },
   container: {

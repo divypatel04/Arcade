@@ -25,13 +25,15 @@ interface UtilityTabProps {
     ability1Casts: { id: string; count: number; kills: number; damage: number };
     ability2Casts: { id: string; count: number; kills: number; damage: number };
     ultimateCasts: { id: string; count: number; kills: number; damage: number };
-  };
+  } | undefined;
   totalRounds: number;
   abilitiesData: AbilityData[];
 }
 
-const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) => {
-  const abilities = abilitiesData.map((ability) => {
+const mergeUtilitiesAndAbilities = (abilitiesData: AbilityData[], utilities: any) => {
+  if (!utilities) return abilitiesData.map((ability) => ({ ...ability, data: { count: 0, kills: 0, damage: 0 } }));
+
+  return abilitiesData.map((ability) => {
     let data;
     switch (ability.id) {
       case utilities.grenadeCasts.id:
@@ -49,26 +51,25 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
       default:
         data = { count: 0, kills: 0, damage: 0 };
     }
-    return { name: ability.name, data };
+    return { ...ability, data };
   });
+};
 
-  const abilitiesType = abilities.map((item) => item.name);
-  const [selectedAbility, setSelectedAbility] = React.useState(abilitiesType[0]);
-  const [currentAbility, setCurrentAbility] = React.useState(abilities[0].data);
-  const [currentAbilityData, setCurrentAbilityData] = React.useState<AbilityData | undefined>(abilitiesData[0]);
+const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) => {
+  const abilities = mergeUtilitiesAndAbilities(abilitiesData, utilities);
+
+  const abilitiesType = abilities.map((ability) => ability.name);
+  const [selectedAbilityType, setSelectedAbilityType] = React.useState(abilitiesType[0]);
+  const [currentAbility, setCurrentAbility] = React.useState(abilities[0]);
 
   useEffect(() => {
-    const selected = abilities.find((item) => item.name === selectedAbility);
-    setCurrentAbility(selected?.data ?? { count: 0, kills: 0, damage: 0 });
-
-    const selectedAbilityData = abilitiesData.find((ability) => ability.name === selectedAbility);
-    setCurrentAbilityData(selectedAbilityData);
-  }, [selectedAbility, abilitiesData]);
+    setCurrentAbility(abilities.find((ability) => ability.name === selectedAbilityType) || abilities[0]);
+  }, [selectedAbilityType, abilities]);
 
   const Stats = [
-    { name: 'Usage/R', value: String(((currentAbility?.count ?? 0) / totalRounds).toFixed(1)) },
-    { name: 'Damage/R', value: String(((currentAbility?.damage ?? 0) / totalRounds).toFixed(1)) },
-    { name: 'Kills', value: String((currentAbility?.kills ?? 0)) },
+    { name: 'Usage/R', value: String(((currentAbility?.data.count ?? 0) / totalRounds).toFixed(1)) },
+    { name: 'Damage/R', value: String(((currentAbility?.data.damage ?? 0) / totalRounds).toFixed(1)) },
+    { name: 'Kills', value: String((currentAbility?.data.kills ?? 0)) },
   ];
 
   return (
@@ -77,18 +78,18 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
         <DropDown
           list={abilitiesType}
           name="Ability"
-          value={selectedAbility}
-          onSelect={(item) => setSelectedAbility(item)}
+          value={selectedAbilityType}
+          onSelect={(item) => setSelectedAbilityType(item)}
         />
       </View>
       <View style={styles.abilityBox}>
         <Image
           style={styles.abilityImage}
-          source={{ uri: currentAbilityData?.imageUrl ?? '' }}
+          source={{ uri: currentAbility?.imageUrl ?? '' }}
         />
         <View style={styles.abilityMeta}>
           <Text style={styles.abilitySubText}>Ability</Text>
-          <Text style={styles.abilityTitle}>{currentAbilityData?.name}</Text>
+          <Text style={styles.abilityTitle}>{currentAbility.name}</Text>
         </View>
       </View>
       <StatsSummary stats={Stats} />
@@ -98,7 +99,7 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: sizes.lg,
+    paddingTop: sizes['3xl'],
     flex: 1,
   },
   dropdowncontainer: {
@@ -117,6 +118,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: sizes['4xl'],
     paddingVertical: sizes['2xl'],
     flexDirection: 'row',
+    marginTop: sizes.md,
+    marginBottom: sizes['2xl'],
   },
   abilityMeta: {
     paddingLeft: sizes['4xl'],

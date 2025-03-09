@@ -30,7 +30,7 @@ const OverviewTab = ({stats1,stats2,stats3}:OverviewStats) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: sizes.lg,
+    paddingTop: sizes['3xl'],
     flex:1,
   },
 });

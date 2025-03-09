@@ -5,6 +5,7 @@ import {
   getCurrentOrMostRecentSeason,
   getTopAgentByKills,
   sortAgentsByMatches,
+  mergeUtilitiesAndAbilities
 } from './agentUtils';
 import {
   aggregateMapStatsForAllActs,
@@ -67,5 +68,6 @@ export {
   getCurrentorRecentSeasonStats,
   getSeasonNames,
   aggregateSeasonStatsForAllActs,
-  aggregateWeaponStatsForAllActs
+  aggregateWeaponStatsForAllActs,
+  mergeUtilitiesAndAbilities
 };
