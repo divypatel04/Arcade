@@ -6,6 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import TabBar from '../components/TabBar'
 import MatchOverviewTab from '../components/Tabs/MatchOverviewTab'
+import TeamStatsTab from '../components/Tabs/TeamStatsTab';
 
 
 const MatchInfoScreen = () => {
@@ -15,6 +16,7 @@ const MatchInfoScreen = () => {
 
   const tabs = [
     { label: 'Overview', content: <MatchOverviewTab/> },
+    { label: 'Team Stats', content: <TeamStatsTab/> },
   ];
 
   return (
