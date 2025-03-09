@@ -20,37 +20,15 @@ interface AbilityData {
 }
 
 interface UtilityTabProps {
-  utilities: {
-    grenadeCasts: { id: string; count: number; kills: number; damage: number };
-    ability1Casts: { id: string; count: number; kills: number; damage: number };
-    ability2Casts: { id: string; count: number; kills: number; damage: number };
-    ultimateCasts: { id: string; count: number; kills: number; damage: number };
-  } | undefined;
+  utilities: { id: string; count: number; kills: number; damage: number; type: string }[];
   totalRounds: number;
   abilitiesData: AbilityData[];
 }
 
-const mergeUtilitiesAndAbilities = (abilitiesData: AbilityData[], utilities: any) => {
-  if (!utilities) return abilitiesData.map((ability) => ({ ...ability, data: { count: 0, kills: 0, damage: 0 } }));
-
+const mergeUtilitiesAndAbilities = (abilitiesData: AbilityData[], utilities: { id: string; count: number; kills: number; damage: number; type: string }[]) => {
   return abilitiesData.map((ability) => {
-    let data;
-    switch (ability.id) {
-      case utilities.grenadeCasts.id:
-        data = utilities.grenadeCasts;
-        break;
-      case utilities.ability1Casts.id:
-        data = utilities.ability1Casts;
-        break;
-      case utilities.ability2Casts.id:
-        data = utilities.ability2Casts;
-        break;
-      case utilities.ultimateCasts.id:
-        data = utilities.ultimateCasts;
-        break;
-      default:
-        data = { count: 0, kills: 0, damage: 0 };
-    }
+    const utility = utilities.find((util) => util.id === ability.id);
+    const data = utility ? { count: utility.count, kills: utility.kills, damage: utility.damage } : { count: 0, kills: 0, damage: 0 };
     return { ...ability, data };
   });
 };
@@ -64,11 +42,11 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
 
   useEffect(() => {
     setCurrentAbility(abilities.find((ability) => ability.name === selectedAbilityType) || abilities[0]);
-  }, [selectedAbilityType, abilities]);
+  }, [selectedAbilityType]);
 
   const Stats = [
-    { name: 'Usage/R', value: String(((currentAbility?.data.count ?? 0) / totalRounds).toFixed(1)) },
-    { name: 'Damage/R', value: String(((currentAbility?.data.damage ?? 0) / totalRounds).toFixed(1)) },
+    { name: 'Usage/R', value: String(((currentAbility?.data.count ?? 0) / totalRounds).toFixed(2)) },
+    { name: 'Damage/R', value: String(((currentAbility?.data.damage ?? 0) / totalRounds).toFixed(2)) },
     { name: 'Kills', value: String((currentAbility?.data.kills ?? 0)) },
   ];
 
