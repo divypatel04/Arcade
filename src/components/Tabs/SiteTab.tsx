@@ -10,7 +10,7 @@ type Stats = {
   kills: number;
   roundsLost: number;
   roundsWon: number;
-  clutchStats: ClutchStats;
+  clutchStats?: ClutchStats;
 }
 
 type ClutchStats = {

@@ -13,6 +13,7 @@ import MapInfoScreen from '../screens/MapInfoScreen';
 import WeaponInfoScreen from '../screens/WeaponInfoScreen';
 import SeasonInfoScreen from '../screens/SeasonInfoScreen';
 import MatchListScreen from '../screens/MatchListScreen';
+import MatchInfoScreen from '../screens/MatchInfoScreen';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -44,7 +45,8 @@ function CareerStackScreen() {
         presentation: 'modal',
         headerShown: false,
       }}>
-      <Stack.Screen name="MatchListScreen" component={MatchListScreen} />
+      <Stack.Screen name="MatchInfoScreen" component={MatchInfoScreen} />
+      {/* <Stack.Screen name="MatchListScreen" component={MatchListScreen} /> */}
     </Stack.Navigator>
   );
 }
