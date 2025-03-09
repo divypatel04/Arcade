@@ -19,7 +19,7 @@ const MapHeatmap: React.FC<{
   const siteNames = ['Attack', 'Defence', 'Both'];
   const [selectedSite, setSelectedSite] = useState(siteNames[0]);
 
-  const modeNames = ['Kills', 'Deaths', 'Both'];
+  const modeNames = ['Kills', 'Deaths'];
   const [selectedMode, setSelectedMode] = useState(modeNames[0]);
 
   const getHeatmapLocations = () => {
@@ -29,7 +29,7 @@ const MapHeatmap: React.FC<{
     const getLocations = (stats: any, mode: string) => {
       if (mode === 'Kills') return stats?.killsLocation || [];
       if (mode === 'Deaths') return stats?.deathLocation || [];
-      return [...(stats?.killsLocation || []), ...(stats?.deathLocation || [])];
+      return [];
     };
 
     if (selectedSite === 'Attack') return getLocations(attackStats, selectedMode);
@@ -66,6 +66,7 @@ const MapHeatmap: React.FC<{
         locations={siteStat}
         mapImage={mapImage}
         mapCoordinate={mapCoordinate?? {xMultiplier: 0, xScalarToAdd: 0, yMultiplier: 0, yScalarToAdd: 0}}
+        mode={selectedMode}
       />
     </View>
   );

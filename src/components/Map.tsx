@@ -16,12 +16,14 @@ interface DeathMapProps {
     yMultiplier: number;
     yScalarToAdd: number;
   };
+  mode: string
 }
 
 const Map: React.FC<DeathMapProps> = ({
   locations,
   mapImage,
   mapCoordinate,
+  mode
 }) => {
   const screenWidth = Dimensions.get('window').width;
   const imageWidth = screenWidth - 34;
@@ -50,6 +52,7 @@ const Map: React.FC<DeathMapProps> = ({
               {
                 left: x,
                 top: y,
+                backgroundColor: mode === 'Kills' ? 'rgba(0, 34, 255, 0.5)' : 'rgba(255, 0, 0, 0.5)',
               },
             ]}
           />
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
     width: sizes.sm,
     height: sizes.sm,
     borderRadius: 50,
-    backgroundColor: 'rgba(255, 0, 0, 0.5)',
+    // backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
 });
 
