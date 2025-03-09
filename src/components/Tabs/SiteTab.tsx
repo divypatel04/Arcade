@@ -10,6 +10,15 @@ type Stats = {
   kills: number;
   roundsLost: number;
   roundsWon: number;
+  clutchStats: ClutchStats;
+}
+
+type ClutchStats = {
+  "1v1Wins": number;
+  "1v2Wins": number;
+  "1v3Wins": number;
+  "1v4Wins": number;
+  "1v5Wins": number;
 }
 
 type AttackDefenseStats = {
@@ -27,6 +36,14 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
     { name: 'Round Win%', value: String((((siteStat?.roundsWon ?? 0) + (siteStat?.roundsLost ?? 0)) / (siteStat?.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
     { name: 'Atk. Kills', value: String(siteStat?.kills ?? 0) },
     { name: 'Atk. K/D', value: String(((siteStat?.kills ?? 0) / (siteStat?.deaths ?? 1)).toFixed(1)) },
+  ];
+
+  const Stats2 = [
+    { name: '1v1', value: String(siteStat?.clutchStats['1v1Wins']) },
+    { name: '1v2', value: String(siteStat?.clutchStats['1v2Wins']) },
+    { name: '1v3', value: String(siteStat?.clutchStats['1v3Wins']) },
+    { name: '1v4', value: String(siteStat?.clutchStats['1v4Wins']) },
+    { name: '1v5', value: String(siteStat?.clutchStats['1v5Wins']) },
   ];
 
   const roundWinPercentage = (siteStat?.roundsWon !== undefined && siteStat?.roundsLost !== undefined)
@@ -74,6 +91,8 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
       </View>
 
       <StatsSummary stats={Stats} />
+
+      <StatsSummary stats={Stats2} />
     </View>
   )
 }

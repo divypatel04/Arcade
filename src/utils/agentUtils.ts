@@ -251,18 +251,20 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
     acc.defenseStats.clutchStats["1v3Wins"] += curr.defenseStats.clutchStats["1v3Wins"];
     acc.defenseStats.clutchStats["1v4Wins"] += curr.defenseStats.clutchStats["1v4Wins"];
 
-    acc.abilityAndUltimateImpact.grenadeCasts.count += curr.abilityAndUltimateImpact.grenadeCasts.count;
-    acc.abilityAndUltimateImpact.grenadeCasts.kills += curr.abilityAndUltimateImpact.grenadeCasts.kills;
-    acc.abilityAndUltimateImpact.grenadeCasts.damage += curr.abilityAndUltimateImpact.grenadeCasts.damage;
-    acc.abilityAndUltimateImpact.ability1Casts.count += curr.abilityAndUltimateImpact.ability1Casts.count;
-    acc.abilityAndUltimateImpact.ability1Casts.kills += curr.abilityAndUltimateImpact.ability1Casts.kills;
-    acc.abilityAndUltimateImpact.ability1Casts.damage += curr.abilityAndUltimateImpact.ability1Casts.damage;
-    acc.abilityAndUltimateImpact.ability2Casts.count += curr.abilityAndUltimateImpact.ability2Casts.count;
-    acc.abilityAndUltimateImpact.ability2Casts.kills += curr.abilityAndUltimateImpact.ability2Casts.kills;
-    acc.abilityAndUltimateImpact.ability2Casts.damage += curr.abilityAndUltimateImpact.ability2Casts.damage;
-    acc.abilityAndUltimateImpact.ultimateCasts.count += curr.abilityAndUltimateImpact.ultimateCasts.count;
-    acc.abilityAndUltimateImpact.ultimateCasts.kills += curr.abilityAndUltimateImpact.ultimateCasts.kills;
-    acc.abilityAndUltimateImpact.ultimateCasts.damage += curr.abilityAndUltimateImpact.ultimateCasts.damage;
+    curr.abilityAndUltimateImpact.forEach((abilityImpact) => {
+      const existingAbility = acc.abilityAndUltimateImpact.abilityCasts[abilityImpact.type];
+      if (existingAbility) {
+      existingAbility.count += abilityImpact.count;
+      existingAbility.kills += abilityImpact.kills;
+      existingAbility.damage += abilityImpact.damage;
+      } else {
+      acc.abilityAndUltimateImpact.abilityCasts[abilityImpact.type] = {
+        count: abilityImpact.count,
+        kills: abilityImpact.kills,
+        damage: abilityImpact.damage
+      };
+      }
+    });
 
     return acc;
   }, seasonStat);

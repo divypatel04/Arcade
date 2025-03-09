@@ -73,6 +73,7 @@ type ClutchStats = {
   "1v2Wins": number;
   "1v3Wins": number;
   "1v4Wins": number;
+  "1v5Wins": number;
 };
 
 type AbilityAndUltimateImpact = AbilityCastDetails[];

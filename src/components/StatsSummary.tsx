@@ -8,13 +8,14 @@ interface Stat {
 }
 
 const StatsSummary = ({ stats }: { stats: Stat[] }) => {
+
   return (
     <View style={styles.container}>
       <View style={styles.stats}>
         {stats != undefined &&
           stats.map((item: any, index: number) => {
             return (
-              <View key={index} style={styles.stat}>
+              <View key={index} style={{width: `${100 / stats.length}%`}}>
                 <Text
                   numberOfLines={1}
                   adjustsFontSizeToFit={true}
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   stat: {
-    width: '33%',
+    // width: `${100 / stats}%`,
   },
   stattitle: {
     fontFamily: fonts.family.novecentoUltraBold,

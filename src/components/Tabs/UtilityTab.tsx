@@ -20,7 +20,7 @@ interface AbilityData {
 }
 
 interface UtilityTabProps {
-  utilities: { id: string; count: number; kills: number; damage: number; type: string }[];
+  utilities: { id: string; count: number; kills: number; damage: number; type: string }[] | undefined;
   totalRounds: number;
   abilitiesData: AbilityData[];
 }
@@ -34,7 +34,7 @@ const mergeUtilitiesAndAbilities = (abilitiesData: AbilityData[], utilities: { i
 };
 
 const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) => {
-  const abilities = mergeUtilitiesAndAbilities(abilitiesData, utilities);
+  const abilities = mergeUtilitiesAndAbilities(abilitiesData, utilities ?? []);
 
   const abilitiesType = abilities.map((ability) => ability.name);
   const [selectedAbilityType, setSelectedAbilityType] = React.useState(abilitiesType[0]);
