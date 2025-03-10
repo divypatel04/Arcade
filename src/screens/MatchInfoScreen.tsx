@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import TabBar from '../components/TabBar'
 import MatchOverviewTab from '../components/Tabs/MatchOverviewTab'
 import TeamStatsTab from '../components/Tabs/TeamStatsTab';
+import RoundPerfTab from '../components/Tabs/RoundPerfTab';
 
 
 const MatchInfoScreen = () => {
@@ -17,6 +18,7 @@ const MatchInfoScreen = () => {
   const tabs = [
     { label: 'Overview', content: <MatchOverviewTab/> },
     { label: 'Team Stats', content: <TeamStatsTab/> },
+    { label: 'Round by Round', content: <RoundPerfTab/> },
   ];
 
   return (
