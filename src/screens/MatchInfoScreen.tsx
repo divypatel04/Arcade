@@ -8,6 +8,8 @@ import TabBar from '../components/TabBar'
 import MatchOverviewTab from '../components/Tabs/MatchOverviewTab'
 import TeamStatsTab from '../components/Tabs/TeamStatsTab';
 import RoundPerfTab from '../components/Tabs/RoundPerfTab';
+import PlayerVsTab from '../components/Tabs/PlayerVsTab';
+import ChartsTab from '../components/Tabs/ChartsTab';
 
 
 const MatchInfoScreen = () => {
@@ -19,6 +21,8 @@ const MatchInfoScreen = () => {
     { label: 'Overview', content: <MatchOverviewTab/> },
     { label: 'Team Stats', content: <TeamStatsTab/> },
     { label: 'Round by Round', content: <RoundPerfTab/> },
+    { label: 'vs Player', content: <PlayerVsTab/> },
+    // { label: 'Charts', content: <ChartsTab/> },
   ];
 
   return (

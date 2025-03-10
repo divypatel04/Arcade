@@ -39,7 +39,6 @@ interface RoundPerformance {
 
 const RoundPerfTab = () => {
   const [selectedRound, setSelectedRound] = useState<number | null>(null);
-  const [filterMode, setFilterMode] = useState<'all' | 'wins' | 'losses'>('all');
   const screenWidth = Dimensions.get('window').width;
 
   // Dummy round performance data
@@ -277,77 +276,6 @@ const RoundPerfTab = () => {
     },
   ];
 
-  // Get rounds by filter
-  const getFilteredRounds = () => {
-    switch (filterMode) {
-      case 'wins':
-        return roundPerformanceData.filter(round => round.outcome === 'win');
-      case 'losses':
-        return roundPerformanceData.filter(round => round.outcome === 'loss');
-      default:
-        return roundPerformanceData;
-    }
-  };
-
-  // Calculate performance metrics
-  const calculatePerformanceMetrics = () => {
-    let totalImpact = 0;
-    let totalKills = 0;
-    let totalDeaths = 0;
-    let totalDamage = 0;
-    let totalRounds = roundPerformanceData.length;
-    let openingDuelsWon = 0;
-    let totalOpeningDuels = 0;
-    let tradeEfficiency = 0;
-    let tradeOpportunities = 0;
-    let utilityEfficiency = 0;
-
-    roundPerformanceData.forEach(round => {
-      totalImpact += round.impactScore;
-      totalKills += round.combat.kills;
-      totalDeaths += round.combat.deaths;
-      totalDamage += round.combat.damageDealt;
-
-      if (round.positioning.firstContact) {
-        totalOpeningDuels++;
-        if (round.outcome === 'win') openingDuelsWon++;
-      }
-
-      if (round.combat.tradeKill) tradeEfficiency++;
-      if (round.combat.deaths === 1) tradeOpportunities++;
-
-      utilityEfficiency += round.utility.abilitiesUsed / round.utility.totalAbilities;
-    });
-
-    // Collect areas for improvement from all rounds
-    const allImprovementAreas = roundPerformanceData.flatMap(r => r.improvement);
-    const improvementCount: Record<string, number> = {};
-    allImprovementAreas.forEach(area => {
-      if (!improvementCount[area]) improvementCount[area] = 0;
-      improvementCount[area]++;
-    });
-
-    // Sort improvement areas by frequency
-    const sortedImprovements = Object.entries(improvementCount)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([area]) => area);
-
-    return {
-      averageImpact: Math.round(totalImpact / totalRounds),
-      killDeathRatio: totalDeaths > 0 ? +(totalKills / totalDeaths).toFixed(2) : totalKills,
-      averageDamage: Math.round(totalDamage / totalRounds),
-      openingDuelWinRate: totalOpeningDuels > 0 ?
-        Math.round((openingDuelsWon / totalOpeningDuels) * 100) : 0,
-      tradeEfficiencyRate: tradeOpportunities > 0 ?
-        Math.round((tradeEfficiency / tradeOpportunities) * 100) : 0,
-      utilityEfficiency: Math.round((utilityEfficiency / totalRounds) * 100),
-      topImprovement: sortedImprovements
-    };
-  };
-
-  const metrics = calculatePerformanceMetrics();
-
   // Helper function for impact score color
   const getImpactScoreColor = (score: number) => {
     if (score >= 80) return colors.win;
@@ -355,76 +283,13 @@ const RoundPerfTab = () => {
     return colors.lose;
   };
 
-  // Function to generate progress bar width based on a score
-  const getProgressWidth = (value: number, max: number) => {
-    return `${Math.min(100, (value / max) * 100)}%`;
-  };
+  // Get the selected round data
+  const selectedRoundData = selectedRound
+    ? roundPerformanceData.find(round => round.roundNumber === selectedRound)
+    : null;
 
   return (
-    <View>
     <View style={styles.container}>
-      {/* Performance Summary Card */}
-      <View style={styles.summaryCard}>
-        <Text style={styles.summaryTitle}>PERFORMANCE SUMMARY</Text>
-        <View style={styles.metricsContainer}>
-          <View style={styles.metricColumn}>
-            <View style={styles.metricItem}>
-              <Text style={styles.metricValue}>{metrics.averageImpact}</Text>
-              <Text style={styles.metricLabel}>IMPACT</Text>
-            </View>
-            <View style={styles.metricItem}>
-              <Text style={styles.metricValue}>{metrics.killDeathRatio}</Text>
-              <Text style={styles.metricLabel}>K/D</Text>
-            </View>
-          </View>
-
-          <View style={styles.metricColumn}>
-            <View style={styles.metricItem}>
-              <Text style={styles.metricValue}>{metrics.openingDuelWinRate}%</Text>
-              <Text style={styles.metricLabel}>1ST DUELS</Text>
-            </View>
-            <View style={styles.metricItem}>
-              <Text style={styles.metricValue}>{metrics.averageDamage}</Text>
-              <Text style={styles.metricLabel}>AVG DMG</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.improvementSection}>
-          <Text style={styles.improvementTitle}>FOCUS ON IMPROVING</Text>
-          <View style={styles.improvementList}>
-            {metrics.topImprovement.map((area, index) => (
-              <View key={index} style={styles.improvementItem}>
-                <Icon name="flashlight-line" size={14} color={colors.darkGray} />
-                <Text style={styles.improvementText}>{area}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      </View>
-
-      {/* Filter tabs */}
-      <View style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[styles.filterTab, filterMode === 'all' && styles.activeFilterTab]}
-          onPress={() => setFilterMode('all')}
-        >
-          <Text style={[styles.filterText, filterMode === 'all' && styles.activeFilterText]}>All Rounds</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filterMode === 'wins' && styles.activeFilterTab]}
-          onPress={() => setFilterMode('wins')}
-        >
-          <Text style={[styles.filterText, filterMode === 'wins' && styles.activeFilterText]}>Wins</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filterMode === 'losses' && styles.activeFilterTab]}
-          onPress={() => setFilterMode('losses')}
-        >
-          <Text style={[styles.filterText, filterMode === 'losses' && styles.activeFilterText]}>Losses</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Round timeline */}
       <View style={styles.timelineContainer}>
         <Text style={styles.timelineTitle}>ROUND TIMELINE</Text>
@@ -451,93 +316,109 @@ const RoundPerfTab = () => {
         </ScrollView>
       </View>
 
-      {/* Round details */}
+      {/* Round details - only show when a round is selected */}
       <ScrollView style={styles.detailsContainer} showsVerticalScrollIndicator={false}>
-        {getFilteredRounds().map((round) => (
-          <>
-          <View
-            key={round.roundNumber}
-            style={[
-              styles.roundCard,
-              selectedRound === round.roundNumber && styles.selectedRoundCard,
-              { opacity: selectedRound && selectedRound !== round.roundNumber ? 0.6 : 1 }
-            ]}
-          >
-            <View style={styles.roundHeaderRow}>
-              <View style={styles.roundNumberBadge}>
-                <Text style={styles.roundNumberText}>{round.roundNumber}</Text>
-              </View>
-            </View>
-
-            <View style={styles.roundOutcome}>
-              <Text
-                style={[
-                  styles.outcomeText,
-                  { color: round.outcome === 'win' ? colors.win : colors.lose }
-                ]}
-              >
-              {round.outcome.toUpperCase()}
-              </Text>
-            </View>
-
-            <View style={styles.impactScoreContainer}>
-              <Text
-                style={[
-                  styles.impactScore,
-                  { color: getImpactScoreColor(round.impactScore) }
-                ]}
-              >
-                {round.impactScore}
-              </Text>
-              <Text style={styles.impactLabel}>IMPACT</Text>
-            </View>
+        {!selectedRoundData && (
+          <View style={styles.noSelectionContainer}>
+            <Text style={styles.noSelectionText}>Select a round from the timeline to view details</Text>
           </View>
+        )}
 
-          <View style={styles.roundStatsContainer}>
-            <View style={styles.statRow}>
-              <View style={styles.statItem}>
-                <Text style={styles.statLabel}>K/D/A</Text>
-                <Text style={styles.statValue}>
-                  {round.combat.kills}/{round.combat.deaths}/{round.combat.assists}
-                </Text>
-              </View>
-
-              <View style={styles.statItem}>
-                <Text style={styles.statLabel}>DAMAGE</Text>
-                <Text style={styles.statValue}>{round.combat.damageDealt}</Text>
-              </View>
-
-              <View style={styles.statItem}>
-                <Text style={styles.statLabel}>HS%</Text>
-                <Text style={styles.statValue}>{round.combat.headshotPercentage}%</Text>
-              </View>
-
-              <View style={styles.statItem}>
-                <Text style={styles.statLabel}>LOADOUT</Text>
-                <Text style={styles.statValue}>{round.economy.weaponType}</Text>
+        {selectedRoundData && (
+          <>
+            <View style={styles.roundCard}>
+              <View style={styles.roundHeaderRow}>
+                <View style={styles.roundNumberDetails}>
+                  <View style={styles.roundNumberBadge}>
+                    <Text style={styles.roundNumberText}>Round {selectedRoundData.roundNumber}</Text>
+                  </View>
+                  <View style={styles.roundOutcome}>
+                    <Text
+                      style={[
+                        styles.outcomeText,
+                        { color: selectedRoundData.outcome === 'win' ? colors.win : colors.lose }
+                      ]}
+                    >
+                      {selectedRoundData.outcome.toUpperCase()}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.impactScoreContainer}>
+                  <Text
+                    style={[
+                      styles.impactScore,
+                      { color: getImpactScoreColor(selectedRoundData.impactScore) }
+                    ]}
+                  >
+                    {selectedRoundData.impactScore}
+                  </Text>
+                  <Text style={styles.impactLabel}>IMPACT</Text>
+                </View>
               </View>
             </View>
+            <View style={styles.divider} />
+            {selectedRoundData.improvement.length > 0 && (
+              <>
+                <View style={styles.improvementList}>
+                  <Text style={styles.improvementListTitle}>AREAS TO IMPROVE</Text>
+                  {selectedRoundData.improvement.map((item, index) => (
+                    <View key={index} style={styles.improvementListItem}>
+                      <Icon name="checkbox-blank-circle-fill" size={6} color={colors.darkGray} />
+                      <Text style={styles.improvementItemText}>{item}</Text>
+                    </View>
+                  ))}
+                </View>
+                <View style={styles.divider} />
+              </>
+              )}
 
-            <View style={styles.positioningContainer}>
+            <View style={styles.roundStatsContainer}>
+              <View style={styles.statRow}>
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>K/D/A</Text>
+                  <Text style={styles.statValue}>
+                    {selectedRoundData.combat.kills}/{selectedRoundData.combat.deaths}/{selectedRoundData.combat.assists}
+                  </Text>
+                </View>
+
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>DAMAGE</Text>
+                  <Text style={styles.statValue}>{selectedRoundData.combat.damageDealt}</Text>
+                </View>
+
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>HS%</Text>
+                  <Text style={styles.statValue}>{selectedRoundData.combat.headshotPercentage}%</Text>
+                </View>
+
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>LOADOUT</Text>
+                  <Text style={styles.statValue}>{selectedRoundData.economy.weaponType}</Text>
+                </View>
+              </View>
+
+              <View style={styles.divider} />
+
+              <View style={styles.positioningContainer}>
                 <View style={styles.sitePosition}>
-                  <Text style={styles.siteLabel}>SITE</Text>
-                  <Text style={styles.siteValue}>{round.positioning.site}</Text>
+                  <Text style={styles.siteLabel}>SITE:</Text>
+                  <Text style={styles.siteValue}>{selectedRoundData.positioning.site}</Text>
                 </View>
 
                 <View style={styles.positionTags}>
                   <View
                     style={[
                       styles.positionTag,
-                      { backgroundColor: round.positioning.firstContact ? colors.lose + '30' : colors.darkGray + '20' }
+                      { backgroundColor: selectedRoundData.positioning.firstContact ? colors.lose + '30' : colors.darkGray + '20' }
                     ]}
                   >
                     <Text
                       style={[
                         styles.tagText,
-                        { color: round.positioning.firstContact ? colors.lose : colors.darkGray }
+                        { color: selectedRoundData.positioning.firstContact ? colors.lose : colors.darkGray }
                       ]}
                     >
-                      {round.positioning.firstContact ? 'FIRST CONTACT' : 'SUPPORT'}
+                      {selectedRoundData.positioning.firstContact ? 'FIRST CONTACT' : 'SUPPORT'}
                     </Text>
                   </View>
 
@@ -547,45 +428,74 @@ const RoundPerfTab = () => {
                       { backgroundColor: colors.darkGray + '20' }
                     ]}
                   >
-                    <Text style={styles.tagText}>{round.positioning.positionType.toUpperCase()}</Text>
+                    <Text style={styles.tagText}>{selectedRoundData.positioning.positionType.toUpperCase()}</Text>
                   </View>
                 </View>
               </View >
 
-            <View style={styles.utilitySection}>
+              <View style={styles.utilitySection}>
                 <Text style={styles.utilityTitle}>UTILITY USAGE</Text>
                 <View style={styles.utilityBar}>
                   <View
                     style={[
                       styles.utilityProgress,
-                      { width: `${(round.utility.abilitiesUsed / round.utility.totalAbilities) * 100}%` }
+                      { width: `${(selectedRoundData.utility.abilitiesUsed / selectedRoundData.utility.totalAbilities) * 100}%` }
                     ]}
                   />
                 </View>
                 <Text style={styles.utilityText}>
-                  {round.utility.abilitiesUsed}/{round.utility.totalAbilities} abilities • {round.utility.utilityDamage} damage
+                  {selectedRoundData.utility.abilitiesUsed}/{selectedRoundData.utility.totalAbilities} abilities • {selectedRoundData.utility.utilityDamage} damage
                 </Text>
               </View>
 
-              {
-                round.improvement.length > 0 && (
-                  <View style={styles.improvementList}>
-                    <Text style={styles.improvementListTitle}>AREAS TO IMPROVE</Text>
-                    {round.improvement.map((item, index) => (
-                      <View key={index} style={styles.improvementListItem}>
-                        <Icon name="checkbox-blank-circle-fill" size={6} color={colors.darkGray} />
-                        <Text style={styles.improvementItemText}>{item}</Text>
-                      </View>
-                    ))}
+
+
+              {/* Additional economy details */}
+              <View style={styles.economyContainer}>
+                <Text style={styles.sectionTitle}>ECONOMY</Text>
+                <View style={styles.economyDetails}>
+                  <View style={styles.economyItem}>
+                    <Text style={styles.economyLabel}>Armor</Text>
+                    <Text style={styles.economyValue}>{selectedRoundData.economy.armorType}</Text>
                   </View>
-                )
-              }
-          </View>
+                  <View style={styles.economyItem}>
+                    <Text style={styles.economyLabel}>Credits Spent</Text>
+                    <Text style={styles.economyValue}>{selectedRoundData.economy.creditSpent}</Text>
+                  </View>
+                  <View style={styles.economyItem}>
+                    <Text style={styles.economyLabel}>Your Loadout</Text>
+                    <Text style={styles.economyValue}>{selectedRoundData.economy.loadoutValue}</Text>
+                  </View>
+                  <View style={styles.economyItem}>
+                    <Text style={styles.economyLabel}>Enemy Loadout</Text>
+                    <Text style={styles.economyValue}>{selectedRoundData.economy.enemyLoadoutValue}</Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Combat specifics */}
+              <View style={styles.combatContainer}>
+                <Text style={styles.sectionTitle}>COMBAT DETAILS</Text>
+                <View style={styles.combatDetails}>
+                  <View style={styles.combatItem}>
+                    <Text style={styles.combatLabel}>Trade Kill</Text>
+                    <Text style={styles.combatValue}>{selectedRoundData.combat.tradeKill ? 'Yes' : 'No'}</Text>
+                  </View>
+                  <View style={styles.combatItem}>
+                    <Text style={styles.combatLabel}>Death Traded</Text>
+                    <Text style={styles.combatValue}>{selectedRoundData.combat.tradedKill ? 'Yes' : 'No'}</Text>
+                  </View>
+                  <View style={styles.combatItem}>
+                    <Text style={styles.combatLabel}>Time to First Contact</Text>
+                    <Text style={styles.combatValue}>{selectedRoundData.positioning.timeToFirstContact}s</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
           </>
-        ))}
-      </ScrollView >
-    </View >
-    </View >
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -595,103 +505,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingTop: sizes.xl,
   },
-  summaryCard: {
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    padding: sizes.xl,
-    margin: sizes.md,
-    marginBottom: sizes.lg,
-  },
-  summaryTitle: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.md,
-    color: colors.black,
-    marginBottom: sizes.md,
-    textTransform: 'uppercase',
-  },
-  metricsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: sizes.md,
-  },
-  metricColumn: {
-    width: '48%',
-  },
-  metricItem: {
-    backgroundColor: colors.white,
-    borderRadius: 6,
-    padding: sizes.lg,
-    marginBottom: sizes.md,
-    alignItems: 'center',
-  },
-  metricValue: {
-    fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['4xl'],
-    color: colors.black,
-  },
-  metricLabel: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
-    color: colors.darkGray,
-    marginTop: 2,
-  },
-  improvementSection: {
-    marginTop: sizes.sm,
-    paddingTop: sizes.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.darkGray + '20',
-  },
-  improvementTitle: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.sm,
-    color: colors.darkGray,
-    marginBottom: sizes.sm,
-  },
-  improvementList: {
-    marginTop: sizes.xs,
-  },
-  improvementItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: sizes.xs,
-  },
-  improvementText: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.sm,
-    color: colors.black,
-    marginLeft: sizes.xs,
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    marginHorizontal: sizes.md,
-    marginBottom: sizes.md,
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: colors.primary + '40',
-  },
-  filterTab: {
-    flex: 1,
-    paddingVertical: sizes.md,
-    alignItems: 'center',
-  },
-  activeFilterTab: {
-    backgroundColor: colors.primary,
-  },
-  filterText: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.sm,
-    color: colors.darkGray,
-  },
-  activeFilterText: {
-    color: colors.black,
-  },
   timelineContainer: {
     marginHorizontal: sizes.md,
     marginBottom: sizes.md,
   },
   timelineTitle: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.md,
     color: colors.darkGray,
     marginBottom: sizes.sm,
   },
@@ -699,10 +519,9 @@ const styles = StyleSheet.create({
     paddingBottom: sizes.sm,
   },
   timelineItem: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    marginRight: sizes.sm,
+    width: 50,
+    height: 60,
+    marginRight: sizes.md,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -719,162 +538,175 @@ const styles = StyleSheet.create({
   },
   timelineNumber: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes.md,
+    fontSize: fonts.sizes.lg,
     color: colors.black,
   },
   impactIndicator: {
     position: 'absolute',
     bottom: -2,
-    width: 8,
+    width: '100%',
     height: 3,
     borderRadius: 2,
   },
   detailsContainer: {
     flex: 1,
-    paddingHorizontal: sizes.md,
+    marginTop: sizes.md,
+    padding: sizes.lg,
+    backgroundColor: colors.primary,
+
+  },
+  noSelectionContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: sizes.xl * 2,
+    paddingHorizontal: sizes.xl,
+  },
+  noSelectionText: {
+    fontFamily: fonts.family.proximaBold,
+    fontSize: fonts.sizes.md,
+    color: colors.darkGray,
+    textAlign: 'center',
   },
   roundCard: {
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    marginBottom: sizes.md,
+    marginBottom: sizes.lg,
     overflow: 'hidden',
-  },
-  selectedRoundCard: {
-    borderWidth: 1.5,
-    borderColor: colors.black,
   },
   roundHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: sizes.lg,
-    backgroundColor: colors.primary + '90',
+    paddingBottom: sizes.md,
+    // backgroundColor: colors.primary + '90',
   },
   roundNumberBadge: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.black,
-    alignItems: 'center',
     justifyContent: 'center',
   },
   roundNumberText: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes.md,
-    color: colors.white,
+    fontSize: fonts.sizes['2xl'],
+    textTransform: 'lowercase',
+    color: colors.black,
+  },
+  roundNumberDetails: {
+    flex: 1,
   },
   roundOutcome: {
-    flex: 1,
-    marginLeft: sizes.md,
   },
   outcomeText: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.md,
+    fontSize: fonts.sizes.lg,
     fontWeight: 'bold',
   },
   impactScoreContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   impactScore: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['4xl'],
-    lineHeight: fonts.sizes['4xl'],
+    fontSize: fonts.sizes['7xl'],
+    lineHeight: fonts.sizes['7xl'],
   },
   impactLabel: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.md,
     color: colors.darkGray,
   },
   roundStatsContainer: {
-    padding: sizes.md,
+
   },
   statRow: {
+    padding: sizes.md,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: sizes.lg,
+    marginVertical: sizes.xl,
   },
   statItem: {
     alignItems: 'center',
   },
   statLabel: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.sm,
     color: colors.darkGray,
-    marginBottom: 2,
   },
   statValue: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes.lg,
+    fontSize: fonts.sizes['3xl'],
     color: colors.black,
+    textTransform: 'lowercase'
   },
   positioningContainer: {
-    backgroundColor: colors.white + '40',
     padding: sizes.md,
-    borderRadius: 6,
     marginBottom: sizes.md,
   },
   sitePosition: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: sizes.sm,
+    marginBottom: sizes.md,
   },
   siteLabel: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.md,
     color: colors.darkGray,
     marginRight: sizes.xs,
   },
   siteValue: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.md,
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes.xl,
+    lineHeight: fonts.sizes.lg,
+    textTransform: 'lowercase',
     color: colors.black,
   },
   positionTags: {
     flexDirection: 'row',
   },
   positionTag: {
-    paddingVertical: sizes.xs,
-    paddingHorizontal: sizes.sm,
+    paddingVertical: sizes.sm,
+    paddingHorizontal: sizes.md,
     borderRadius: 4,
     marginRight: sizes.sm,
   },
   tagText: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.sm,
   },
   utilitySection: {
-    marginTop: sizes.sm,
-    marginBottom: sizes.lg,
+    padding: sizes.md,
   },
   utilityTitle: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.md,
     color: colors.darkGray,
     marginBottom: sizes.xs,
   },
   utilityBar: {
     height: 8,
     backgroundColor: colors.darkGray + '20',
-    borderRadius: 4,
     marginBottom: sizes.xs,
   },
   utilityProgress: {
     height: 8,
-    backgroundColor: colors.black,
-    borderRadius: 4,
+    backgroundColor: colors.darkGray,
   },
   utilityText: {
     fontFamily: fonts.family.proximaRegular,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.sm,
     color: colors.darkGray,
   },
+  divider: {
+    height: 1,
+    backgroundColor: colors.darkGray + '20', // Adding transparency
+    marginVertical: 2,
+  },
   improvementList: {
-    backgroundColor: colors.darkGray + '10',
+    // backgroundColor: colors.darkGray + '10',
+    marginTop:6,
     padding: sizes.md,
     borderRadius: 6,
+    marginBottom: sizes.lg,
+
   },
   improvementListTitle: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.sm,
     color: colors.darkGray,
     marginBottom: sizes.sm,
   },
@@ -888,7 +720,63 @@ const styles = StyleSheet.create({
     fontSize: fonts.sizes.sm,
     color: colors.darkGray,
     marginLeft: sizes.xs,
-  }
+  },
+  economyContainer: {
+    backgroundColor: colors.white + '40',
+    padding: sizes.md,
+    borderRadius: 6,
+    marginBottom: sizes.lg,
+  },
+  sectionTitle: {
+    fontFamily: fonts.family.proximaBold,
+    fontSize: fonts.sizes.sm,
+    color: colors.black,
+    marginBottom: sizes.md,
+  },
+  economyDetails: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  economyItem: {
+    width: '48%',
+    marginBottom: sizes.md,
+  },
+  economyLabel: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xs,
+    color: colors.darkGray,
+  },
+  economyValue: {
+    fontFamily: fonts.family.proximaBold,
+    fontSize: fonts.sizes.md,
+    color: colors.black,
+  },
+  combatContainer: {
+    backgroundColor: colors.white + '40',
+    padding: sizes.md,
+    borderRadius: 6,
+    marginBottom: sizes.lg,
+  },
+  combatDetails: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  combatItem: {
+    width: '48%',
+    marginBottom: sizes.md,
+  },
+  combatLabel: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xs,
+    color: colors.darkGray,
+  },
+  combatValue: {
+    fontFamily: fonts.family.proximaBold,
+    fontSize: fonts.sizes.md,
+    color: colors.black,
+  },
 });
 
 export default RoundPerfTab;
