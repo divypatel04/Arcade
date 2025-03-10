@@ -375,9 +375,9 @@ const RoundPerfTab = () => {
             <View style={styles.roundStatsContainer}>
               <View style={styles.statRow}>
                 <View style={styles.statItem}>
-                  <Text style={styles.statLabel}>K/D/A</Text>
+                  <Text style={styles.statLabel}>KILLS</Text>
                   <Text style={styles.statValue}>
-                    {selectedRoundData.combat.kills}/{selectedRoundData.combat.deaths}/{selectedRoundData.combat.assists}
+                    {selectedRoundData.combat.kills}
                   </Text>
                 </View>
 
@@ -448,7 +448,7 @@ const RoundPerfTab = () => {
                 </Text>
               </View>
 
-
+              <View style={styles.divider} />
 
               {/* Additional economy details */}
               <View style={styles.economyContainer}>
@@ -506,7 +506,6 @@ const styles = StyleSheet.create({
     paddingTop: sizes.xl,
   },
   timelineContainer: {
-    marginHorizontal: sizes.md,
     marginBottom: sizes.md,
   },
   timelineTitle: {
@@ -570,6 +569,7 @@ const styles = StyleSheet.create({
   roundCard: {
     marginBottom: sizes.lg,
     overflow: 'hidden',
+
   },
   roundHeaderRow: {
     flexDirection: 'row',
@@ -634,6 +634,8 @@ const styles = StyleSheet.create({
     textTransform: 'lowercase'
   },
   positioningContainer: {
+
+    marginTop: sizes.lg,
     padding: sizes.md,
     marginBottom: sizes.md,
   },
@@ -670,6 +672,8 @@ const styles = StyleSheet.create({
   },
   utilitySection: {
     padding: sizes.md,
+
+    marginBottom: sizes.lg,
   },
   utilityTitle: {
     fontFamily: fonts.family.proximaBold,
@@ -722,16 +726,15 @@ const styles = StyleSheet.create({
     marginLeft: sizes.xs,
   },
   economyContainer: {
-    backgroundColor: colors.white + '40',
     padding: sizes.md,
-    borderRadius: 6,
-    marginBottom: sizes.lg,
+    marginTop: sizes.lg,
   },
   sectionTitle: {
-    fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.sm,
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes.lg,
+    letterSpacing: 0.2,
     color: colors.black,
-    marginBottom: sizes.md,
+    marginBottom: sizes.lg,
   },
   economyDetails: {
     flexDirection: 'row',
@@ -744,7 +747,7 @@ const styles = StyleSheet.create({
   },
   economyLabel: {
     fontFamily: fonts.family.proximaRegular,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.sm,
     color: colors.darkGray,
   },
   economyValue: {
@@ -753,7 +756,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   combatContainer: {
-    backgroundColor: colors.white + '40',
     padding: sizes.md,
     borderRadius: 6,
     marginBottom: sizes.lg,
@@ -769,7 +771,7 @@ const styles = StyleSheet.create({
   },
   combatLabel: {
     fontFamily: fonts.family.proximaRegular,
-    fontSize: fonts.sizes.xs,
+    fontSize: fonts.sizes.sm,
     color: colors.darkGray,
   },
   combatValue: {
