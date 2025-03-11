@@ -45,8 +45,8 @@ function CareerStackScreen() {
         presentation: 'modal',
         headerShown: false,
       }}>
+      <Stack.Screen name="MatchListScreen" component={MatchListScreen} />
       <Stack.Screen name="MatchInfoScreen" component={MatchInfoScreen} />
-      {/* <Stack.Screen name="MatchListScreen" component={MatchListScreen} /> */}
     </Stack.Navigator>
   );
 }

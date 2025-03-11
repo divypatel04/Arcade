@@ -4,10 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { Icon } from './lcon';
+import { MatchStatType } from '../types/MatchStatType';
 
 interface MatchBoxProps {
   isPremium: boolean;
-  match: any;
+  match: MatchStatType;
   onPress: () => void;
 }
 
@@ -20,7 +21,7 @@ const MatchBox = ({isPremium,match, onPress}: MatchBoxProps) => {
       style={styles.matchBox}>
       <Image
         style={styles.matchAgentImage}
-        source={{uri: "https://firebasestorage.googleapis.com/v0/b/arcade-backend-100cd.appspot.com/o/agentIcon%2FIso.jpg?alt=media&token=4caf6172-b9ab-41b6-9b9c-22badb41781c"}}
+        source={{uri: match.general.agent.iconUrl}}
       />
       <View style={styles.matchMetaContainer}>
           <View style={styles.matchMeta}>

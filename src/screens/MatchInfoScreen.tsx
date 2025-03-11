@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -9,7 +9,6 @@ import MatchOverviewTab from '../components/Tabs/MatchOverviewTab'
 import TeamStatsTab from '../components/Tabs/TeamStatsTab';
 import RoundPerfTab from '../components/Tabs/RoundPerfTab';
 import PlayerVsTab from '../components/Tabs/PlayerVsTab';
-import ChartsTab from '../components/Tabs/ChartsTab';
 
 
 const MatchInfoScreen = () => {

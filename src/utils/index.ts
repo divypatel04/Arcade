@@ -49,6 +49,7 @@ function parseDate(dateString: string) {
   return null;
 }
 
+import {extractUniqueMatchType, transformMatchStats} from './matchUtils';
 
 export {
   formatDateString,
@@ -69,5 +70,7 @@ export {
   getSeasonNames,
   aggregateSeasonStatsForAllActs,
   aggregateWeaponStatsForAllActs,
-  mergeUtilitiesAndAbilities
+  mergeUtilitiesAndAbilities,
+  extractUniqueMatchType,
+  transformMatchStats
 };
