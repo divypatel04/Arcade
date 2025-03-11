@@ -19,7 +19,7 @@ const MatchInfoScreen = () => {
 
 
   const tabs = [
-    { label: 'Overview', content: <MatchOverviewTab/> },
+    { label: 'Overview', content: <MatchOverviewTab matchStats={match}/> },
     { label: 'Team Stats', content: <TeamStatsTab teamStats={match.teamStats} yourScore={match.playerVsplayerStat.user.stats.roundsWon} enemyScore={match.playerVsplayerStat.user.stats.roundsLost}/> },
     { label: 'Round by Round', content: <RoundPerfTab roundStats={match.roundPerformace}/> },
     { label: 'vs Player', content: <PlayerVsTab pvpStats={match.playerVsplayerStat}/> },
