@@ -45,6 +45,10 @@ interface GeneralInfo {
   seasonId: string;
   queueId: string;
   gameStartMillis: number;
+  gameLengthMillis: number;
+  isRanked: boolean;
+  winningTeam: string;
+  roundsPlayed: number;
   agent: Agent;
   map: Map;
   season: Season;
@@ -62,12 +66,16 @@ interface PlayerStats {
   headshotPercentage: number;
   damagePerRound: number;
   kdRatio: number;
-  aces?: number;
-  playtimeMillis?: number;
+  aces: number;
+  playtimeMillis: number;
+  roundsPlayed: number;
+  roundsWon: number;
+  roundsLost: number;
 }
 
 interface Player {
   id: string;
+  teamId: string;
   name: string;
   stats: PlayerStats;
 }
@@ -182,5 +190,8 @@ export type {
   PlayerVsPlayerStat,
   TeamStat,
   RoundPerformance,
-  MatchStatType
+  MatchStatType,
+  KillEvent,
+  ClutchEvent,
+
 };

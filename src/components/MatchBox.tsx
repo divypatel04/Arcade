@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { Icon } from './lcon';
 import { MatchStatType } from '../types/MatchStatType';
@@ -12,7 +12,8 @@ interface MatchBoxProps {
   onPress: () => void;
 }
 
-const MatchBox = ({isPremium,match, onPress}: MatchBoxProps) => {
+const MatchBox = ({ isPremium, match, onPress }: MatchBoxProps) => {
+  const isWon = match.general.winningTeam === match.playerVsplayerStat.user.teamId;
 
   return (
     <TouchableOpacity
@@ -21,44 +22,45 @@ const MatchBox = ({isPremium,match, onPress}: MatchBoxProps) => {
       style={styles.matchBox}>
       <Image
         style={styles.matchAgentImage}
-        source={{uri: match.general.agent.iconUrl}}
+        source={{ uri: match.general.agent.iconUrl }}
       />
       <View style={styles.matchMetaContainer}>
-          <View style={styles.matchMeta}>
-            <Text>
-              <Text
-                style={[
-                  styles.matchMetaTitle,
-                  {color: true ? colors.win : colors.lose},
-                ]}>
-                {true ? 'Victory' : 'Defeat'}
-              </Text>{' '}
-              <Text style={styles.matchMetaScore}>
-                13-7
-              </Text>
+        <View style={styles.matchMeta}>
+          <Text>
+            <Text
+              style={[
+                styles.matchMetaTitle,
+                { color: isWon ? colors.win : colors.lose },
+              ]}>
+              {isWon ? 'Victory' : 'Defeat'}
+            </Text>{' '}
+            <Text style={styles.matchMetaScore}>
+              {match.playerVsplayerStat.user.stats.roundsWon}-
+              {match.playerVsplayerStat.user.stats.roundsPlayed - match.playerVsplayerStat.user.stats.roundsWon}
             </Text>
-            <Text style={styles.matchMetaSubText}>
-              35/18/11 -{' '}
-              Ascent - Ranked
-            </Text>
-          </View>
+          </Text>
+          <Text style={styles.matchMetaSubText}>
+            {match.playerVsplayerStat.user.stats.kills}/{match.playerVsplayerStat.user.stats.deaths}/{match.playerVsplayerStat.user.stats.assists} -{' '}
+            {match.general.map.name} - {match.general.queueId}
+          </Text>
+        </View>
 
 
         <View style={styles.rightMeta}>
           <View style={{ flexDirection: 'row' }}>
-          {isPremium && (
-                      <View style={{ justifyContent: 'center' }}>
-                        <Icon
-                          name={'star-fill'}
-                          size={15}
-                          color={colors.darkGray}
-                          style={{marginTop: -2,marginRight: 5}}
-                        />
-                      </View>
-                    )}
-          <Icon name="arrow-right-s-line" size={20} color={colors.darkGray} />
+            {isPremium && (
+              <View style={{ justifyContent: 'center' }}>
+                <Icon
+                  name={'star-fill'}
+                  size={15}
+                  color={colors.darkGray}
+                  style={{ marginTop: -2, marginRight: 5 }}
+                />
+              </View>
+            )}
+            <Icon name="arrow-right-s-line" size={20} color={colors.darkGray} />
+          </View>
         </View>
-      </View>
       </View>
     </TouchableOpacity>
   );

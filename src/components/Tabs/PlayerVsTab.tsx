@@ -4,249 +4,49 @@ import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
 import DropDown from '../DropDown';
 import Map from '../Map';
+import { ClutchEvent, KillEvent, PlayerVsPlayerStat } from '../../types/MatchStatType';
 
-interface KillEvent {
-  killer: string;
-  victim: string;
-  weapon: string;
-  headshot: boolean;
-  timestamp: string;
-  round: number;
+interface PlayerVsTabProps {
+  pvpStats: PlayerVsPlayerStat;
 }
 
-interface ClutchEvent {
-  player: string;
-  situation: string; // e.g. "1v3"
-  round: number;
-  won: boolean;
-}
-
-interface PlayerStats {
-  name: string;
-  kills: number;
-  deaths: number;
-  assists: number;
-  firstBloods: number;
-  clutchesWon: number;
-  clutchAttempts: number;
-  headshotPercentage: number;
-  damagePerRound: number;
-  kdRatio: number;
-}
-
-// Central data structure with all player vs player data
-interface PlayerVsPlayerData {
-  user: {
-    id: string;
-    name: string;
-    stats: PlayerStats;
-  };
-  enemies: {
-    id: string;
-    name: string;
-    stats: PlayerStats;
-  }[];
-  killEvents: KillEvent[];
-  clutchEvents: ClutchEvent[];
-  mapData: {
-    kills: Record<string, {x: number, y: number}[]>;
-    deaths: Record<string, {x: number, y: number}[]>;
-  };
-  mapCoordinates: {
-    xMultiplier: number;
-    xScalarToAdd: number;
-    yMultiplier: number;
-    yScalarToAdd: number;
-  };
-}
-
-const PlayerVsTab = () => {
+const PlayerVsTab = ({pvpStats}:PlayerVsTabProps) => {
   const [selectedView, setSelectedView] = useState<'killFeed' | 'stats' | 'heatmap'>('stats');
   const [heatmapMode, setHeatmapMode] = useState<'kills' | 'deaths'>('kills');
   const [selectedOpponentId, setSelectedOpponentId] = useState<string>("enemy1");
 
-  // Centralized dummy data
-  const playerVsPlayerData: PlayerVsPlayerData = {
-    user: {
-      id: "user1",
-      name: "YourName",
-      stats: {
-        name: "YourName",
-        kills: 22,
-        deaths: 14,
-        assists: 5,
-        firstBloods: 3,
-        clutchesWon: 2,
-        clutchAttempts: 3,
-        headshotPercentage: 42,
-        damagePerRound: 156,
-        kdRatio: 1.57
-      }
-    },
-    enemies: [
-      {
-        id: "enemy1",
-        name: "Enemy1",
-        stats: {
-          name: "Enemy1",
-          kills: 18,
-          deaths: 19,
-          assists: 8,
-          firstBloods: 2,
-          clutchesWon: 1,
-          clutchAttempts: 4,
-          headshotPercentage: 35,
-          damagePerRound: 142,
-          kdRatio: 0.95
-        }
-      },
-      {
-        id: "enemy2",
-        name: "Enemy2",
-        stats: {
-          name: "Enemy2",
-          kills: 15,
-          deaths: 22,
-          assists: 4,
-          firstBloods: 1,
-          clutchesWon: 2,
-          clutchAttempts: 3,
-          headshotPercentage: 28,
-          damagePerRound: 125,
-          kdRatio: 0.68
-        }
-      },
-      {
-        id: "enemy3",
-        name: "Enemy3",
-        stats: {
-          name: "Enemy3",
-          kills: 24,
-          deaths: 12,
-          assists: 6,
-          firstBloods: 4,
-          clutchesWon: 3,
-          clutchAttempts: 4,
-          headshotPercentage: 40,
-          damagePerRound: 168,
-          kdRatio: 2.0
-        }
-      },
-      {
-        id: "enemy4",
-        name: "Enemy4",
-        stats: {
-          name: "Enemy4",
-          kills: 20,
-          deaths: 16,
-          assists: 9,
-          firstBloods: 3,
-          clutchesWon: 1,
-          clutchAttempts: 2,
-          headshotPercentage: 32,
-          damagePerRound: 151,
-          kdRatio: 1.25
-        }
-      }
-    ],
-    killEvents: [
-      { killer: "YourName", victim: "Enemy1", weapon: "Vandal", headshot: true, timestamp: "1:42", round: 1 },
-      { killer: "Enemy2", victim: "YourName", weapon: "Operator", headshot: false, timestamp: "2:15", round: 1 },
-      { killer: "YourName", victim: "Enemy2", weapon: "Sheriff", headshot: true, timestamp: "0:35", round: 2 },
-      { killer: "YourName", victim: "Enemy3", weapon: "Vandal", headshot: false, timestamp: "1:20", round: 3 },
-      { killer: "Enemy4", victim: "YourName", weapon: "Phantom", headshot: true, timestamp: "0:55", round: 4 },
-      { killer: "YourName", victim: "Enemy1", weapon: "Vandal", headshot: false, timestamp: "1:05", round: 5 },
-      { killer: "YourName", victim: "Enemy4", weapon: "Vandal", headshot: true, timestamp: "1:42", round: 5 },
-      { killer: "Enemy1", victim: "YourName", weapon: "Vandal", headshot: false, timestamp: "0:30", round: 6 },
-      { killer: "YourName", victim: "Enemy3", weapon: "Sheriff", headshot: true, timestamp: "1:15", round: 7 },
-      { killer: "Enemy1", victim: "YourName", weapon: "Phantom", headshot: true, timestamp: "0:45", round: 8 }
-    ],
-    clutchEvents: [
-      { player: "YourName", situation: "1v2", round: 3, won: true },
-      { player: "YourName", situation: "1v3", round: 7, won: true },
-      { player: "YourName", situation: "1v2", round: 11, won: false },
-      { player: "Enemy1", situation: "1v2", round: 15, won: true },
-      { player: "Enemy2", situation: "1v3", round: 9, won: false },
-      { player: "Enemy3", situation: "1v2", round: 12, won: true },
-      { player: "Enemy4", situation: "1v4", round: 17, won: true }
-    ],
-    mapData: {
-      kills: {
-        "enemy1": [
-          { x: 0.3, y: 0.4 },
-          { x: 0.5, y: 0.6 }
-        ],
-        "enemy2": [
-          { x: 0.4, y: 0.3 },
-          { x: 0.6, y: 0.5 }
-        ],
-        "enemy3": [
-          { x: 0.2, y: 0.7 },
-          { x: 0.8, y: 0.3 }
-        ],
-        "enemy4": [
-          { x: 0.7, y: 0.6 },
-          { x: 0.4, y: 0.2 }
-        ]
-      },
-      deaths: {
-        "enemy1": [
-          { x: 0.2, y: 0.8 },
-          { x: 0.4, y: 0.2 }
-        ],
-        "enemy2": [
-          { x: 0.3, y: 0.7 },
-          { x: 0.5, y: 0.3 }
-        ],
-        "enemy3": [
-          { x: 0.6, y: 0.4 },
-          { x: 0.8, y: 0.7 }
-        ],
-        "enemy4": [
-          { x: 0.5, y: 0.5 },
-          { x: 0.3, y: 0.3 }
-        ]
-      }
-    },
-    mapCoordinates: {
-      xMultiplier: 1,
-      xScalarToAdd: 0,
-      yMultiplier: 1,
-      yScalarToAdd: 0
-    }
-  };
 
   // Get current opponent data
-  const selectedOpponent = playerVsPlayerData.enemies.find(enemy => enemy.id === selectedOpponentId);
-  const opponentStats = selectedOpponent?.stats || playerVsPlayerData.enemies[0].stats;
-  const opponentName = selectedOpponent?.name || playerVsPlayerData.enemies[0].name;
+  const selectedOpponent = pvpStats.enemies.find(enemy => enemy.id === selectedOpponentId);
+  const opponentStats = selectedOpponent?.stats || pvpStats.enemies[0].stats;
+  const opponentName = selectedOpponent?.name || pvpStats.enemies[0].name;
 
   // Get user stats
-  const userStats = playerVsPlayerData.user.stats;
-  const userName = playerVsPlayerData.user.name;
+  const userStats = pvpStats.user.stats;
+  const userName = pvpStats.user.name;
 
   // Get enemy names for dropdown
-  const enemyNames = playerVsPlayerData.enemies.map(enemy => enemy.name);
+  const enemyNames = pvpStats.enemies.map(enemy => enemy.name);
 
   // Filter kill feed to only show events related to the selected opponent and user
-  const killFeed = playerVsPlayerData.killEvents.filter(event =>
+  const killFeed = pvpStats.killEvents.filter(event =>
     (event.killer === userName && event.victim === opponentName) ||
     (event.killer === opponentName && event.victim === userName)
   );
 
   // Filter clutch events to only show those relevant to selected opponent and user
-  const clutchEvents = playerVsPlayerData.clutchEvents.filter(event =>
+  const clutchEvents = pvpStats.clutchEvents.filter(event =>
     event.player === userName || event.player === opponentName
   );
 
   // Get current kill and death locations
-  const killLocations = playerVsPlayerData.mapData.kills[selectedOpponentId] || [];
-  const deathLocations = playerVsPlayerData.mapData.deaths[selectedOpponentId] || [];
+  const killLocations = pvpStats.mapData.kills[selectedOpponentId] || [];
+  const deathLocations = pvpStats.mapData.deaths[selectedOpponentId] || [];
 
   // Handle opponent selection change
   const handleOpponentChange = (opponent: string) => {
     // Find the enemy id from the selected name
-    const selectedEnemy = playerVsPlayerData.enemies.find(enemy => enemy.name === opponent);
+    const selectedEnemy = pvpStats.enemies.find(enemy => enemy.name === opponent);
     if (selectedEnemy) {
       setSelectedOpponentId(selectedEnemy.id);
     }
@@ -504,7 +304,7 @@ const PlayerVsTab = () => {
             <Map
               locations={heatmapMode === 'kills' ? killLocations : deathLocations}
               mapImage="https://static.wikia.nocookie.net/valorant/images/2/23/Loading_Screen_Ascent.png"
-              mapCoordinate={playerVsPlayerData.mapCoordinates}
+              mapCoordinate={pvpStats.mapCoordinates}
               mode={heatmapMode === 'kills' ? 'Kills' : 'Deaths'}
             />
 
@@ -563,7 +363,7 @@ const styles = StyleSheet.create({
   },
   playerName: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['6xl'],
+    fontSize: fonts.sizes['2xl'],
     textTransform: 'lowercase',
     color: colors.black,
   },

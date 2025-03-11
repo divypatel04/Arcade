@@ -2,279 +2,16 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
+import { RoundPerformance } from '../../types/MatchStatType';
 
-interface RoundPerformance {
-  roundNumber: number;
-  outcome: 'win' | 'loss';
-  impactScore: number; // Overall contribution to round (0-100)
-  combat: {
-    kills: number;
-    deaths: number;
-    assists: number;
-    damageDealt: number;
-    headshotPercentage: number;
-    tradedKill: boolean; // Was player's death traded by teammate
-    tradeKill: boolean;  // Did player trade a teammate's death
-  };
-  economy: {
-    weaponType: string;
-    armorType: string;
-    creditSpent: number;
-    loadoutValue: number;
-    enemyLoadoutValue: number;
-  };
-  positioning: {
-    site: string; // A, B, Mid
-    positionType: 'aggressive' | 'passive' | 'lurk';
-    firstContact: boolean; // First to encounter enemies
-    timeToFirstContact: number; // Seconds into round
-  };
-  utility: {
-    abilitiesUsed: number;
-    totalAbilities: number;
-    utilityDamage: number;
-  };
-  improvement: string[]; // Areas to improve from this round
+
+interface RoundPerfTabProps {
+  roundStats: RoundPerformance[];
 }
 
-const RoundPerfTab = () => {
+const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
   const [selectedRound, setSelectedRound] = useState<number | null>(null);
   const screenWidth = Dimensions.get('window').width;
-
-  // Dummy round performance data
-  const roundPerformanceData: RoundPerformance[] = [
-    {
-      roundNumber: 1,
-      outcome: 'win',
-      impactScore: 82,
-      combat: {
-        kills: 2,
-        deaths: 0,
-        assists: 1,
-        damageDealt: 243,
-        headshotPercentage: 50,
-        tradedKill: false,
-        tradeKill: false
-      },
-      economy: {
-        weaponType: 'Classic',
-        armorType: 'Light Shield',
-        creditSpent: 800,
-        loadoutValue: 800,
-        enemyLoadoutValue: 800
-      },
-      positioning: {
-        site: 'A Site',
-        positionType: 'aggressive',
-        firstContact: true,
-        timeToFirstContact: 12
-      },
-      utility: {
-        abilitiesUsed: 2,
-        totalAbilities: 3,
-        utilityDamage: 40
-      },
-      improvement: ['Utility usage', 'Early positioning']
-    },
-    {
-      roundNumber: 2,
-      outcome: 'loss',
-      impactScore: 45,
-      combat: {
-        kills: 1,
-        deaths: 1,
-        assists: 0,
-        damageDealt: 120,
-        headshotPercentage: 0,
-        tradedKill: false,
-        tradeKill: false
-      },
-      economy: {
-        weaponType: 'Ghost',
-        armorType: 'Light Shield',
-        creditSpent: 1200,
-        loadoutValue: 1500,
-        enemyLoadoutValue: 2100
-      },
-      positioning: {
-        site: 'B Site',
-        positionType: 'passive',
-        firstContact: false,
-        timeToFirstContact: 28
-      },
-      utility: {
-        abilitiesUsed: 1,
-        totalAbilities: 3,
-        utilityDamage: 0
-      },
-      improvement: ['Trading teammate deaths', 'Crosshair placement']
-    },
-    {
-      roundNumber: 3,
-      outcome: 'win',
-      impactScore: 95,
-      combat: {
-        kills: 3,
-        deaths: 0,
-        assists: 1,
-        damageDealt: 432,
-        headshotPercentage: 66,
-        tradedKill: false,
-        tradeKill: true
-      },
-      economy: {
-        weaponType: 'Vandal',
-        armorType: 'Heavy Shield',
-        creditSpent: 3900,
-        loadoutValue: 3900,
-        enemyLoadoutValue: 2800
-      },
-      positioning: {
-        site: 'Mid',
-        positionType: 'lurk',
-        firstContact: false,
-        timeToFirstContact: 35
-      },
-      utility: {
-        abilitiesUsed: 3,
-        totalAbilities: 4,
-        utilityDamage: 75
-      },
-      improvement: []
-    },
-    {
-      roundNumber: 4,
-      outcome: 'loss',
-      impactScore: 35,
-      combat: {
-        kills: 0,
-        deaths: 1,
-        assists: 0,
-        damageDealt: 78,
-        headshotPercentage: 0,
-        tradedKill: true,
-        tradeKill: false
-      },
-      economy: {
-        weaponType: 'Spectre',
-        armorType: 'Light Shield',
-        creditSpent: 2000,
-        loadoutValue: 2000,
-        enemyLoadoutValue: 4200
-      },
-      positioning: {
-        site: 'B Site',
-        positionType: 'aggressive',
-        firstContact: true,
-        timeToFirstContact: 8
-      },
-      utility: {
-        abilitiesUsed: 2,
-        totalAbilities: 4,
-        utilityDamage: 26
-      },
-      improvement: ['Pre-aim common angles', 'Pace of aggression', 'Economy management']
-    },
-    {
-      roundNumber: 5,
-      outcome: 'win',
-      impactScore: 72,
-      combat: {
-        kills: 1,
-        deaths: 1,
-        assists: 2,
-        damageDealt: 345,
-        headshotPercentage: 100,
-        tradedKill: false,
-        tradeKill: false
-      },
-      economy: {
-        weaponType: 'Vandal',
-        armorType: 'Heavy Shield',
-        creditSpent: 3900,
-        loadoutValue: 3900,
-        enemyLoadoutValue: 4700
-      },
-      positioning: {
-        site: 'A Site',
-        positionType: 'passive',
-        firstContact: false,
-        timeToFirstContact: 22
-      },
-      utility: {
-        abilitiesUsed: 4,
-        totalAbilities: 4,
-        utilityDamage: 130
-      },
-      improvement: ['Post-plant positioning']
-    },
-    {
-      roundNumber: 6,
-      outcome: 'loss',
-      impactScore: 15,
-      combat: {
-        kills: 0,
-        deaths: 1,
-        assists: 0,
-        damageDealt: 0,
-        headshotPercentage: 0,
-        tradedKill: false,
-        tradeKill: false
-      },
-      economy: {
-        weaponType: 'Marshal',
-        armorType: 'No Shield',
-        creditSpent: 1100,
-        loadoutValue: 1100,
-        enemyLoadoutValue: 3800
-      },
-      positioning: {
-        site: 'Mid',
-        positionType: 'aggressive',
-        firstContact: true,
-        timeToFirstContact: 5
-      },
-      utility: {
-        abilitiesUsed: 0,
-        totalAbilities: 2,
-        utilityDamage: 0
-      },
-      improvement: ['Eco round positioning', 'Team coordination', 'Utility usage']
-    },
-    {
-      roundNumber: 7,
-      outcome: 'win',
-      impactScore: 100,
-      combat: {
-        kills: 4,
-        deaths: 0,
-        assists: 0,
-        damageDealt: 580,
-        headshotPercentage: 75,
-        tradedKill: false,
-        tradeKill: false
-      },
-      economy: {
-        weaponType: 'Operator',
-        armorType: 'Heavy Shield',
-        creditSpent: 4700,
-        loadoutValue: 4700,
-        enemyLoadoutValue: 4200
-      },
-      positioning: {
-        site: 'B Site',
-        positionType: 'passive',
-        firstContact: false,
-        timeToFirstContact: 18
-      },
-      utility: {
-        abilitiesUsed: 4,
-        totalAbilities: 4,
-        utilityDamage: 95
-      },
-      improvement: []
-    },
-  ];
 
   // Helper function for impact score color
   const getImpactScoreColor = (score: number) => {
@@ -285,7 +22,7 @@ const RoundPerfTab = () => {
 
   // Get the selected round data
   const selectedRoundData = selectedRound
-    ? roundPerformanceData.find(round => round.roundNumber === selectedRound)
+    ? roundStats.find(round => round.roundNumber === selectedRound)
     : null;
 
   return (
@@ -294,7 +31,7 @@ const RoundPerfTab = () => {
       <View style={styles.timelineContainer}>
         <Text style={styles.timelineTitle}>ROUND TIMELINE</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timelineScroll}>
-          {roundPerformanceData.map((round) => (
+          {roundStats.map((round) => (
             <TouchableOpacity
               key={round.roundNumber}
               style={[

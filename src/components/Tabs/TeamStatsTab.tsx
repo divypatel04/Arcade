@@ -2,36 +2,21 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
+import { useRoute } from '@react-navigation/native';
+import { TeamStat } from '../../types/MatchStatType';
 
-const TeamStatsTab = () => {
 
-  const stats = [
-    {
-      team: 'Your Team',
-      teamId: '1',
-      firstKills: 1,
-      thrifties: 2,
-      postPlantsWon: 3,
-      postPlantsLost: 1,
-      clutchesWon: 1,
-    },
-    {
-      team: 'Enemy Team',
-      teamId: '2',
-      firstKills: 3,
-      thrifties: 1,
-      postPlantsWon: 2,
-      postPlantsLost: 3,
-      clutchesWon: 0,
-    }
-  ]
+interface TeamStatsProps {
+  teamStats: TeamStat[];
+  yourScore: number;
+  enemyScore: number;
+}
 
-  const yourTeam = stats[0];
-  const enemyTeam = stats[1];
+const TeamStatsTab = ({teamStats, yourScore, enemyScore}:TeamStatsProps) => {
 
-  // Calculate which team has higher score for coloring
-  const yourScore = 13;
-  const enemyScore = 9;
+  const yourTeam = teamStats[0];
+  const enemyTeam = teamStats[1];
+
   const yourScoreColor = yourScore > enemyScore ? colors.win : yourScore < enemyScore ? colors.lose : colors.darkGray;
   const enemyScoreColor = enemyScore > yourScore ? colors.win : enemyScore < yourScore ? colors.lose : colors.darkGray;
 

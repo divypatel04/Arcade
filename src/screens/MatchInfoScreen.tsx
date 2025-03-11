@@ -9,18 +9,20 @@ import MatchOverviewTab from '../components/Tabs/MatchOverviewTab'
 import TeamStatsTab from '../components/Tabs/TeamStatsTab';
 import RoundPerfTab from '../components/Tabs/RoundPerfTab';
 import PlayerVsTab from '../components/Tabs/PlayerVsTab';
+import { MatchStatType } from '../types/MatchStatType';
 
 
 const MatchInfoScreen = () => {
-
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const route: any = useRoute().params;
+  const match: MatchStatType = route.match;
 
 
   const tabs = [
     { label: 'Overview', content: <MatchOverviewTab/> },
-    { label: 'Team Stats', content: <TeamStatsTab/> },
-    { label: 'Round by Round', content: <RoundPerfTab/> },
-    { label: 'vs Player', content: <PlayerVsTab/> },
+    { label: 'Team Stats', content: <TeamStatsTab teamStats={match.teamStats} yourScore={match.playerVsplayerStat.user.stats.roundsWon} enemyScore={match.playerVsplayerStat.user.stats.roundsLost}/> },
+    { label: 'Round by Round', content: <RoundPerfTab roundStats={match.roundPerformace}/> },
+    { label: 'vs Player', content: <PlayerVsTab pvpStats={match.playerVsplayerStat}/> },
     // { label: 'Charts', content: <ChartsTab/> },
   ];
 
