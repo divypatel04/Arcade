@@ -3,17 +3,9 @@ import {
   StatusBar,
   useColorScheme,
 } from 'react-native';
-
-import HomeScreen from './src/screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import BottomTabs from './src/navigation/BottomTabs';
-import AgentListScreen from './src/screens/AgentListScreen';
-import MapListScreen from './src/screens/MapListScreen';
-import WeaponListScreen from './src/screens/WeaponListScreen';
-import AgentInfoScreen from './src/screens/AgentInfoScreen';
-import MapInfoScreen from './src/screens/MapInfoScreen';
-import WeaponInfoScreen from './src/screens/WeaponInfoScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
+import OnboardingScreen from './src/screens/OnboardingScreen';
+import { AuthProvider } from './src/context/AuthContext';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,20 +16,16 @@ function App(): React.JSX.Element {
 
   return (
     <>
+    <AuthProvider>
     <NavigationContainer>
-    {/* <SafeAreaView style={backgroundStyle}> */}
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={'rgba(52, 52, 52, 0)'}
       />
-      {/* <AgentListScreen/> */}
-      {/* <AgentInfoScreen/> */}
-      {/* <MapInfoScreen/> */}
-      {/* <ProfileScreen/> */}
-      {/* <MapListScreen/> */}
-      <BottomTabs/>
-    {/* </SafeAreaView> */}
+      {/* <BottomTabs/> */}
+      <OnboardingScreen/>
     </NavigationContainer>
+    </AuthProvider>
     </>
   );
 }
