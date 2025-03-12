@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { colors, fonts } from '../theme';
 import { Icon } from '../components/lcon';
+import { useAuth } from '../context/AuthContext';
 
 const {width, height} = Dimensions.get('window');
 
@@ -40,6 +41,8 @@ const slides = [
   },
 ];
 
+
+
 const Slide = ({item}: any) => {
   return (
     <View style={{alignItems: 'center', width}}>
@@ -61,6 +64,16 @@ const Slide = ({item}: any) => {
 };
 
 const OnboardingScreen = () => {
+
+  const {setIsAuthenticated, login} = useAuth();
+
+
+  const onLogin = () => {
+    console.log('Login with Riot ID');
+
+    login('1234567890');
+    setIsAuthenticated(true);
+  }
 
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = useRef();
@@ -124,7 +137,7 @@ const OnboardingScreen = () => {
           <View style={{height: 55}}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => {}}
+              onPress={onLogin}
               // disabled={isLoading}
               >
               <Text style={styles.btnText}>

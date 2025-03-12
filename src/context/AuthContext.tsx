@@ -12,6 +12,7 @@ export const AuthProvider = ({children}: any) => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
+        // await AsyncStorage.removeItem('UserID');
         const userId = await AsyncStorage.getItem('UserID');
         if (userId) {
           setUserPuuid(userId);
