@@ -4,9 +4,9 @@ import DropDown from '../components/DropDown';
 import { colors, fonts, sizes } from '../theme';
 import StatsSummary from '../components/StatsSummary';
 import DetailedStats from '../components/DetailedStats';
-import { seasonStats } from '../data/dummyData';
 import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '../utils';
 import { SeasonStatsType } from '../types/SeasonStatsType';
+import { seasonStats } from '../data';
 
 
 const SeasonInfoScreen = () => {

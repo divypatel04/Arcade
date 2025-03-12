@@ -9,10 +9,10 @@ import OverviewTab from '../components/Tabs/OverviewTab';
 import SiteTab from '../components/Tabs/SiteTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { MapStats } from '../data/dummyData';
 import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 import MapHeatmap from '../components/Tabs/MapHeatmap';
 import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames } from '../utils';
+import { mapStats } from '../data';
 
 const MapInfoScreen = () => {
 
@@ -21,7 +21,7 @@ const MapInfoScreen = () => {
   const map: MapStatsType = routeParams.map;
   const selectedSeasonName = routeParams.seasonName;
 
-  const seasonNames = getAllMapSeasonNames(MapStats);
+  const seasonNames = getAllMapSeasonNames(mapStats);
   const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
   const [selectedSeason, setSelectedSeason] = useState(selectedSeasonName);
 

@@ -5,10 +5,10 @@ import { colors, fonts, sizes } from '../theme'
 import DropDown from '../components/DropDown'
 import { extractUniqueMatchType, formatDateString, transformMatchStats } from '../utils'
 import MatchBox from '../components/MatchBox'
-import { matchStats } from '../data/dummyData'
 import { MatchStatType } from '../types/MatchStatType'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { matchStats } from '../data'
 
 
 interface resultArray {

@@ -10,7 +10,6 @@ import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames } from '../util
 import OverviewTab from '../components/Tabs/OverviewTab';
 import TabBar from '../components/TabBar';
 import HitsTab from '../components/Tabs/HitsTab';
-import { weaponStats } from '../data/dummyData';
 
 const WeaponInfoScreen = () => {
 

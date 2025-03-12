@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDown from '../components/DropDown'
 import { colors, fonts, sizes } from '../theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
@@ -11,7 +11,6 @@ import BestMapTab from '../components/Tabs/BestMapTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
-import { AgentStats } from '../data/dummyData';
 import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, mergeUtilitiesAndAbilities } from '../utils';
 import UtilityTab from '../components/Tabs/UtilityTab';
 
@@ -72,12 +71,6 @@ const AgentInfoScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.details}>
-        <View style={styles.imagecontainer}>
-          <ImageBackground
-            style={styles.image}
-            source={{uri: agent.agent.imageUrl}}
-          />
-        </View>
         <View style={styles.meta}>
           <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} onPress={() => navigation.goBack()}>
             <FontAwesome
@@ -100,12 +93,14 @@ const AgentInfoScreen = () => {
             </View>
           </View>
         </View>
-
+        <Image
+          style={styles.agentImage}
+          source={{uri: agent.agent.imageUrl}}
+        />
       </View>
       <View style={styles.tabs}>
         <TabBar tabs={tabs} />
       </View>
-
     </View>
   )
 }
@@ -116,16 +111,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   details: {
-    flexDirection: 'row',
     height: 260,
-    // borderBottomWidth: 0.6,
-    // borderBottomColor: colors.black,
     paddingVertical: sizes['2xl'],
     paddingHorizontal: sizes['4xl'],
+    position: 'relative',
   },
   meta: {
+    height: '100%',
     paddingTop: sizes['3xl'],
     zIndex: 100,
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   backicon: {
     paddingTop: sizes.md,
@@ -138,7 +134,6 @@ const styles = StyleSheet.create({
     letterSpacing: -0.9,
     paddingBottom: sizes.md,
     textTransform: 'capitalize',
-
   },
   subtext: {
     fontFamily: fonts.family.proximaBold,
@@ -156,16 +151,14 @@ const styles = StyleSheet.create({
     paddingBottom: sizes.md,
     zIndex: 100,
   },
-  imagecontainer: {
+  agentImage: {
     width: '60%',
-    position: 'absolute',
-    right: 0,
-    marginRight: -sizes.xl,
-  },
-  image: {
-    width: '100%',
-    height: 260,
+    height: 240,
     resizeMode: 'contain',
+    position: 'absolute',
+    bottom: 0,
+    right: -sizes.xl,
+    zIndex: 0,
   },
   tabs: {
     zIndex: -1,

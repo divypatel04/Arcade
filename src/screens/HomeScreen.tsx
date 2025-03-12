@@ -5,18 +5,18 @@ import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
 import GunBox from '../components/GunBox';
 import SeasonBox from '../components/SeasonBox';
-import { AgentStats, MapStats, seasonStats, weaponStats } from '../data/dummyData';
 import { AgentStatType } from '../types/AgentStatsType';
 import { MapStatsType } from '../types/MapStatsType';
 import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate } from '../utils';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { getTopWeaponByKills } from '../utils/weaponUtils';
+import { agentStats, mapStats, seasonStats, weaponStats } from '../data';
 
 
 const HomeScreen = () => {
 
-  const bestAgentStats: AgentStatType = getTopAgentByKills(AgentStats);
-  const bestMapStats: MapStatsType = getTopMapByWinRate(MapStats);
+  const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
+  const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
   const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
   const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
 

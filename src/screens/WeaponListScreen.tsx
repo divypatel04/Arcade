@@ -6,9 +6,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import GunCard from '../components/GunCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { weaponStats } from '../data/dummyData';
 import { getAllWeaponSeasonNames, sortWeaponsByMatches } from '../utils';
 import { WeaponStatType } from '../types/WeaponStatsType';
+import { weaponStats } from '../data';
 
 
 type WeaponListProps = {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
@@ -17,10 +17,6 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate('AgentListScreen')} activeOpacity={0.6} style={styles.agentcontainer}>
-      <View style={styles.agentimagecontainer}>
-        <ImageBackground source={{uri: bestAgent.agent.imageUrl}} style={styles.agentimage}>
-        </ImageBackground>
-      </View>
       <View style={styles.agentmetacontainer}>
         <Text style={styles.agentsubtext}>Best Agent</Text>
         <Text
@@ -36,6 +32,10 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
           <Text style={styles.agentmetatitle}>Kills:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.kills}</Text>
         </View>
       </View>
+      <Image
+        style={styles.agentimage}
+        source={{uri: bestAgent.agent.imageUrl}}
+      />
     </TouchableOpacity>
   )
 }
@@ -45,20 +45,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     marginTop: sizes['22xl'],
     padding: sizes['5xl'],
-    flexDirection: 'row',
-  },
-  agentimagecontainer: {
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    right: 0,
-  },
-  agentimage: {
-    height: 260,
-    aspectRatio: 7.6 / 9,
-    resizeMode: 'contain',
-    marginRight: -sizes.xl,
+    position: 'relative',
   },
   agentmetacontainer: {
+    zIndex: 1,
   },
   agentmetadetails: {
     paddingBottom: sizes.md,
@@ -88,6 +78,15 @@ const styles = StyleSheet.create({
     letterSpacing: -0.4,
     color: colors.black,
     marginBottom: sizes['6xl'],
+  },
+  agentimage: {
+    width: '45%',
+    height: 210,
+    resizeMode: 'contain',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    zIndex: 0,
   },
 });
 
