@@ -3,10 +3,9 @@ import {
   StatusBar,
   useColorScheme,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import OnboardingScreen from './src/screens/OnboardingScreen';
 import { AuthProvider } from './src/context/AuthContext';
 import Navigation from './src/navigation';
+import { DataProvider } from './src/context/DataContext';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -17,6 +16,7 @@ function App(): React.JSX.Element {
 
   return (
     <>
+    <DataProvider>
     <AuthProvider>
       <StatusBar
         barStyle={'dark-content'}
@@ -24,6 +24,7 @@ function App(): React.JSX.Element {
       />
       <Navigation />
     </AuthProvider>
+    </DataProvider>
     </>
   );
 }
