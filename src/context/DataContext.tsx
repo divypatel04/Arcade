@@ -1,271 +1,333 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { supabase } from '../lib/supabase';
+import { AgentStatType } from '../types/AgentStatsType';
+import { MapStatsType } from '../types/MapStatsType';
+import { WeaponStatType } from '../types/WeaponStatsType';
+import { SeasonStatsType } from '../types/SeasonStatsType';
+import { MatchStatType } from '../types/MatchStatType';
 
-// Create a client for TanStack Query
+type UserData = {
+  puuid: string;
+  region: string;
+  name: string;
+  tagline: string;
+  createdAt: string;
+  lastUpdated: string;
+  matchesId: string[];
+};
+
+interface DataContextState {
+  userData: UserData | null;
+  agentStats: AgentStatType | null;
+  mapStats: MapStatsType | null;
+  weaponStats: WeaponStatType | null;
+  seasonStats: SeasonStatsType[] | null;
+  matchStats: MatchStatType[] | null;
+  isLoading: boolean;
+  error: Error | null;
+  isDataReady: boolean;
+}
+
+interface DataContextValue extends DataContextState {
+  fetchUserData: (puuid: string) => Promise<void>;
+}
+
+// Create QueryClient with optimized settings
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       refetchOnWindowFocus: false,
+      retry: 1,
+      retryDelay: 2000,
     },
   },
 });
 
-// Define types for our context data
-type DataContextType = {
-  userData: any | null;
-  agentStats: any[];
-  mapStats: any[];
-  weaponStats: any[];
-  seasonStats: any[];
-  matchStats: any[];
-  isLoading: boolean;
-  error: Error | null;
-  fetchUserData: (puuid: string) => void;
-  isDataReady: boolean;
+// Create context
+const DataContext = createContext<DataContextValue | undefined>(undefined);
+
+// Initial state
+const initialState: DataContextState = {
+  userData: null,
+  agentStats: null,
+  mapStats: null,
+  weaponStats: null,
+  seasonStats: null,
+  matchStats: null,
+  isLoading: false,
+  error: null,
+  isDataReady: false,
 };
 
-// Create the context
-const DataContext = createContext<DataContextType | undefined>(undefined);
-
-// Create a hook to use the context
-export const useDataContext = () => {
-  const context = useContext(DataContext);
-  if (!context) {
-    throw new Error('useDataContext must be used within a DataProvider');
-  }
-  return context;
-};
-
-// Provider component
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClientInstance = useQueryClient();
-  const [puuid, setPuuid] = useState<string | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-  const [isDataReady, setIsDataReady] = useState<boolean>(false);
-  const [userData, setUserData] = useState<any | null>(null);
+  const [state, setState] = useState<DataContextState>(initialState);
+  const [currentPuuid, setCurrentPuuid] = useState<string | null>(null);
+  const subscriptionRef = useRef<{ [key: string]: () => void }>({});
 
-  // Function to fetch user data and set PUUID - this will be called from LoadingScreen
-  const fetchUserData = async (userPuuid: string) => {
-    try {
-      // Set PUUID immediately to trigger other queries
-      setPuuid(userPuuid);
-
-      // Fetch user data by PUUID
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('puuid', userPuuid)
-        .single();
-
-      if (error) throw error;
-
-      setUserData(data);
-    } catch (err) {
-      setError(err as Error);
+  // Helper function to handle API errors consistently
+  const handleApiError = (error: any, resourceName: string) => {
+    if (error?.message?.includes('contains 0 rows') || !error) {
+      console.log(`No ${resourceName} found for this user`);
+      return null;
     }
+    throw error;
   };
 
-  // Set up queries for each table once we have the PUUID
-  const {
-    data: agentStats = [],
-    isLoading: isAgentsLoading
-  } = useQuery({
-    queryKey: ['agentStats', puuid],
-    queryFn: async () => {
-      if (!puuid) return [];
+  // Setup real-time subscriptions
+  const setupSubscriptions = useCallback((puuid: string) => {
+    // Clean up existing subscriptions first
+    Object.values(subscriptionRef.current).forEach(unsub => unsub());
+    subscriptionRef.current = {};
+
+    const tables = ['agentstats', 'mapstats', 'weaponstats', 'seasonstats', 'matchstats'];
+
+    tables.forEach(table => {
+      const channel = supabase.channel(`${table}-changes-${puuid}`)
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table, filter: `puuid=eq.${puuid}` },
+          () => {
+            queryClientInstance.invalidateQueries({ queryKey: [table.toLowerCase(), puuid] });
+          }
+        )
+        .subscribe();
+
+      subscriptionRef.current[table] = () => {
+        channel.unsubscribe();
+      };
+    });
+  }, [queryClientInstance]);
+
+  // Fetch user data function
+  const fetchUserData = useCallback(async (puuid: string) => {
+    console.log('🚀 Starting data fetch for PUUID:', puuid);
+
+    setState(prev => ({ ...prev, isLoading: true, error: null, isDataReady: false }));
+    setCurrentPuuid(puuid);
+
+    try {
+      // Fetch user data first
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('puuid', puuid)
+        .single();
+
+      if (userError) throw new Error(`Failed to fetch user data: ${userError.message}`);
+      if (!userData) throw new Error('User not found');
+
+      console.log('✅ User data fetched:', userData);
+
+      // Update state with user data
+      setState(prev => ({
+        ...prev,
+        userData: userData as UserData,
+      }));
+
+      // Setup subscriptions
+      setupSubscriptions(puuid);
+
+      // Separately fetch other data
+      await Promise.all([
+        fetchAgentStats(puuid),
+        fetchMapStats(puuid),
+        fetchWeaponStats(puuid),
+        fetchSeasonStats(puuid),
+        fetchMatchStats(puuid)
+      ]);
+
+      // Mark data as ready
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        isDataReady: true,
+      }));
+
+    } catch (error) {
+      console.error('❌ Error fetching data:', error);
+      setState(prev => ({
+        ...prev,
+        error: error as Error,
+        isLoading: false,
+        isDataReady: false,
+      }));
+    }
+  }, [setupSubscriptions]);
+
+  // Individual data fetching functions
+  const fetchAgentStats = async (puuid: string) => {
+    try {
+      console.log('📊 Fetching agent stats...');
       const { data, error } = await supabase
         .from('agentstats')
         .select('*')
         .eq('puuid', puuid);
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!puuid,
-  });
 
-  const {
-    data: mapStats = [],
-    isLoading: isMapsLoading
-  } = useQuery({
-    queryKey: ['mapStats', puuid],
-    queryFn: async () => {
-      if (!puuid) return [];
+      if (error || !data || data.length === 0) {
+        handleApiError(error, 'agent stats');
+        setState(prev => ({ ...prev, agentStats: null }));
+        return;
+      }
+
+      const record = data[0];
+      console.log('✅ Agent stats fetched');
+
+      const agentStats = {
+        playerId: record.puuid,
+        agent: record.agent,
+        performanceBySeason: record.performancebyseason || []
+      } as AgentStatType;
+
+      setState(prev => ({ ...prev, agentStats }));
+    } catch (error) {
+      console.error('Error fetching agent stats:', error);
+      setState(prev => ({ ...prev, agentStats: null }));
+    }
+  };
+
+  const fetchMapStats = async (puuid: string) => {
+    try {
+      console.log('📊 Fetching map stats...');
       const { data, error } = await supabase
         .from('mapstats')
         .select('*')
         .eq('puuid', puuid);
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!puuid,
-  });
 
-  const {
-    data: weaponStats = [],
-    isLoading: isWeaponsLoading
-  } = useQuery({
-    queryKey: ['weaponStats', puuid],
-    queryFn: async () => {
-      if (!puuid) return [];
+      if (error || !data || data.length === 0) {
+        handleApiError(error, 'map stats');
+        setState(prev => ({ ...prev, mapStats: null }));
+        return;
+      }
+
+      const record = data[0];
+      console.log('✅ Map stats fetched');
+
+      const mapStats = {
+        playerId: record.puuid,
+        map: record.map,
+        performanceBySeason: record.performancebyseason || []
+      } as MapStatsType;
+
+      setState(prev => ({ ...prev, mapStats }));
+    } catch (error) {
+      console.error('Error fetching map stats:', error);
+      setState(prev => ({ ...prev, mapStats: null }));
+    }
+  };
+
+  const fetchWeaponStats = async (puuid: string) => {
+    try {
+      console.log('📊 Fetching weapon stats...');
       const { data, error } = await supabase
         .from('weaponstats')
         .select('*')
         .eq('puuid', puuid);
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!puuid,
-  });
 
-  const {
-    data: seasonStats = [],
-    isLoading: isSeasonsLoading
-  } = useQuery({
-    queryKey: ['seasonStats', puuid],
-    queryFn: async () => {
-      if (!puuid) return [];
+      if (error || !data || data.length === 0) {
+        handleApiError(error, 'weapon stats');
+        setState(prev => ({ ...prev, weaponStats: null }));
+        return;
+      }
+
+      const record = data[0];
+      console.log('✅ Weapon stats fetched');
+
+      const weaponStats = {
+        playerId: record.puuid,
+        weapon: record.weapon,
+        performanceBySeason: record.performancebyseason || []
+      } as WeaponStatType;
+
+      setState(prev => ({ ...prev, weaponStats }));
+    } catch (error) {
+      console.error('Error fetching weapon stats:', error);
+      setState(prev => ({ ...prev, weaponStats: null }));
+    }
+  };
+
+  const fetchSeasonStats = async (puuid: string) => {
+    try {
+      console.log('📊 Fetching season stats...');
       const { data, error } = await supabase
         .from('seasonstats')
         .select('*')
         .eq('puuid', puuid);
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!puuid,
-  });
 
-  const {
-    data: matchStats = [],
-    isLoading: isMatchesLoading
-  } = useQuery({
-    queryKey: ['matchStats', puuid],
-    queryFn: async () => {
-      if (!puuid) return [];
+      if (error || !data || data.length === 0) {
+        handleApiError(error, 'season stats');
+        setState(prev => ({ ...prev, seasonStats: [] }));
+        return;
+      }
+
+      const record = data[0];
+      console.log('✅ Season stats fetched');
+      const seasonStats = (record?.performancebyseason || []) as SeasonStatsType[];
+
+      setState(prev => ({ ...prev, seasonStats }));
+    } catch (error) {
+      console.error('Error fetching season stats:', error);
+      setState(prev => ({ ...prev, seasonStats: [] }));
+    }
+  };
+
+  const fetchMatchStats = async (puuid: string) => {
+    try {
+      console.log('📊 Fetching match stats...');
       const { data, error } = await supabase
         .from('matchstats')
         .select('*')
-        .eq('puuid', puuid);
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!puuid,
-  });
+        .eq('puuid', puuid)
+        .order('createdat', { ascending: false });
 
-  // Set up real-time subscriptions when PUUID is available
-  useEffect(() => {
-    if (!puuid) return;
+      if (error || !data || data.length === 0) {
+        handleApiError(error, 'match stats');
+        setState(prev => ({ ...prev, matchStats: [] }));
+        return;
+      }
 
-    // Set up real-time subscriptions for each table
-    const agentSubscription = supabase
-      .channel('agent-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'agentstats', filter: `puuid=eq.${puuid}` },
-        (payload) => {
-          queryClientInstance.invalidateQueries({ queryKey: ['agentStats', puuid] });
-        }
-      )
-      .subscribe();
+      console.log('✅ Match stats fetched:', data.length, 'matches');
+      const matchStats = data.map(item => ({
+        ...item.stats,
+        puuid: item.puuid,
+        match_id: item.id
+      })) as MatchStatType[];
 
-    const mapSubscription = supabase
-      .channel('map-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'mapstats', filter: `puuid=eq.${puuid}` },
-        (payload) => {
-          queryClientInstance.invalidateQueries({ queryKey: ['mapStats', puuid] });
-        }
-      )
-      .subscribe();
-
-    const weaponSubscription = supabase
-      .channel('weapon-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'weaponstats', filter: `puuid=eq.${puuid}` },
-        (payload) => {
-          queryClientInstance.invalidateQueries({ queryKey: ['weaponStats', puuid] });
-        }
-      )
-      .subscribe();
-
-    const seasonSubscription = supabase
-      .channel('season-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'seasonstats', filter: `puuid=eq.${puuid}` },
-        (payload) => {
-          queryClientInstance.invalidateQueries({ queryKey: ['seasonStats', puuid] });
-        }
-      )
-      .subscribe();
-
-    const matchSubscription = supabase
-      .channel('match-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'matchstats', filter: `puuid=eq.${puuid}` },
-        (payload) => {
-          queryClientInstance.invalidateQueries({ queryKey: ['matchStats', puuid] });
-        }
-      )
-      .subscribe();
-
-    // Clean up subscriptions
-    return () => {
-      agentSubscription.unsubscribe();
-      mapSubscription.unsubscribe();
-      weaponSubscription.unsubscribe();
-      seasonSubscription.unsubscribe();
-      matchSubscription.unsubscribe();
-    };
-  }, [puuid, queryClientInstance]);
-
-  // Determine overall loading state
-  const isLoading = !puuid ||
-    (!!puuid && (isAgentsLoading || isMapsLoading || isWeaponsLoading || isSeasonsLoading || isMatchesLoading));
-
-  // Check if data is ready (all queries completed and have data)
-  useEffect(() => {
-    if (
-      !isLoading &&
-      userData &&
-      agentStats.length > 0 &&
-      mapStats.length > 0 &&
-      weaponStats.length > 0 &&
-      seasonStats.length > 0 &&
-      matchStats.length > 0
-    ) {
-      setIsDataReady(true);
-    } else {
-      setIsDataReady(false);
+      setState(prev => ({ ...prev, matchStats }));
+    } catch (error) {
+      console.error('Error fetching match stats:', error);
+      setState(prev => ({ ...prev, matchStats: [] }));
     }
-  }, [isLoading, userData, agentStats, mapStats, weaponStats, seasonStats, matchStats]);
+  };
 
-  // Context value
-  const value: DataContextType = {
-    userData: userData || null,
-    agentStats: agentStats || [],
-    mapStats: mapStats || [],
-    weaponStats: weaponStats || [],
-    seasonStats: seasonStats || [],
-    matchStats: matchStats || [],
-    isLoading,
-    error,
+  // Cleanup subscriptions on unmount
+  React.useEffect(() => {
+    return () => {
+      Object.values(subscriptionRef.current).forEach(unsub => unsub());
+      subscriptionRef.current = {};
+    };
+  }, []);
+
+  const value: DataContextValue = {
+    ...state,
     fetchUserData,
-    isDataReady,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
 
-// Root provider that combines DataProvider with QueryClientProvider
-export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <DataProvider>{children}</DataProvider>
-    </QueryClientProvider>
-  );
+export const useDataContext = () => {
+  const context = useContext(DataContext);
+  if (!context) {
+    throw new Error('useDataContext must be used within DataProvider');
+  }
+  return context;
 };
+
+export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <QueryClientProvider client={queryClient}>
+    <DataProvider>{children}</DataProvider>
+  </QueryClientProvider>
+);

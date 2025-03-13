@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   ActivityIndicator,
@@ -12,88 +12,78 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { useDataContext } from '../context/DataContext';
-import { supabase } from '../lib/supabase';
 
 export default function LoadingScreen() {
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const [localError, setLocalError] = useState<Error | null>(null);
-  const [fetchingUser, setFetchingUser] = useState<boolean>(true);
+  const [loadingStarted, setLoadingStarted] = useState<boolean>(false);
+  // Use ref to track if data fetch has been initiated
+  const dataFetchInitiated = useRef<boolean>(false);
 
   const {
     fetchUserData,
     isLoading,
     error: contextError,
-    isDataReady
+    isDataReady,
+    userData
   } = useDataContext();
 
-  // First, fetch the current user's PUUID
+  // Fetch data only once
   useEffect(() => {
     const fetchCurrentUser = async () => {
+      // Only fetch if not already initiated
+      if (dataFetchInitiated.current) return;
+
+      dataFetchInitiated.current = true;
+      console.log('LoadingScreen: Initiating data fetch (once)');
+      setLoadingStarted(true);
+
       try {
-        setFetchingUser(true);
-        // Get the current authenticated user
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-
-        if (sessionError) throw sessionError;
-
-        if (!sessionData.session?.user) {
-          // No authenticated user, redirect to authentication
-          navigation.navigate('Auth');
-          return;
-        }
-
-        // Get the user details including PUUID from the users table
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('user_id', sessionData.session.user.id)
-          .single();
-
-        if (userError) throw userError;
-
-        if (!userData || !userData.puuid) {
-          throw new Error('User PUUID not found');
-        }
-
-        // Pass the PUUID to our context to fetch all related data
-        fetchUserData(userData.puuid);
+        // Use the hardcoded PUUID for now
+        await fetchUserData('-1rAp6FLCdD-ZJTyFbsr14nNndzmK_7WLKi4a-MvuOIPihsOaRGNoL4c0QQWGUWNiIf_tW0jxxm9mA');
+        console.log('LoadingScreen: fetchUserData call completed');
       } catch (err) {
-        setLocalError(err as Error);
-        console.error('Error fetching user:', err);
-      } finally {
-        setFetchingUser(false);
+        console.error('LoadingScreen: Error in fetchCurrentUser:', err);
       }
     };
 
     fetchCurrentUser();
-  }, [navigation, fetchUserData]);
+  }, [fetchUserData]);
 
-  // Navigate to main screen when data is loaded and ready
+  // Navigate to BottomTabs when data is ready
   useEffect(() => {
     if (isDataReady) {
-      // All data is loaded, navigate to main screen
-      navigation.navigate('MainScreen');
+      console.log('LoadingScreen: Data ready, navigating to BottomTabs');
+      // Small delay to ensure any final state updates complete
+      setTimeout(() => {
+        navigation.navigate('BottomTabs');
+      }, 300);
     }
   }, [isDataReady, navigation]);
 
   // Handle errors
   useEffect(() => {
-    if (localError || contextError) {
+    if (contextError) {
+      console.error('Error from context:', contextError);
+
       Alert.alert(
         'Error',
         'There was a problem loading your data. Please try again.',
         [
           {
             text: 'Retry',
-            onPress: () => navigation.reset({
-              index: 0,
-              routes: [{ name: 'Loading' }]
-            })
+            onPress: () => {
+              // Reset our flag to allow a retry
+              dataFetchInitiated.current = false;
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Loading' }]
+              });
+            }
           }
         ]
       );
     }
-  }, [localError, contextError, navigation]);
+  }, [contextError, navigation]);
 
   return (
     <View style={styles.wrapper}>
@@ -104,8 +94,16 @@ export default function LoadingScreen() {
       />
       <ActivityIndicator size="small" color={'#000'} />
       <Text style={styles.text}>Loading...</Text>
-      {(fetchingUser || isLoading) && (
+      {(loadingStarted || isLoading) && (
         <Text style={styles.subText}>Fetching your latest game data...</Text>
+      )}
+      {userData && (
+        <Text style={styles.userText}>
+          Welcome, {userData.name}#{userData.tagline || ''}
+        </Text>
+      )}
+      {isDataReady && (
+        <Text style={styles.readyText}>Data ready! Redirecting...</Text>
       )}
     </View>
   );
@@ -133,6 +131,18 @@ const styles = StyleSheet.create({
   subText: {
     fontFamily: fonts.family.proximaSemiBold,
     color: colors.darkGray,
+    fontSize: 14,
+    paddingTop: 8,
+  },
+  readyText: {
+    fontFamily: fonts.family.proximaSemiBold,
+    color: colors.black,
+    fontSize: 14,
+    paddingTop: 8,
+  },
+  userText: {
+    fontFamily: fonts.family.proximaSemiBold,
+    color: colors.primary || '#4630EB',
     fontSize: 14,
     paddingTop: 8,
   }

@@ -11,18 +11,25 @@ import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate }
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { getTopWeaponByKills } from '../utils/weaponUtils';
 import { agentStats, mapStats, seasonStats, weaponStats } from '../data';
+import { useDataContext } from '../context/DataContext';
 
 
 const HomeScreen = () => {
 
-  const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
+  const {agentStats} = useDataContext();
+
+  // const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
   const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
   const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
 
+
+
+  console.log(agentStats);
+
   return (
     <View style={styles.container}>
-      <AgentBox bestAgent={bestAgentStats}/>
+      {/* <AgentBox bestAgent={bestAgentStats}/> */}
       <View style={styles.twoboxcontainer}>
         <MapBox bestMap={bestMapStats} />
         <GunBox bestWeapon={bestWeaponStats}/>
