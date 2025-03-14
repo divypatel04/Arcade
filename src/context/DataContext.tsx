@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { AgentStatType } from '../types/AgentStatsType';
@@ -6,6 +6,7 @@ import { MapStatsType } from '../types/MapStatsType';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 import { MatchStatType } from '../types/MatchStatType';
+import { dataUpdateTracker } from '../services';
 
 type UserData = {
   puuid: string;
@@ -67,6 +68,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentPuuid, setCurrentPuuid] = useState<string | null>(null);
   const subscriptionRef = useRef<{ [key: string]: () => void }>({});
 
+  // Track when the data was last updated by our processing function
+  const [lastDataCheck, setLastDataCheck] = useState<Date | null>(null);
+
   // Helper function to handle API errors consistently
   const handleApiError = (error: any, resourceName: string) => {
     if (error?.message?.includes('contains 0 rows') || !error) {
@@ -76,7 +80,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     throw error;
   };
 
-  // Setup real-time subscriptions
+  // Setup real-time subscriptions - this is the key to auto-updating data
   const setupSubscriptions = useCallback((puuid: string) => {
     // Clean up existing subscriptions first
     Object.values(subscriptionRef.current).forEach(unsub => unsub());
@@ -89,8 +93,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .on(
           'postgres_changes',
           { event: '*', schema: 'public', table, filter: `puuid=eq.${puuid}` },
-          () => {
-            queryClientInstance.invalidateQueries({ queryKey: [table.toLowerCase(), puuid] });
+          (payload) => {
+            console.log(`📡 Received update for ${table}:`, payload);
+
+            // When background service updates data, this subscription will trigger
+            // a refetch of the specific changed data type
+            const refetchFunction = {
+              'agentstats': fetchAgentStats,
+              'mapstats': fetchMapStats,
+              'weaponstats': fetchWeaponStats,
+              'seasonstats': fetchSeasonStats,
+              'matchstats': fetchMatchStats
+            }[table];
+
+            if (refetchFunction) {
+              refetchFunction(puuid);
+              console.log(`🔄 Auto-refetching ${table} after background update`);
+            }
           }
         )
         .subscribe();
@@ -100,6 +119,46 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
     });
   }, [queryClientInstance]);
+
+  // Check for data updates from the processing function
+  useEffect(() => {
+    // Only run if we have a current user
+    if (!currentPuuid) return;
+
+    // Function to check if our data has been processed
+    const checkForUpdates = () => {
+      const { lastProcessedPuuid, lastUpdateTimestamp } = dataUpdateTracker;
+
+      // Check if there's been a new update for our current user
+      if (
+        lastProcessedPuuid === currentPuuid &&
+        lastUpdateTimestamp &&
+        (!lastDataCheck || lastUpdateTimestamp > lastDataCheck)
+      ) {
+        console.log('🔔 Detected data update, refreshing data');
+
+        // Update our last check time
+        setLastDataCheck(lastUpdateTimestamp);
+
+        // Refetch all data types
+        Promise.all([
+          fetchAgentStats(currentPuuid),
+          fetchMapStats(currentPuuid),
+          fetchWeaponStats(currentPuuid),
+          fetchSeasonStats(currentPuuid),
+          fetchMatchStats(currentPuuid)
+        ]).catch(error => {
+          console.error('Error refetching data after processing:', error);
+        });
+      }
+    };
+
+    // Check immediately and then periodically
+    checkForUpdates();
+    const intervalId = setInterval(checkForUpdates, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [currentPuuid, lastDataCheck]);
 
   // Fetch user data function
   const fetchUserData = useCallback(async (puuid: string) => {
@@ -139,7 +198,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         fetchMatchStats(puuid)
       ]);
 
-      // Mark data as ready
+      // Mark data as ready - the processing function will be called from LoadingScreen component
       setState(prev => ({
         ...prev,
         isLoading: false,

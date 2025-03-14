@@ -1,5 +1,5 @@
 import 'react-native-url-polyfill/auto'
-import { AppState } from 'react-native'
+import { AppState, Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient } from '@supabase/supabase-js'
 import Config from 'react-native-config';
@@ -27,3 +27,27 @@ AppState.addEventListener('change', (state) => {
     supabase.auth.stopAutoRefresh()
   }
 })
+
+/**
+ * Calls the Supabase Edge Function to process user data in the background
+ * @param puuid The user's PUUID
+ * @returns Promise with the result of the processing
+ */
+export const processUserData = async (puuid: string) => {
+  try {
+    // For iOS and Android, use a regular invoke
+    const { data, error } = await supabase.functions.invoke('process-user-data', {
+      body: { puuid },
+    });
+
+    if (error) {
+      console.error('Error invoking process-user-data function:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Failed to process user data:', error);
+    throw error;
+  }
+};
