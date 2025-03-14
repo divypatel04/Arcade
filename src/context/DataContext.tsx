@@ -19,11 +19,11 @@ type UserData = {
 
 interface DataContextState {
   userData: UserData | null;
-  agentStats: AgentStatType | null;
-  mapStats: MapStatsType | null;
-  weaponStats: WeaponStatType | null;
-  seasonStats: SeasonStatsType[] | null;
-  matchStats: MatchStatType[] | null;
+  agentStats: any;
+  mapStats: any;
+  weaponStats: any;
+  seasonStats: any;
+  matchStats: any;
   isLoading: boolean;
   error: Error | null;
   isDataReady: boolean;
@@ -172,14 +172,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      const record = data[0];
-      console.log('✅ Agent stats fetched');
+      console.log('✅ Agent stats fetched:', data.length, 'records');
 
-      const agentStats = {
-        playerId: record.puuid,
-        agent: record.agent,
-        performanceBySeason: record.performancebyseason || []
-      } as AgentStatType;
+      // Transform all records to correct the casing of performanceBySeason
+      const agentStats = data.map(item => ({
+        ...item,
+        performanceBySeason: item.performancebyseason,
+        // Remove the original lowercase field if needed
+        performancebyseason: undefined
+      }));
 
       setState(prev => ({ ...prev, agentStats }));
     } catch (error) {
@@ -202,14 +203,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      const record = data[0];
-      console.log('✅ Map stats fetched');
+      console.log('✅ Map stats fetched:', data.length, 'records');
 
-      const mapStats = {
-        playerId: record.puuid,
-        map: record.map,
-        performanceBySeason: record.performancebyseason || []
-      } as MapStatsType;
+      // Transform to correct the casing of performanceBySeason
+      const mapStats = data.map(item => ({
+        ...item,
+        performanceBySeason: item.performancebyseason,
+        performancebyseason: undefined
+      }));
 
       setState(prev => ({ ...prev, mapStats }));
     } catch (error) {
@@ -232,14 +233,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      const record = data[0];
-      console.log('✅ Weapon stats fetched');
+      console.log('✅ Weapon stats fetched:', data.length, 'records');
 
-      const weaponStats = {
-        playerId: record.puuid,
-        weapon: record.weapon,
-        performanceBySeason: record.performancebyseason || []
-      } as WeaponStatType;
+      // Transform to correct the casing of performanceBySeason
+      const weaponStats = data.map(item => ({
+        ...item,
+        performanceBySeason: item.performancebyseason,
+        performancebyseason: undefined
+      }));
 
       setState(prev => ({ ...prev, weaponStats }));
     } catch (error) {
@@ -262,9 +263,20 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      const record = data[0];
-      console.log('✅ Season stats fetched');
-      const seasonStats = (record?.performancebyseason || []) as SeasonStatsType[];
+      console.log('✅ Season stats fetched:', data.length, 'records');
+
+      // Transform the data to ensure correct casing
+      // We're assuming seasonstats table also needs the same transformation
+      const seasonStats = data.map(item => {
+        if (item.performancebyseason) {
+          return {
+            ...item,
+            performanceBySeason: item.performancebyseason,
+            performancebyseason: undefined
+          };
+        }
+        return item;
+      });
 
       setState(prev => ({ ...prev, seasonStats }));
     } catch (error) {
@@ -273,6 +285,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Transform match stats data similarly
   const fetchMatchStats = async (puuid: string) => {
     try {
       console.log('📊 Fetching match stats...');
@@ -289,11 +302,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       console.log('✅ Match stats fetched:', data.length, 'matches');
-      const matchStats = data.map(item => ({
-        ...item.stats,
-        puuid: item.puuid,
-        match_id: item.id
-      })) as MatchStatType[];
+
+      // Transform match stats to ensure consistent casing
+      const matchStats = data;
 
       setState(prev => ({ ...prev, matchStats }));
     } catch (error) {

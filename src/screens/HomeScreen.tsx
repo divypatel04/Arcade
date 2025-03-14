@@ -18,7 +18,7 @@ const HomeScreen = () => {
 
   const {agentStats} = useDataContext();
 
-  // const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
+  const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
   const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
   const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
@@ -29,7 +29,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* <AgentBox bestAgent={bestAgentStats}/> */}
+      <AgentBox bestAgent={bestAgentStats}/>
       <View style={styles.twoboxcontainer}>
         <MapBox bestMap={bestMapStats} />
         <GunBox bestWeapon={bestWeaponStats}/>
