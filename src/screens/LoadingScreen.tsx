@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { useDataContext } from '../context/DataContext';
+import { processUserData } from '../services';
 
 export default function LoadingScreen() {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -37,9 +38,11 @@ export default function LoadingScreen() {
       console.log('LoadingScreen: Initiating data fetch (once)');
       setLoadingStarted(true);
 
+
       try {
         // Use the hardcoded PUUID for now
         await fetchUserData('-1rAp6FLCdD-ZJTyFbsr14nNndzmK_7WLKi4a-MvuOIPihsOaRGNoL4c0QQWGUWNiIf_tW0jxxm9mA');
+        processUserData('-1rAp6FLCdD-ZJTyFbsr14nNndzmK_7WLKi4a-MvuOIPihsOaRGNoL4c0QQWGUWNiIf_tW0jxxm9mA');
         console.log('LoadingScreen: fetchUserData call completed');
       } catch (err) {
         console.error('LoadingScreen: Error in fetchCurrentUser:', err);

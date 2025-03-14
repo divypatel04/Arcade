@@ -178,7 +178,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (userError) throw new Error(`Failed to fetch user data: ${userError.message}`);
       if (!userData) throw new Error('User not found');
 
-      console.log('✅ User data fetched:', userData);
+      console.log('✅ User data fetched');
 
       // Update state with user data
       setState(prev => ({

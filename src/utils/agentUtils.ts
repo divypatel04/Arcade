@@ -286,7 +286,7 @@ export const convertMillisToReadableTime = (ms: number) => {
 
 
 export const mergeUtilitiesAndAbilities = (abilitiesData: any, utilities: any) => {
-  console.log(abilitiesData, utilities);
+  // console.log(abilitiesData, utilities);
   return abilitiesData.map((ability: any) => {
     let data;
     switch (ability.id) {

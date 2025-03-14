@@ -24,9 +24,6 @@ const HomeScreen = () => {
   const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
 
 
-
-  console.log(agentStats);
-
   return (
     <View style={styles.container}>
       <AgentBox bestAgent={bestAgentStats}/>

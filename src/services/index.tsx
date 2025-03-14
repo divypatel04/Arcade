@@ -1,11 +1,5 @@
 import { supabase } from '../lib/supabase';
-import {
-  processAgentStatsData,
-  processMapStatsData,
-  processWeaponStatsData,
-  processSeasonStatsData,
-  processMatchStatsData
-} from './processService';
+import { processAllStatsData } from './processService';
 
 // A simple state object to track the last processed data
 export const dataUpdateTracker = {
@@ -21,27 +15,50 @@ export const dataUpdateTracker = {
 };
 
 /**
- * Process user statistics data
- * Fetches data from Supabase, processes it, and updates it back
+ * Main function to process user statistics data
+ * Fetches user data, compares matchIds, processes and updates stats
  *
  * @param puuid User's PUUID to process data for
  */
 export const processUserData = async (puuid: string): Promise<void> => {
-  console.log('🔄 Processing data for PUUID:', puuid);
+  console.log('🔄 Starting data processing for PUUID:', puuid);
 
   try {
-    // Process all data types in parallel for efficiency
-    await Promise.all([
-      processAgentStats(puuid),
-      processMapStats(puuid),
-      processWeaponStats(puuid),
-      processSeasonStats(puuid),
-      processMatchStats(puuid)
-    ]);
+    // 1. Fetch the user data to get matchIds
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('puuid', puuid)
+      .single();
 
-    console.log('✅ All data processed successfully');
+    if (userError) {
+      throw new Error(`Failed to fetch user data: ${userError.message}`);
+    }
 
-    // Update the tracker to signal that processing is complete
+    if (!userData) {
+      throw new Error('User not found');
+    }
+
+    console.log('✅ User data fetched:', userData);
+
+    // 2. Compare with dummy data to find unique/new matchIds
+    const newMatchIds = findNewMatchIds(userData.matchesId || []);
+
+    if (newMatchIds.length === 0) {
+      console.log('📝 No new matches found, processing completed');
+      // Update the tracker to signal that processing is complete
+      dataUpdateTracker.markUpdated(puuid);
+      return;
+    }
+
+    console.log('🎮 Found new matches to process:', newMatchIds);
+
+    // 3. Process the data with new matchIds
+    await processData(puuid, newMatchIds);
+
+    console.log('✅ All data processed and updated successfully');
+
+    // 4. Update the tracker to signal that processing is complete
     dataUpdateTracker.markUpdated(puuid);
 
   } catch (error) {
@@ -51,169 +68,196 @@ export const processUserData = async (puuid: string): Promise<void> => {
 };
 
 /**
- * Process agent statistics
+ * Compare user matchIds with a dummy list to find new matches
+ * @param userMatchIds Array of match IDs from user record
+ * @returns Array of new match IDs that need processing
  */
-async function processAgentStats(puuid: string): Promise<void> {
-  console.log('🔄 Processing agent stats...');
+function findNewMatchIds(userMatchIds: string[]): string[] {
+  // For demonstration, use dummy matchIds that would come from a database or API
+  const dummyProcessedMatchIds = [
+    'match-1234',
+    'match-5678',
+    'match-9012'
+  ];
+
+  // Find matches in userMatchIds that aren't in dummyProcessedMatchIds
+  return userMatchIds.filter(id => !dummyProcessedMatchIds.includes(id));
+}
+
+/**
+ * Process data for all stat types using new match IDs
+ * @param puuid User PUUID
+ * @param newMatchIds Array of new match IDs to process
+ */
+async function processData(puuid: string, newMatchIds: string[]): Promise<void> {
   try {
-    // 1. Fetch the raw data from Supabase
-    const { data, error } = await supabase
-      .from('agentstats')
-      .select('*')
-      .eq('puuid', puuid);
+    // 1. Fetch all current stats from the database
+    const [agentStats, mapStats, weaponStats, seasonStats, matchStats] = await Promise.all([
+      fetchAgentStats(puuid),
+      fetchMapStats(puuid),
+      fetchWeaponStats(puuid),
+      fetchSeasonStats(puuid),
+      fetchMatchStats(puuid)
+    ]);
 
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.log('No agent stats found for processing');
-      return;
-    }
+    console.log('📊 Fetched all current stats data');
 
-    // 2. Process the data using the imported function from processService
-    const processedData = processAgentStatsData(data);
+    // 2. Process all stats with new matchIds
+    const processedStats = await processAllStatsData({
+      puuid,
+      agentStats,
+      mapStats,
+      weaponStats,
+      seasonStats,
+      matchStats,
+      newMatchIds
+    });
 
-    // 3. Update the database with processed data
-    const { error: updateError } = await supabase
-      .from('agentstats')
-      .upsert(processedData, { onConflict: 'puuid,agent' });
+    console.log('🧮 Data processing complete');
 
-    if (updateError) throw updateError;
-    console.log('✅ Agent stats processed and updated');
+    // 3. Update all tables with the processed data
+    await Promise.all([
+      updateAgentStats(processedStats.agentStats),
+      updateMapStats(processedStats.mapStats),
+      updateWeaponStats(processedStats.weaponStats),
+      updateSeasonStats(processedStats.seasonStats),
+      updateMatchStats(processedStats.matchStats)
+    ]);
+
+    console.log('💾 All database tables updated with processed data');
 
   } catch (error) {
-    console.error('Error processing agent stats:', error);
+    console.error('Error in processData function:', error);
     throw error;
   }
 }
 
 /**
- * Process map statistics
+ * Fetch agent stats from database
  */
-async function processMapStats(puuid: string): Promise<void> {
-  console.log('🔄 Processing map stats...');
-  try {
-    const { data, error } = await supabase
-      .from('mapstats')
-      .select('*')
-      .eq('puuid', puuid);
+async function fetchAgentStats(puuid: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('agentstats')
+    .select('*')
+    .eq('puuid', puuid);
 
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.log('No map stats found for processing');
-      return;
-    }
-
-    // Process the data using the imported function
-    const processedData = processMapStatsData(data);
-
-    const { error: updateError } = await supabase
-      .from('mapstats')
-      .upsert(processedData, { onConflict: 'puuid,map' });
-
-    if (updateError) throw updateError;
-    console.log('✅ Map stats processed and updated');
-
-  } catch (error) {
-    console.error('Error processing map stats:', error);
-    throw error;
-  }
+  if (error) throw error;
+  return data || [];
 }
 
 /**
- * Process weapon statistics
+ * Fetch map stats from database
  */
-async function processWeaponStats(puuid: string): Promise<void> {
-  console.log('🔄 Processing weapon stats...');
-  try {
-    const { data, error } = await supabase
-      .from('weaponstats')
-      .select('*')
-      .eq('puuid', puuid);
+async function fetchMapStats(puuid: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('mapstats')
+    .select('*')
+    .eq('puuid', puuid);
 
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.log('No weapon stats found for processing');
-      return;
-    }
-
-    // Process the data using the imported function
-    const processedData = processWeaponStatsData(data);
-
-    const { error: updateError } = await supabase
-      .from('weaponstats')
-      .upsert(processedData, { onConflict: 'puuid,weapon' });
-
-    if (updateError) throw updateError;
-    console.log('✅ Weapon stats processed and updated');
-
-  } catch (error) {
-    console.error('Error processing weapon stats:', error);
-    throw error;
-  }
+  if (error) throw error;
+  return data || [];
 }
 
 /**
- * Process season statistics
+ * Fetch weapon stats from database
  */
-async function processSeasonStats(puuid: string): Promise<void> {
-  console.log('🔄 Processing season stats...');
-  try {
-    const { data, error } = await supabase
-      .from('seasonstats')
-      .select('*')
-      .eq('puuid', puuid);
+async function fetchWeaponStats(puuid: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('weaponstats')
+    .select('*')
+    .eq('puuid', puuid);
 
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.log('No season stats found for processing');
-      return;
-    }
-
-    // Process the data using the imported function
-    const processedData = processSeasonStatsData(data);
-
-    const { error: updateError } = await supabase
-      .from('seasonstats')
-      .upsert(processedData, { onConflict: 'puuid,season' });
-
-    if (updateError) throw updateError;
-    console.log('✅ Season stats processed and updated');
-
-  } catch (error) {
-    console.error('Error processing season stats:', error);
-    throw error;
-  }
+  if (error) throw error;
+  return data || [];
 }
 
 /**
- * Process match statistics
+ * Fetch season stats from database
  */
-async function processMatchStats(puuid: string): Promise<void> {
-  console.log('🔄 Processing match stats...');
-  try {
-    const { data, error } = await supabase
-      .from('matchstats')
-      .select('*')
-      .eq('puuid', puuid)
-      .order('createdat', { ascending: false });
+async function fetchSeasonStats(puuid: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('seasonstats')
+    .select('*')
+    .eq('puuid', puuid);
 
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.log('No match stats found for processing');
-      return;
-    }
+  if (error) throw error;
+  return data || [];
+}
 
-    // Process the data using the imported function
-    const processedData = processMatchStatsData(data);
+/**
+ * Fetch match stats from database
+ */
+async function fetchMatchStats(puuid: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('matchstats')
+    .select('*')
+    .eq('puuid', puuid);
 
-    const { error: updateError } = await supabase
-      .from('matchstats')
-      .upsert(processedData, { onConflict: 'puuid,matchid' });
+  if (error) throw error;
+  return data || [];
+}
 
-    if (updateError) throw updateError;
-    console.log('✅ Match stats processed and updated');
+/**
+ * Update agent stats in the database
+ */
+async function updateAgentStats(agentStats: any[]): Promise<void> {
+  if (!agentStats || agentStats.length === 0) return;
 
-  } catch (error) {
-    console.error('Error processing match stats:', error);
-    throw error;
-  }
+  const { error } = await supabase
+    .from('agentstats')
+    .upsert(agentStats, { onConflict: 'puuid,agent' });
+
+  if (error) throw error;
+}
+
+/**
+ * Update map stats in the database
+ */
+async function updateMapStats(mapStats: any[]): Promise<void> {
+  if (!mapStats || mapStats.length === 0) return;
+
+  const { error } = await supabase
+    .from('mapstats')
+    .upsert(mapStats, { onConflict: 'puuid,map' });
+
+  if (error) throw error;
+}
+
+/**
+ * Update weapon stats in the database
+ */
+async function updateWeaponStats(weaponStats: any[]): Promise<void> {
+  if (!weaponStats || weaponStats.length === 0) return;
+
+  const { error } = await supabase
+    .from('weaponstats')
+    .upsert(weaponStats, { onConflict: 'puuid,weapon' });
+
+  if (error) throw error;
+}
+
+/**
+ * Update season stats in the database
+ */
+async function updateSeasonStats(seasonStats: any[]): Promise<void> {
+  if (!seasonStats || seasonStats.length === 0) return;
+
+  const { error } = await supabase
+    .from('seasonstats')
+    .upsert(seasonStats, { onConflict: 'puuid,season' });
+
+  if (error) throw error;
+}
+
+/**
+ * Update match stats in the database
+ */
+async function updateMatchStats(matchStats: any[]): Promise<void> {
+  if (!matchStats || matchStats.length === 0) return;
+
+  const { error } = await supabase
+    .from('matchstats')
+    .upsert(matchStats, { onConflict: 'puuid,matchid' });
+
+  if (error) throw error;
 }
