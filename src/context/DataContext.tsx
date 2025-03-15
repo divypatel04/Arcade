@@ -1,11 +1,6 @@
 import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
-import { AgentStatType } from '../types/AgentStatsType';
-import { MapStatsType } from '../types/MapStatsType';
-import { WeaponStatType } from '../types/WeaponStatsType';
-import { SeasonStatsType } from '../types/SeasonStatsType';
-import { MatchStatType } from '../types/MatchStatType';
 import { dataUpdateTracker } from '../services';
 
 type UserData = {

@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { fetchMatchList } from './api/fetchMatchList';
 import { processAllStatsData } from './processService';
 
 // A simple state object to track the last processed data
@@ -42,7 +43,7 @@ export const processUserData = async (puuid: string): Promise<void> => {
     console.log('✅ User data fetched:', userData);
 
     // 2. Compare with dummy data to find unique/new matchIds
-    const newMatchIds = findNewMatchIds(userData.matchesId || []);
+    const newMatchIds = await findNewMatchIds(userData.puuid, userData.region, userData.matchesId || []);
 
     if (newMatchIds.length === 0) {
       console.log('📝 No new matches found, processing completed');
@@ -54,7 +55,7 @@ export const processUserData = async (puuid: string): Promise<void> => {
     console.log('🎮 Found new matches to process:', newMatchIds);
 
     // 3. Process the data with new matchIds
-    await processData(puuid, newMatchIds);
+    await processData(puuid, newMatchIds, userData.region);
 
     console.log('✅ All data processed and updated successfully');
 
@@ -72,16 +73,11 @@ export const processUserData = async (puuid: string): Promise<void> => {
  * @param userMatchIds Array of match IDs from user record
  * @returns Array of new match IDs that need processing
  */
-function findNewMatchIds(userMatchIds: string[]): string[] {
-  // For demonstration, use dummy matchIds that would come from a database or API
-  const dummyProcessedMatchIds = [
-    'match-1234',
-    'match-5678',
-    'match-9012'
-  ];
+async function findNewMatchIds(puuid: string, region: string, userMatchIds: string[]): Promise<string[]> {
 
+  const matchIds = await fetchMatchList({ puuid, region});
   // Find matches in userMatchIds that aren't in dummyProcessedMatchIds
-  return userMatchIds.filter(id => !dummyProcessedMatchIds.includes(id));
+  return userMatchIds.filter(id => !matchIds.includes(id));
 }
 
 /**
@@ -89,7 +85,7 @@ function findNewMatchIds(userMatchIds: string[]): string[] {
  * @param puuid User PUUID
  * @param newMatchIds Array of new match IDs to process
  */
-async function processData(puuid: string, newMatchIds: string[]): Promise<void> {
+async function processData(puuid: string, newMatchIds: string[], region: string): Promise<void> {
   try {
     // 1. Fetch all current stats from the database
     const [agentStats, mapStats, weaponStats, seasonStats, matchStats] = await Promise.all([
@@ -104,6 +100,7 @@ async function processData(puuid: string, newMatchIds: string[]): Promise<void> 
 
     // 2. Process all stats with new matchIds
     const processedStats = await processAllStatsData({
+      region,
       puuid,
       agentStats,
       mapStats,
