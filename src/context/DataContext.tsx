@@ -321,18 +321,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Transform the data to ensure correct casing
       // We're assuming seasonstats table also needs the same transformation
-      const seasonStats = data.map(item => {
-        if (item.performancebyseason) {
-          return {
-            ...item,
-            performanceBySeason: item.performancebyseason,
-            performancebyseason: undefined
-          };
-        }
-        return item;
-      });
+      // const seasonStats = data.map(item => {
+      //   if (item.performancebyseason) {
+      //     return {
+      //       ...item,
+      //       performanceBySeason: item.performancebyseason,
+      //       performancebyseason: undefined
+      //     };
+      //   }
+      //   return item;
+      // });
 
-      setState(prev => ({ ...prev, seasonStats }));
+      setState(prev => ({ ...prev, data }));
     } catch (error) {
       console.error('Error fetching season stats:', error);
       setState(prev => ({ ...prev, seasonStats: [] }));

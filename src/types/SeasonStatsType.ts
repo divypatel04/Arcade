@@ -1,4 +1,6 @@
 export interface SeasonStatsType {
+  id: string;
+  puuid: string;
   season: {
     id: string;
     name: string;

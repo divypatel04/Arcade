@@ -180,10 +180,14 @@ interface RoundPerformance {
 
 // Main match stats interface
 interface MatchStatType {
-  general: GeneralInfo;
-  playerVsplayerStat: PlayerVsPlayerStat;
-  teamStats: TeamStat[];
-  roundPerformace: RoundPerformance[];
+  id: string
+  puuid: string;
+  stats: {
+    general: GeneralInfo;
+    playerVsplayerStat: PlayerVsPlayerStat;
+    teamStats: TeamStat[];
+    roundPerformace: RoundPerformance[];
+  }
 }
 
 export type {

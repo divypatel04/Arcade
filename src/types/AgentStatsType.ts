@@ -1,5 +1,6 @@
 export type AgentStatType = {
-  playerId: string;
+  id: string;
+  puuid: string;
   agent: Agent;
   performanceBySeason: SeasonPerformance[];
 };

@@ -1,5 +1,6 @@
 export type WeaponStatType = {
-  playerId: string;
+  id: string;
+  puuid: string;
   weapon: {
     id: string;
     name: string;

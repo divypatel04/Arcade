@@ -54,7 +54,8 @@ type MapDetails = {
 };
 
 export type MapStatsType = {
-  playerId: string;
+  id: string
+  puuid: string;
   map: MapDetails;
   performanceBySeason: SeasonPerformance[];
 };

@@ -7,17 +7,7 @@ import { AuthProvider } from './src/context/AuthContext';
 import Navigation from './src/navigation';
 import { DataProvider } from './src/context/DataContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Clipboard from "@react-native-clipboard/clipboard";
-import { DevToolsBubble } from 'react-native-react-query-devtools';
 
-const onCopy = async (text: string) => {
-  try {
-    await Clipboard.setString(text);
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 const queryClient = new QueryClient()
 
@@ -28,14 +18,6 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? '#000' : '#fff',
   };
 
-  const onCopy = async (text: string) => {
-    try {
-      await Clipboard.setString(text);
-      return true;
-    } catch {
-      return false;
-    }
-  };
 
   return (
     <>
@@ -49,7 +31,6 @@ function App(): React.JSX.Element {
       <Navigation />
     </AuthProvider>
     </DataProvider>
-    <DevToolsBubble onCopy={onCopy} />
     </QueryClientProvider>
     </>
   );
