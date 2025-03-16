@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {APIKEY} from './config';
+import { RIOT_APIKEY } from '@env';
 
 interface MatchDetailsApiProps {
   matchIds: string[];
@@ -24,7 +24,7 @@ export const fetchMatchDetails = async ({
   // Define a function to fetch a batch of match details
   const fetchBatch = async (batch: any) => {
     const batchPromises = batch.map(async (matchId: string) => {
-      const apiUrl = `https://${region}.api.riotgames.com/val/match/v1/matches/${matchId}?api_key=${APIKEY}`;
+      const apiUrl = `https://${region}.api.riotgames.com/val/match/v1/matches/${matchId}?api_key=${RIOT_APIKEY}`;
       try {
         const response = await axios.get(apiUrl);
         matchDetails.push(response.data);

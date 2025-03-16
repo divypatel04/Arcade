@@ -332,7 +332,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       //   return item;
       // });
 
-      setState(prev => ({ ...prev, data }));
+      const seasonStats = data;
+
+      setState(prev => ({ ...prev, seasonStats }));
     } catch (error) {
       console.error('Error fetching season stats:', error);
       setState(prev => ({ ...prev, seasonStats: [] }));
@@ -346,8 +348,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data, error } = await supabase
         .from('matchstats')
         .select('*')
-        .eq('puuid', puuid)
-        .order('createdat', { ascending: false });
+        .eq('puuid', puuid);
 
       if (error || !data || data.length === 0) {
         handleApiError(error, 'match stats');

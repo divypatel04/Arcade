@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIKEY } from './config';
+import { RIOT_APIKEY } from '@env';
 
 interface matchApiProps {
   puuid: string;
@@ -12,7 +12,7 @@ export const fetchMatchList = async ({puuid, region}: matchApiProps) => {
 
   while (retries < maxRetries) {
     try {
-      const apiUrl = `https://${region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/${puuid}?api_key=${APIKEY}`;
+      const apiUrl = `https://${region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/${puuid}?api_key=${RIOT_APIKEY}`;
       const response = await axios.get(apiUrl);
 
       if (response.data && response.data.history) {
