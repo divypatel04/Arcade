@@ -37,18 +37,20 @@ AppState.addEventListener('change', (state) => {
 export const processUserData = async (puuid: string) => {
   try {
     // For iOS and Android, use a regular invoke
+    console.log('[BackgroundProcess] Invoking process-user-data function for PUUID:', puuid);
     const { data, error } = await supabase.functions.invoke('process-user-data', {
       body: { puuid },
     });
 
     if (error) {
-      console.error('Error invoking process-user-data function:', error);
+      console.error('[BackgroundProcess] Error invoking process-user-data function:', error);
       throw error;
     }
 
+    console.log('[BackgroundProcess] Successfully processed user data');
     return data;
   } catch (error) {
-    console.error('Failed to process user data:', error);
+    console.error('[BackgroundProcess] Failed to process user data:', error);
     throw error;
   }
 };

@@ -40,18 +40,18 @@ interface ProcessDataOutput {
  * @returns Processed stats for all data types
  */
 export async function processAllStatsData(data: ProcessDataInput): Promise<ProcessDataOutput> {
-  console.log('Processing all stats data with new match IDs:', data.newMatchIds);
+  console.log('[BackgroundProcess] Processing all stats data with new match IDs:', data.newMatchIds);
 
   try {
     // Validate input data to prevent errors
     if (!data.puuid || !data.region || !Array.isArray(data.newMatchIds)) {
-      console.error('Invalid input data:', { puuid: data.puuid, region: data.region, newMatchIds: data.newMatchIds });
+      console.error('[BackgroundProcess] Invalid input data:', { puuid: data.puuid, region: data.region, newMatchIds: data.newMatchIds });
       throw new Error('Invalid input data for processing');
     }
 
     // Return early if no new match IDs to process
     if (data.newMatchIds.length === 0) {
-      console.log('No new match IDs to process, returning current data');
+      console.log('[BackgroundProcess] No new matches to process, returning current data');
       return {
         agentStats: data.agentStats || [],
         mapStats: data.mapStats || [],
@@ -68,7 +68,7 @@ export async function processAllStatsData(data: ProcessDataInput): Promise<Proce
 
     // Check if we got valid match details back
     if (!Array.isArray(matchDetails) || matchDetails.length === 0) {
-      console.warn('No match details retrieved, returning current data');
+      console.warn('[BackgroundProcess] No match details retrieved, returning current data');
       return {
         agentStats: data.agentStats || [],
         mapStats: data.mapStats || [],
@@ -113,7 +113,7 @@ export async function processAllStatsData(data: ProcessDataInput): Promise<Proce
       matchStats: data.matchStats || []
     };
   } catch (error) {
-    console.error('Error in processAllStatsData:', error);
+    console.error('[BackgroundProcess] Error processing stats data:', error);
     // Return original data if processing fails, to prevent data loss
     return {
       agentStats: data.agentStats || [],

@@ -157,7 +157,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Fetch user data function
   const fetchUserData = useCallback(async (puuid: string) => {
-    console.log('🚀 Starting data fetch for PUUID:', puuid);
+    console.log('[Process] 🚀 Starting data fetch for PUUID:', puuid);
 
     setState(prev => ({ ...prev, isLoading: true, error: null, isDataReady: false }));
     setCurrentPuuid(puuid);
@@ -173,7 +173,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (userError) throw new Error(`Failed to fetch user data: ${userError.message}`);
       if (!userData) throw new Error('User not found');
 
-      console.log('✅ User data fetched');
+      console.log('[Process] ✅ User data fetched');
 
       // Update state with user data
       setState(prev => ({
@@ -201,7 +201,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
 
     } catch (error) {
-      console.error('❌ Error fetching data:', error);
+      console.error('[Process] ❌ Error fetching data:', error);
       setState(prev => ({
         ...prev,
         error: error as Error,
@@ -214,7 +214,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Individual data fetching functions
   const fetchAgentStats = async (puuid: string) => {
     try {
-      console.log('📊 Fetching agent stats...');
+      console.log('[Process] 📊 Fetching agent stats...');
       const { data, error } = await supabase
         .from('agentstats')
         .select('*')
@@ -226,7 +226,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      console.log('✅ Agent stats fetched:', data.length, 'records');
+      console.log('[Process] ✅ Agent stats fetched:', data.length, 'records');
 
       // Transform all records to correct the casing of performanceBySeason
       const agentStats = data.map(item => ({
@@ -238,14 +238,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setState(prev => ({ ...prev, agentStats }));
     } catch (error) {
-      console.error('Error fetching agent stats:', error);
+      console.error('[Process] Error fetching agent stats:', error);
       setState(prev => ({ ...prev, agentStats: null }));
     }
   };
 
   const fetchMapStats = async (puuid: string) => {
     try {
-      console.log('📊 Fetching map stats...');
+      console.log('[Process] 📊 Fetching map stats...');
       const { data, error } = await supabase
         .from('mapstats')
         .select('*')
@@ -257,7 +257,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      console.log('✅ Map stats fetched:', data.length, 'records');
+      console.log('[Process] ✅ Map stats fetched:', data.length, 'records');
 
       // Transform to correct the casing of performanceBySeason
       const mapStats = data.map(item => ({
@@ -268,14 +268,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setState(prev => ({ ...prev, mapStats }));
     } catch (error) {
-      console.error('Error fetching map stats:', error);
+      console.error('[Process] Error fetching map stats:', error);
       setState(prev => ({ ...prev, mapStats: null }));
     }
   };
 
   const fetchWeaponStats = async (puuid: string) => {
     try {
-      console.log('📊 Fetching weapon stats...');
+      console.log('[Process] 📊 Fetching weapon stats...');
       const { data, error } = await supabase
         .from('weaponstats')
         .select('*')
@@ -287,7 +287,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      console.log('✅ Weapon stats fetched:', data.length, 'records');
+      console.log('[Process] ✅ Weapon stats fetched:', data.length, 'records');
 
       // Transform to correct the casing of performanceBySeason
       const weaponStats = data.map(item => ({
@@ -298,14 +298,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setState(prev => ({ ...prev, weaponStats }));
     } catch (error) {
-      console.error('Error fetching weapon stats:', error);
+      console.error('[Process] Error fetching weapon stats:', error);
       setState(prev => ({ ...prev, weaponStats: null }));
     }
   };
 
   const fetchSeasonStats = async (puuid: string) => {
     try {
-      console.log('📊 Fetching season stats...');
+      console.log('[Process] 📊 Fetching season stats...');
       const { data, error } = await supabase
         .from('seasonstats')
         .select('*')
@@ -317,7 +317,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      console.log('✅ Season stats fetched:', data.length, 'records');
+      console.log('[Process] ✅ Season stats fetched:', data.length, 'records');
 
       // Transform the data to ensure correct casing
       // We're assuming seasonstats table also needs the same transformation
@@ -336,7 +336,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setState(prev => ({ ...prev, seasonStats }));
     } catch (error) {
-      console.error('Error fetching season stats:', error);
+      console.error('[Process] Error fetching season stats:', error);
       setState(prev => ({ ...prev, seasonStats: [] }));
     }
   };
@@ -344,7 +344,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Transform match stats data similarly
   const fetchMatchStats = async (puuid: string) => {
     try {
-      console.log('📊 Fetching match stats...');
+      console.log('[Process] 📊 Fetching match stats...');
       const { data, error } = await supabase
         .from('matchstats')
         .select('*')
@@ -356,14 +356,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      console.log('✅ Match stats fetched:', data.length, 'matches');
+      console.log('[Process] ✅ Match stats fetched:', data.length, 'matches');
 
       // Transform match stats to ensure consistent casing
       const matchStats = data;
 
       setState(prev => ({ ...prev, matchStats }));
     } catch (error) {
-      console.error('Error fetching match stats:', error);
+      console.error('[Process] Error fetching match stats:', error);
       setState(prev => ({ ...prev, matchStats: [] }));
     }
   };

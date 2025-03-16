@@ -10,7 +10,6 @@ import { MapStatsType } from '../types/MapStatsType';
 import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate } from '../utils';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { getTopWeaponByKills } from '../utils/weaponUtils';
-// import { agentStats, mapStats, seasonStats, weaponStats } from '../data';
 import { useDataContext } from '../context/DataContext';
 
 
@@ -18,25 +17,21 @@ const HomeScreen = () => {
 
   const {agentStats, mapStats, weaponStats, seasonStats, matchStats} = useDataContext();
 
-  console.log('agentStats', JSON.stringify(agentStats));
-  console.log('mapStats', JSON.stringify(mapStats));
-  console.log('weaponStats', JSON.stringify(weaponStats));
-  console.log('seasonStats', JSON.stringify(seasonStats));
 
-  // const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
-  // const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
-  // const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
-  // const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
+  const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
+  const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
+  const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
+  const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
 
 
   return (
     <View style={styles.container}>
-      {/* <AgentBox bestAgent={bestAgentStats}/>
+      <AgentBox bestAgent={bestAgentStats}/>
       <View style={styles.twoboxcontainer}>
         <MapBox bestMap={bestMapStats} />
         <GunBox bestWeapon={bestWeaponStats}/>
       </View>
-      <SeasonBox season={currentSeason}/> */}
+      <SeasonBox season={currentSeason}/>
     </View>
   )
 }

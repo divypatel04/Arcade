@@ -81,7 +81,7 @@ interface MatchDetails {
 export const generateStats = async (matchDetails: MatchDetails[], puuid: string) => {
   // Validate inputs
   if (!Array.isArray(matchDetails) || !puuid) {
-    console.error('Invalid input to generateStats:', { matchDetailsLength: matchDetails?.length, puuid });
+    console.error('[BackgroundProcess] Invalid input to generateStats:', { matchDetailsLength: matchDetails?.length, puuid });
     return {
       agentStats: [],
       mapStats: [],

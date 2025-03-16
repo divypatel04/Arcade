@@ -11,7 +11,7 @@ export const dataUpdateTracker = {
   markUpdated: function(puuid: string) {
     this.lastProcessedPuuid = puuid;
     this.lastUpdateTimestamp = new Date();
-    console.log('✅ Data updated at:', this.lastUpdateTimestamp);
+    console.log('[BackgroundProcess] ✅ Data updated at:', this.lastUpdateTimestamp);
   }
 };
 
@@ -22,7 +22,7 @@ export const dataUpdateTracker = {
  * @param puuid User's PUUID to process data for
  */
 export const processUserData = async (puuid: string): Promise<void> => {
-  console.log('🔄 Starting data processing for PUUID:', puuid);
+  console.log('[BackgroundProcess] 🔄 Starting data processing for PUUID:', puuid);
 
   try {
     // 1. Fetch the user data to get matchIds
@@ -63,7 +63,7 @@ export const processUserData = async (puuid: string): Promise<void> => {
     dataUpdateTracker.markUpdated(puuid);
 
   } catch (error) {
-    console.error('❌ Error processing data:', error);
+    console.error('[BackgroundProcess] ❌ Error processing data:', error);
     throw error;
   }
 };
@@ -97,7 +97,7 @@ async function processData(puuid: string, newMatchIds: string[], region: string)
       fetchMatchStats(puuid)
     ]);
 
-    console.log('📊 Fetched all current stats data');
+    console.log('[BackgroundProcess] 📊 Fetched all current stats data');
 
     // 2. Process all stats with new matchIds
     const processedStats = await processAllStatsData({
@@ -111,7 +111,7 @@ async function processData(puuid: string, newMatchIds: string[], region: string)
       newMatchIds
     });
 
-    console.log('🧮 Data processing complete');
+    console.log('[BackgroundProcess] 🧮 Data processing complete');
 
     console.log('Processed stats:', processedStats);
 
@@ -126,10 +126,10 @@ async function processData(puuid: string, newMatchIds: string[], region: string)
       updateUserMatchIds(puuid, newMatchIds)
     ]);
 
-    console.log('💾 All database tables updated with processed data');
+    console.log('[BackgroundProcess] 💾 All database tables updated with processed data');
 
   } catch (error) {
-    console.error('Error in processData function:', error);
+    console.error('[BackgroundProcess] Error in processData function:', error);
     throw error;
   }
 }
@@ -174,7 +174,7 @@ async function updateUserMatchIds(puuid: string, newMatchIds: string[]): Promise
       throw updateError;
     }
 
-    console.log(`✅ Updated user's matchesId with ${newMatchIds.length} new matches`);
+    console.log(`[BackgroundProcess] ✅ Updated user's matchesId with ${newMatchIds.length} new matches`);
   } catch (error) {
     console.error('Error in updateUserMatchIds:', error);
     throw error;
@@ -297,22 +297,14 @@ async function fetchMatchStats(puuid: string): Promise<any[]> {
 
 /**
  * Update agent stats in the database
- * First delete all existing records for the puuid, then insert new data
+ * Uses upsert to update existing records or insert new ones
  */
 async function updateAgentStats(agentStats: any[], puuid: string): Promise<void> {
   if (!agentStats || agentStats.length === 0) return;
   if (!puuid) return;
 
   try {
-    // First delete all existing records for this puuid
-    const { error: deleteError } = await supabase
-      .from('agentstats')
-      .delete()
-      .eq('puuid', puuid);
-
-    if (deleteError) throw deleteError;
-
-    // Transform data structure for database insertion
+    // Transform data structure for database insertion/update
     const formattedAgentStats = agentStats.map(stat => ({
       id: `${puuid}-${stat.agent.id}`,
       puuid: stat.puuid,
@@ -321,14 +313,14 @@ async function updateAgentStats(agentStats: any[], puuid: string): Promise<void>
       lastupdated: new Date().toISOString()
     }));
 
-    // Then insert the new records
-    const { error: insertError } = await supabase
+    // Upsert the records (update if exists, insert if not)
+    const { error: upsertError } = await supabase
       .from('agentstats')
-      .insert(formattedAgentStats);
+      .upsert(formattedAgentStats, { onConflict: 'id' });
 
-    if (insertError) {
-      console.error('Error inserting agent stats:', insertError);
-      throw insertError;
+    if (upsertError) {
+      console.error('Error upserting agent stats:', upsertError);
+      throw upsertError;
     }
   } catch (error) {
     console.error('Error in updateAgentStats:', error);
@@ -338,22 +330,14 @@ async function updateAgentStats(agentStats: any[], puuid: string): Promise<void>
 
 /**
  * Update map stats in the database
- * First delete all existing records for the puuid, then insert new data
+ * Uses upsert to update existing records or insert new ones
  */
 async function updateMapStats(mapStats: any[], puuid: string): Promise<void> {
   if (!mapStats || mapStats.length === 0) return;
   if (!puuid) return;
 
   try {
-    // First delete all existing records for this puuid
-    const { error: deleteError } = await supabase
-      .from('mapstats')
-      .delete()
-      .eq('puuid', puuid);
-
-    if (deleteError) throw deleteError;
-
-    // Transform data structure for database insertion
+    // Transform data structure for database insertion/update
     const formattedMapStats = mapStats.map(stat => ({
       id: `${puuid}-${stat.map.id}`,
       puuid: puuid,
@@ -362,14 +346,14 @@ async function updateMapStats(mapStats: any[], puuid: string): Promise<void> {
       lastupdated: new Date().toISOString()
     }));
 
-    // Then insert the new records
-    const { error: insertError } = await supabase
+    // Upsert the records (update if exists, insert if not)
+    const { error: upsertError } = await supabase
       .from('mapstats')
-      .insert(formattedMapStats);
+      .upsert(formattedMapStats, { onConflict: 'id' });
 
-    if (insertError) {
-      console.error('Error inserting map stats:', insertError);
-      throw insertError;
+    if (upsertError) {
+      console.error('Error upserting map stats:', upsertError);
+      throw upsertError;
     }
   } catch (error) {
     console.error('Error in updateMapStats:', error);
@@ -379,22 +363,14 @@ async function updateMapStats(mapStats: any[], puuid: string): Promise<void> {
 
 /**
  * Update weapon stats in the database
- * First delete all existing records for the puuid, then insert new data
+ * Uses upsert to update existing records or insert new ones
  */
 async function updateWeaponStats(weaponStats: any[], puuid: string): Promise<void> {
   if (!weaponStats || weaponStats.length === 0) return;
   if (!puuid) return;
 
   try {
-    // First delete all existing records for this puuid
-    const { error: deleteError } = await supabase
-      .from('weaponstats')
-      .delete()
-      .eq('puuid', puuid);
-
-    if (deleteError) throw deleteError;
-
-    // Transform data structure for database insertion
+    // Transform data structure for database insertion/update
     const formattedWeaponStats = weaponStats.map(stat => ({
       id: `${puuid}-${stat.weapon.id}`,
       puuid: puuid,
@@ -403,14 +379,14 @@ async function updateWeaponStats(weaponStats: any[], puuid: string): Promise<voi
       lastupdated: new Date().toISOString()
     }));
 
-    // Then insert the new records
-    const { error: insertError } = await supabase
+    // Upsert the records (update if exists, insert if not)
+    const { error: upsertError } = await supabase
       .from('weaponstats')
-      .insert(formattedWeaponStats);
+      .upsert(formattedWeaponStats, { onConflict: 'id' });
 
-    if (insertError) {
-      console.error('Error inserting weapon stats:', insertError);
-      throw insertError;
+    if (upsertError) {
+      console.error('Error upserting weapon stats:', upsertError);
+      throw upsertError;
     }
   } catch (error) {
     console.error('Error in updateWeaponStats:', error);
@@ -420,22 +396,14 @@ async function updateWeaponStats(weaponStats: any[], puuid: string): Promise<voi
 
 /**
  * Update season stats in the database
- * First delete all existing records for the puuid, then insert new data
+ * Uses upsert to update existing records or insert new ones
  */
 async function updateSeasonStats(seasonStats: any[], puuid: string): Promise<void> {
   if (!seasonStats || seasonStats.length === 0) return;
   if (!puuid) return;
 
   try {
-    // First delete all existing records for this puuid
-    const { error: deleteError } = await supabase
-      .from('seasonstats')
-      .delete()
-      .eq('puuid', puuid);
-
-    if (deleteError) throw deleteError;
-
-    // Transform data structure for database insertion
+    // Transform data structure for database insertion/update
     const formattedSeasonStats = seasonStats.map(stat => ({
       id: `${puuid}-${stat.season.id}`,
       puuid: puuid,
@@ -444,14 +412,14 @@ async function updateSeasonStats(seasonStats: any[], puuid: string): Promise<voi
       lastupdated: new Date().toISOString()
     }));
 
-    // Then insert the new records
-    const { error: insertError } = await supabase
+    // Upsert the records (update if exists, insert if not)
+    const { error: upsertError } = await supabase
       .from('seasonstats')
-      .insert(formattedSeasonStats);
+      .upsert(formattedSeasonStats, { onConflict: 'id' });
 
-    if (insertError) {
-      console.error('Error inserting season stats:', insertError);
-      throw insertError;
+    if (upsertError) {
+      console.error('Error upserting season stats:', upsertError);
+      throw upsertError;
     }
   } catch (error) {
     console.error('Error in updateSeasonStats:', error);
@@ -461,22 +429,14 @@ async function updateSeasonStats(seasonStats: any[], puuid: string): Promise<voi
 
 /**
  * Update match stats in the database
- * First delete all existing records for the puuid, then insert new data
+ * Uses upsert to update existing records or insert new ones
  */
 async function updateMatchStats(matchStats: any[], puuid: string): Promise<void> {
   if (!matchStats || matchStats.length === 0) return;
   if (!puuid) return;
 
   try {
-    // First delete all existing records for this puuid
-    const { error: deleteError } = await supabase
-      .from('matchstats')
-      .delete()
-      .eq('puuid', puuid);
-
-    if (deleteError) throw deleteError;
-
-    // Transform data structure for database insertion
+    // Transform data structure for database insertion/update
     const formattedMatchStats = matchStats.map(stat => ({
       id: `${puuid}-${stat.stats.general.matchId}`,
       puuid: puuid,
@@ -484,14 +444,14 @@ async function updateMatchStats(matchStats: any[], puuid: string): Promise<void>
       lastupdated: new Date().toISOString()
     }));
 
-    // Then insert the new records
-    const { error: insertError } = await supabase
+    // Upsert the records (update if exists, insert if not)
+    const { error: upsertError } = await supabase
       .from('matchstats')
-      .insert(formattedMatchStats);
+      .upsert(formattedMatchStats, { onConflict: 'id' });
 
-    if (insertError) {
-      console.error('Error inserting match stats:', insertError);
-      throw insertError;
+    if (upsertError) {
+      console.error('Error upserting match stats:', upsertError);
+      throw upsertError;
     }
   } catch (error) {
     console.error('Error in updateMatchStats:', error);
