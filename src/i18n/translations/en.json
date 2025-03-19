@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Home",
+    "bestAgent": "Best Agent",
+    "bestMap": "Best Map",
+    "bestWeapon": "Best Weapon",
+    "currentSeason": "Current Season"
+  },
+  "common": {
+    "kills": "Kills",
+    "deaths": "Deaths",
+    "kd": "K/D",
+    "winRate": "Win Rate",
+    "matches": "Matches",
+    "hours": "Hours"
+  },
+  "settings": {
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Strona Główna",
+    "bestAgent": "Najlepszy Agent",
+    "bestMap": "Najlepsza Mapa",
+    "bestWeapon": "Najlepsza Broń",
+    "currentSeason": "Aktualny Sezon"
+  },
+  "common": {
+    "kills": "Zabójstwa",
+    "deaths": "Śmierci",
+    "kd": "K/D",
+    "winRate": "Współczynnik Wygranych",
+    "matches": "Mecze",
+    "hours": "Godziny"
+  },
+  "settings": {
+    "language": "Język",
+    "selectLanguage": "Wybierz Język"
+  }
+}

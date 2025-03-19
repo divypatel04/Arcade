@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "首頁",
+    "bestAgent": "最佳特工",
+    "bestMap": "最佳地圖",
+    "bestWeapon": "最佳武器",
+    "currentSeason": "當前賽季"
+  },
+  "common": {
+    "kills": "擊殺",
+    "deaths": "死亡",
+    "kd": "K/D",
+    "winRate": "勝率",
+    "matches": "比賽",
+    "hours": "小時"
+  },
+  "settings": {
+    "language": "語言",
+    "selectLanguage": "選擇語言"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "หน้าหลัก",
+    "bestAgent": "เอเจนต์ที่ดีที่สุด",
+    "bestMap": "แผนที่ที่ดีที่สุด",
+    "bestWeapon": "อาวุธที่ดีที่สุด",
+    "currentSeason": "ฤดูกาลปัจจุบัน"
+  },
+  "common": {
+    "kills": "การฆ่า",
+    "deaths": "การตาย",
+    "kd": "K/D",
+    "winRate": "อัตราชนะ",
+    "matches": "แมตช์",
+    "hours": "ชั่วโมง"
+  },
+  "settings": {
+    "language": "ภาษา",
+    "selectLanguage": "เลือกภาษา"
+  }
+}

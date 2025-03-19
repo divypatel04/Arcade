@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Ana Sayfa",
+    "bestAgent": "En İyi Ajan",
+    "bestMap": "En İyi Harita",
+    "bestWeapon": "En İyi Silah",
+    "currentSeason": "Mevcut Sezon"
+  },
+  "common": {
+    "kills": "Öldürmeler",
+    "deaths": "Ölümler",
+    "kd": "K/D",
+    "winRate": "Kazanma Oranı",
+    "matches": "Maçlar",
+    "hours": "Saat"
+  },
+  "settings": {
+    "language": "Dil",
+    "selectLanguage": "Dil Seç"
+  }
+}

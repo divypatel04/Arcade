@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Inicio",
+    "bestAgent": "Mejor Agente",
+    "bestMap": "Mejor Mapa",
+    "bestWeapon": "Mejor Arma",
+    "currentSeason": "Temporada Actual"
+  },
+  "common": {
+    "kills": "Bajas",
+    "deaths": "Muertes",
+    "kd": "K/D",
+    "winRate": "Ratio de Victorias",
+    "matches": "Partidas",
+    "hours": "Horas"
+  },
+  "settings": {
+    "language": "Idioma",
+    "selectLanguage": "Seleccionar Idioma"
+  }
+}

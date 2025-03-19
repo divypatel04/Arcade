@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Главная",
+    "bestAgent": "Лучший Агент",
+    "bestMap": "Лучшая Карта",
+    "bestWeapon": "Лучшее Оружие",
+    "currentSeason": "Текущий Сезон"
+  },
+  "common": {
+    "kills": "Убийства",
+    "deaths": "Смерти",
+    "kd": "У/С",
+    "winRate": "Процент Побед",
+    "matches": "Матчи",
+    "hours": "Часы"
+  },
+  "settings": {
+    "language": "Язык",
+    "selectLanguage": "Выбрать Язык"
+  }
+}

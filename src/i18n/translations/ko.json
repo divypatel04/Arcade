@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "홈",
+    "bestAgent": "최고의 요원",
+    "bestMap": "최고의 맵",
+    "bestWeapon": "최고의 무기",
+    "currentSeason": "현재 시즌"
+  },
+  "common": {
+    "kills": "처치",
+    "deaths": "사망",
+    "kd": "K/D",
+    "winRate": "승률",
+    "matches": "경기",
+    "hours": "시간"
+  },
+  "settings": {
+    "language": "언어",
+    "selectLanguage": "언어 선택"
+  }
+}

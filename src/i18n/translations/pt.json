@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Início",
+    "bestAgent": "Melhor Agente",
+    "bestMap": "Melhor Mapa",
+    "bestWeapon": "Melhor Arma",
+    "currentSeason": "Temporada Atual"
+  },
+  "common": {
+    "kills": "Abates",
+    "deaths": "Mortes",
+    "kd": "K/D",
+    "winRate": "Taxa de Vitória",
+    "matches": "Partidas",
+    "hours": "Horas"
+  },
+  "settings": {
+    "language": "Idioma",
+    "selectLanguage": "Selecionar Idioma"
+  }
+}

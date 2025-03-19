@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "ホーム",
+    "bestAgent": "最高のエージェント",
+    "bestMap": "最高のマップ",
+    "bestWeapon": "最高の武器",
+    "currentSeason": "現在のシーズン"
+  },
+  "common": {
+    "kills": "キル",
+    "deaths": "デス",
+    "kd": "K/D",
+    "winRate": "勝率",
+    "matches": "試合",
+    "hours": "時間"
+  },
+  "settings": {
+    "language": "言語",
+    "selectLanguage": "言語を選択"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Beranda",
+    "bestAgent": "Agen Terbaik",
+    "bestMap": "Peta Terbaik",
+    "bestWeapon": "Senjata Terbaik",
+    "currentSeason": "Musim Saat Ini"
+  },
+  "common": {
+    "kills": "Membunuh",
+    "deaths": "Kematian",
+    "kd": "K/D",
+    "winRate": "Tingkat Kemenangan",
+    "matches": "Pertandingan",
+    "hours": "Jam"
+  },
+  "settings": {
+    "language": "Bahasa",
+    "selectLanguage": "Pilih Bahasa"
+  }
+}

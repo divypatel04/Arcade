@@ -2,8 +2,12 @@ import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from '../components/lcon'
 import { colors, fonts, sizes } from '../theme'
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../components/LanguageSelector';
 
 const ProfileScreen = () => {
+  const { t } = useTranslation();
+
   return (
     <ScrollView style={styles.container} overScrollMode="never">
       <View style={styles.header}>
@@ -65,6 +69,11 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
         ))}
+      </View>
+
+      <View>
+        <Text style={styles.sectiontitle}>{t('settings.language')}</Text>
+        <LanguageSelector />
       </View>
     </ScrollView>
   )

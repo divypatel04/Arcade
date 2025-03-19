@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "Trang Chủ",
+    "bestAgent": "Đặc Vụ Tốt Nhất",
+    "bestMap": "Bản Đồ Tốt Nhất",
+    "bestWeapon": "Vũ Khí Tốt Nhất",
+    "currentSeason": "Mùa Hiện Tại"
+  },
+  "common": {
+    "kills": "Hạ Gục",
+    "deaths": "Tử Vong",
+    "kd": "K/D",
+    "winRate": "Tỷ Lệ Thắng",
+    "matches": "Trận Đấu",
+    "hours": "Giờ"
+  },
+  "settings": {
+    "language": "Ngôn Ngữ",
+    "selectLanguage": "Chọn Ngôn Ngữ"
+  }
+}

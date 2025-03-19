@@ -1,0 +1,21 @@
+{
+  "home": {
+    "title": "الرئيسية",
+    "bestAgent": "أفضل عميل",
+    "bestMap": "أفضل خريطة",
+    "bestWeapon": "أفضل سلاح",
+    "currentSeason": "الموسم الحالي"
+  },
+  "common": {
+    "kills": "القتل",
+    "deaths": "الوفيات",
+    "kd": "نسبة القتل/الوفيات",
+    "winRate": "معدل الفوز",
+    "matches": "المباريات",
+    "hours": "ساعات"
+  },
+  "settings": {
+    "language": "اللغة",
+    "selectLanguage": "اختر اللغة"
+  }
+}
