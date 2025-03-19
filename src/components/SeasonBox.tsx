@@ -4,12 +4,15 @@ import { colors, fonts, sizes } from '../theme';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 type SeasonBoxProps = {
   season: SeasonStatsType;
 }
 
 const SeasonBox = ({season}: SeasonBoxProps) => {
+
+  const { t } = useTranslation();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -21,7 +24,7 @@ const SeasonBox = ({season}: SeasonBoxProps) => {
       <View style={styles.rankdetails}>
         <Image style={styles.rankimage} source={{ uri: 'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/18/largeicon.png' }} />
         <View style={styles.rankmeta}>
-          <Text style={styles.rankepisode}>Current Act</Text>
+          <Text style={styles.rankepisode}>{t('home.currentSeason')}</Text>
           <Text style={styles.ranktitle}>Silver 3</Text>
         </View>
       </View>
@@ -29,21 +32,21 @@ const SeasonBox = ({season}: SeasonBoxProps) => {
       <View style={styles.statsdetails}>
         <View>
           <Text style={styles.stattitle}>{season.stats.matchesWon}</Text>
-          <Text style={styles.statsubtext}>Wins</Text>
+          <Text style={styles.statsubtext}>{t('common.wins')}</Text>
         </View>
         <View>
           <Text style={styles.stattitle}>{season.stats.matchesLost}</Text>
-          <Text style={styles.statsubtext}>Lose</Text>
+          <Text style={styles.statsubtext}>{t('common.lose')}</Text>
         </View>
         <View>
           <Text style={styles.stattitle}>
             {season.stats.kills}
           </Text>
-          <Text style={styles.statsubtext}>Kills</Text>
+          <Text style={styles.statsubtext}>{t('common.kills')}</Text>
         </View>
         <View>
           <Text style={styles.stattitle}>{season.stats.mvps}</Text>
-          <Text style={styles.statsubtext}>MVPs</Text>
+          <Text style={styles.statsubtext}>{t('common.MVPS')}</Text>
         </View>
       </View>
     </TouchableOpacity>

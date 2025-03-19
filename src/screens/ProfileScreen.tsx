@@ -11,7 +11,7 @@ const ProfileScreen = () => {
   return (
     <ScrollView style={styles.container} overScrollMode="never">
       <View style={styles.header}>
-        <Text style={styles.headertitle}>Profile</Text>
+        <Text style={styles.headertitle}>{t('infoScreen.profile')}</Text>
       </View>
 
       <View style={styles.profilecontainer}>
@@ -32,8 +32,8 @@ const ProfileScreen = () => {
 
       <View style={styles.subcontainer}>
         <View>
-          <Text style={styles.subtext}>Account Type: </Text>
-          <Text style={styles.subprimarytext}>None</Text>
+          <Text style={styles.subtext}>{t('infoScreen.accountType')}: </Text>
+          <Text style={styles.subprimarytext}>{t('infoScreen.none')}</Text>
         </View>
         <View style={styles.subbutton}>
           <TouchableOpacity activeOpacity={0.8}>
@@ -43,15 +43,15 @@ const ProfileScreen = () => {
       </View>
 
       <View>
-        <Text style={styles.sectiontitle}>Settings</Text>
+        <Text style={styles.sectiontitle}>{t('infoScreen.settings')}</Text>
         {[
-          { name: 'Follow Us', icon: 'twitter-line' },
+          { name: t('infoScreen.followUs'), icon: 'twitter-line' },
           {
-            name: 'Privacy Policy',
+            name: t('infoScreen.privacyPolicy'),
             icon: 'shield-line',
           },
-          { name: 'Contact Us', icon: 'mail-line', },
-          { name: 'Logout', icon: 'logout-box-r-line', },
+          { name: t('infoScreen.contactUs'), icon: 'mail-line', },
+          { name: t('infoScreen.logout'), icon: 'logout-box-r-line', },
         ].map((item, index) => (
           <TouchableOpacity
             key={index}

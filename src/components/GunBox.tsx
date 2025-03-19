@@ -4,12 +4,14 @@ import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { WeaponStatType } from '../types/WeaponStatsType';
+import { useTranslation } from 'react-i18next';
 
 type GunBoxProps = {
   bestWeapon: WeaponStatType;
 }
 
 const GunBox = ({bestWeapon}:GunBoxProps) => {
+  const { t } = useTranslation();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -27,7 +29,7 @@ const GunBox = ({bestWeapon}:GunBoxProps) => {
         />
       </View>
       <View style={styles.weaponmeta}>
-        <Text style={styles.weaponsubtext}>Best Gun</Text>
+        <Text style={styles.weaponsubtext}>{t('home.bestWeapon')}</Text>
         <Text
           style={styles.weaponname}
           numberOfLines={1}

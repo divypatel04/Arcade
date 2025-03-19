@@ -13,8 +13,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
 import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, mergeUtilitiesAndAbilities } from '../utils';
 import UtilityTab from '../components/Tabs/UtilityTab';
+import { useTranslation } from 'react-i18next';
 
 const AgentInfoScreen = () => {
+  const { t } = useTranslation();
   const routeParams: any = useRoute().params;
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -41,31 +43,31 @@ const AgentInfoScreen = () => {
 
 
   const firstStatBox = [
-    { name: 'Matches', value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
-    { name: 'Hours', value: convertMillisToReadableTime(seasonStat?.stats.playtimeMillis ?? 0) },
-    { name: 'Win Rate', value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
+    { name: t('common.matches'), value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
+    { name: t('common.hours'), value: convertMillisToReadableTime(seasonStat?.stats.playtimeMillis ?? 0) },
+    { name: t('common.winRate'), value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
   ];
 
   const secondStatBox = [
-    { name: 'Kills', value: String(seasonStat?.stats.kills ?? 0) },
-    { name: 'M.Wins', value: String(seasonStat?.stats.matchesWon ?? 0) },
-    { name: 'M.Lose', value: String(seasonStat?.stats.matchesLost ?? 0) },
+    { name: t('common.kills'), value: String(seasonStat?.stats.kills ?? 0) },
+    { name: t('common.mWins'), value: String(seasonStat?.stats.matchesWon ?? 0) },
+    { name: t('common.mLose'), value: String(seasonStat?.stats.matchesLost ?? 0) },
   ];
 
   const thridStatBox = [
-    { name: 'K/D', value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1)).toFixed(1)) },
-    { name: 'Damage/R', value: String(seasonStat?.stats.deaths) },
-    { name: 'Plants', value: String(seasonStat?.stats.plants) },
-    { name: 'Aces', value: String(seasonStat?.stats.aces) },
-    { name: 'First Blood', value: String(seasonStat?.stats.firstKills) },
-    { name: 'Defuse', value: String(seasonStat?.stats.defuses) },
+    { name: t('common.kd'), value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1)).toFixed(1)) },
+    { name: t('common.damageR'), value: String(seasonStat?.stats.deaths) },
+    { name: t('common.plants'), value: String(seasonStat?.stats.plants) },
+    { name: t('common.aces'), value: String(seasonStat?.stats.aces) },
+    { name: t('common.firstBlood'), value: String(seasonStat?.stats.firstKills) },
+    { name: t('common.defuses'), value: String(seasonStat?.stats.defuses) },
   ];
 
   const tabs = [
-    { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
-    { label: 'Site Stat', content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
-    { label: 'Best Map', content: <BestMapTab mapList={seasonStat?.mapStats} /> },
-    { label: 'Utilities', content: <UtilityTab utilities={seasonStat?.abilityAndUltimateImpact} abilitiesData={agent.agent.abilities} totalRounds={seasonStat?.stats.totalRounds ?? 0} /> },
+    { label: t('tabs.overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
+    { label: t('tabs.attackDefence'), content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
+    { label: t('tabs.bestMaps'), content: <BestMapTab mapList={seasonStat?.mapStats} /> },
+    { label: t('tabs.utilityUsage'), content: <UtilityTab utilities={seasonStat?.abilityAndUltimateImpact} abilitiesData={agent.agent.abilities} totalRounds={seasonStat?.stats.totalRounds ?? 0} /> },
   ];
 
   return (
@@ -81,12 +83,12 @@ const AgentInfoScreen = () => {
             />
           </TouchableOpacity>
           <View style={{ marginTop: 'auto', zIndex: 100 }}>
-            <Text style={styles.subtext}>Agent</Text>
+            <Text style={styles.subtext}>t('common.agent')</Text>
             <Text style={styles.title}>{agent.agent.name}</Text>
             <View style={styles.dropdowncontainer}>
               <DropDown
                 list={seasonNames}
-                name="Act"
+                name={t('common.season')}
                 value={selectedSeason}
                 onSelect={item => setSeason(item)}
               />

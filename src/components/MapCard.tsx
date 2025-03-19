@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon'
 import { colors, fonts, sizes } from '../theme'
 import { MapStatsType } from '../types/MapStatsType';
+import { useTranslation } from 'react-i18next';
 
 interface MapBoxProps {
   isPremium: boolean;
@@ -16,6 +17,7 @@ interface MapBoxProps {
 
 //TODO: Add Premium Icon here
 const MapCard = ({ isPremium, item, onPress }: MapBoxProps) => {
+  const {t} = useTranslation();
   return (
     <View>
       <TouchableOpacity
@@ -41,7 +43,7 @@ const MapCard = ({ isPremium, item, onPress }: MapBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches- {item.numberOfMatches}
+              {t('common.matches')}- {item.numberOfMatches}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>

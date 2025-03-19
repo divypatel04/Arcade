@@ -10,19 +10,21 @@ import TeamStatsTab from '../components/Tabs/TeamStatsTab';
 import RoundPerfTab from '../components/Tabs/RoundPerfTab';
 import PlayerVsTab from '../components/Tabs/PlayerVsTab';
 import { MatchStatType } from '../types/MatchStatType';
+import { useTranslation } from 'react-i18next';
 
 
 const MatchInfoScreen = () => {
+  const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const route: any = useRoute().params;
   const match: MatchStatType = route.match;
 
 
   const tabs = [
-    { label: 'Overview', content: <MatchOverviewTab matchStats={match}/> },
-    { label: 'Team Stats', content: <TeamStatsTab teamStats={match.teamStats} yourScore={match.playerVsplayerStat.user.stats.roundsWon} enemyScore={match.playerVsplayerStat.user.stats.roundsLost}/> },
-    { label: 'Round by Round', content: <RoundPerfTab roundStats={match.roundPerformace}/> },
-    { label: 'vs Player', content: <PlayerVsTab pvpStats={match.playerVsplayerStat}/> },
+    { label: t('tabs.overview'), content: <MatchOverviewTab matchStats={match}/> },
+    { label: t('tabs.teamStats'), content: <TeamStatsTab teamStats={match.stats.teamStats} yourScore={match.stats.playerVsplayerStat.user.stats.roundsWon} enemyScore={match.stats.playerVsplayerStat.user.stats.roundsLost}/> },
+    { label: t('tabs.roundTimeline'), content: <RoundPerfTab roundStats={match.stats.roundPerformace}/> },
+    { label: t('tabs.pvp'), content: <PlayerVsTab pvpStats={match.stats.playerVsplayerStat}/> },
     // { label: 'Charts', content: <ChartsTab/> },
   ];
 
@@ -37,7 +39,7 @@ const MatchInfoScreen = () => {
             style={styles.backicon}
           />
         </TouchableOpacity>
-        <Text style={styles.headertitle}>About Match</Text>
+        <Text style={styles.headertitle}>{t('infoScreen.aboutMatch')}</Text>
       </View>
       <View>
         <TabBar tabs={tabs}/>

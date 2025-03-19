@@ -5,12 +5,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { AgentStatType } from '../types/AgentStatsType';
 import { getCurrentOrMostRecentSeason } from '../utils';
+import { useTranslation } from 'react-i18next';
 
 interface AgentBoxType {
   bestAgent: AgentStatType;
 }
 
 const AgentBox = ({bestAgent}: AgentBoxType) => {
+  const { t } = useTranslation();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
   const currentStats = getCurrentOrMostRecentSeason(bestAgent);
@@ -18,7 +20,7 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
   return (
     <TouchableOpacity onPress={() => navigation.navigate('AgentListScreen')} activeOpacity={0.6} style={styles.agentcontainer}>
       <View style={styles.agentmetacontainer}>
-        <Text style={styles.agentsubtext}>Best Agent</Text>
+        <Text style={styles.agentsubtext}>{t('home.bestAgent')}</Text>
         <Text
           style={styles.agentname}
           numberOfLines={1}
@@ -26,10 +28,10 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
           {bestAgent.agent.name}
         </Text>
         <View style={styles.agentmetadetails}>
-          <Text style={styles.agentmetatitle}>Matches Played:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.matchesWon + currentStats.stats.matchesLost}</Text>
+          <Text style={styles.agentmetatitle}>{t('home.matchPlayed')}:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.matchesWon + currentStats.stats.matchesLost}</Text>
         </View>
         <View style={styles.agentmetadetails}>
-          <Text style={styles.agentmetatitle}>Kills:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.kills}</Text>
+          <Text style={styles.agentmetatitle}>{t('home.kills')}:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.kills}</Text>
         </View>
       </View>
       <Image

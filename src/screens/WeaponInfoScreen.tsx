@@ -10,8 +10,11 @@ import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames } from '../util
 import OverviewTab from '../components/Tabs/OverviewTab';
 import TabBar from '../components/TabBar';
 import HitsTab from '../components/Tabs/HitsTab';
+import { useTranslation } from 'react-i18next';
 
 const WeaponInfoScreen = () => {
+
+  const {t} = useTranslation();
 
   const routeParams: any = useRoute().params;
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -36,9 +39,9 @@ const WeaponInfoScreen = () => {
   }, [selectedSeason]);
 
   const firstStatBox = [
-      { name: 'Kills', value: String((seasonStat?.stats.kills ?? 0))},
-      { name: 'Kills/R', value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.roundsPlayed ?? 1)).toFixed(2)) },
-      { name: 'Headshot%', value: String((
+      { name: t('common.kills'), value: String((seasonStat?.stats.kills ?? 0))},
+      { name: t('common.killsR'), value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.roundsPlayed ?? 1)).toFixed(2)) },
+      { name: t('common.headshots%'), value: String((
         ((seasonStat?.stats.headshots ?? 0) /
           ((seasonStat?.stats.headshots ?? 0) + (seasonStat?.stats?.bodyshots ?? 0) + (seasonStat?.stats?.legshots ?? 0))) *
         100
@@ -46,14 +49,14 @@ const WeaponInfoScreen = () => {
     ];
 
     const secondStatBox = [
-      { name: 'Damage/R', value: String(((seasonStat?.stats.damage ?? 0) / (seasonStat?.stats?.roundsPlayed ?? 0)).toFixed(2)) },
-      { name: 'Aces', value: String(seasonStat?.stats.aces ?? 0) },
-      { name: 'M.Lose', value: String(seasonStat?.stats.firstKills ?? 0) },
+      { name: t('common.damageR'), value: String(((seasonStat?.stats.damage ?? 0) / (seasonStat?.stats?.roundsPlayed ?? 0)).toFixed(2)) },
+      { name: t('common.aces'), value: String(seasonStat?.stats.aces ?? 0) },
+      { name: t('common.mLose'), value: String(seasonStat?.stats.firstKills ?? 0) },
     ];
 
   const tabs = [
-    { label: 'Overview', content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={null} /> },
-    { label: 'Hits', content: <HitsTab stats={seasonStat} /> },
+    { label: t('tabs.overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={null} /> },
+    { label: t('tabs.accuracy'), content: <HitsTab stats={seasonStat} /> },
 
   ];
 
@@ -76,12 +79,12 @@ const WeaponInfoScreen = () => {
           />
         </TouchableOpacity>
         <View style={{marginTop:'auto'}}>
-        <Text style={styles.subtext}>Gun</Text>
+        <Text style={styles.subtext}>{t('common.weapon')}</Text>
         <Text style={styles.title}>{weapon.weapon.name}</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={seasonNames}
-            name="Act"
+            name={t('common.season')}
             value={selectedSeason}
             onSelect={item => setSeason(item)}
           />

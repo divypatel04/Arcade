@@ -9,6 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStatsType } from '../types/MapStatsType';
 import { getAllMapSeasonNames, sortMapsByMatches } from '../utils';
 import { useDataContext } from '../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 
 interface MapListProps {
@@ -18,6 +19,7 @@ interface MapListProps {
 }
 
 const MapListScreen = () => {
+  const {t} = useTranslation();
   const {mapStats} = useDataContext();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -42,11 +44,11 @@ const MapListScreen = () => {
             style={styles.backicon}
           />
         </TouchableOpacity>
-        <Text style={styles.headertitle}>Maps</Text>
+        <Text style={styles.headertitle}>{t('listScreen.maps')}</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={seasonNames}
-            name="Act"
+            name={t('common.season')}
             value={selectedSeason}
             onSelect={item => setSelectedSeason(item)}
           />

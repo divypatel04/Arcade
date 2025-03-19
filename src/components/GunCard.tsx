@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
 import { WeaponStatType } from '../types/WeaponStatsType';
+import { useTranslation } from 'react-i18next';
 
 
 interface GunBoxProps {
@@ -17,6 +18,7 @@ interface GunBoxProps {
 
 
 const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
+  const {t} = useTranslation();
   return (
     <View>
       <TouchableOpacity
@@ -45,7 +47,7 @@ const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Kills: {item.numberOfKills}
+              {t('common.kills')}: {item.numberOfKills}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>

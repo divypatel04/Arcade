@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AgentStatType } from '../types/AgentStatsType';
 import { getAllAgentSeasonNames, sortAgentsByMatches } from '../utils';
 import { useDataContext } from '../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 interface AgentListProps {
   agentStat: AgentStatType,
@@ -18,6 +19,8 @@ interface AgentListProps {
 
 
 const AgentListScreen = () => {
+
+  const { t } = useTranslation();
 
   const {agentStats} = useDataContext();
 
@@ -44,11 +47,11 @@ const AgentListScreen = () => {
             style={styles.backicon}
           />
         </TouchableOpacity>
-        <Text style={styles.headertitle}>Agents</Text>
+        <Text style={styles.headertitle}>{t('listScreen.agents')}</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={seasonNames}
-            name="Act"
+            name={t('common.season')}
             value={selectedSeason}
             onSelect={item => setselectedSeason(item)}
           />

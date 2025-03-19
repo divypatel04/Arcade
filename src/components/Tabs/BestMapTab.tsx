@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
+import { useTranslation } from 'react-i18next';
 
 interface mapListType {
   id: string;
@@ -23,9 +24,10 @@ interface BestMapType {
 }
 
 const BestMapTab = ({mapList}:BestMapType) => {
+  const {t} = useTranslation();
   const calculateWinRate = (item: mapListType) => {
     const winRate = ((item.wins / (item.wins + item.losses)) * 100).toFixed(2);
-    return `WinRate- ${winRate}%`;
+    return `${t('common.winRate')}- ${winRate}%`;
   };
 
   const renderMapBox = (item: mapListType) => (
@@ -36,7 +38,7 @@ const BestMapTab = ({mapList}:BestMapType) => {
           <View style={styles.mapMeta}>
             <Text style={styles.metaTitle}>{item.name}</Text>
             <Text style={styles.metaSubTitle}>
-              Wins: {item.wins} | Lose: {item.losses}
+              {t('common.wins')}: {item.wins} | {t('common.losses')}: {item.losses}
             </Text>
           </View>
           <View style={styles.rightMeta}>

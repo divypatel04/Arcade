@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getAllWeaponSeasonNames, sortWeaponsByMatches } from '../utils';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { weaponStats } from '../data';
+import { useTranslation } from 'react-i18next';
 
 
 type WeaponListProps = {
@@ -18,6 +19,7 @@ type WeaponListProps = {
 }
 
 const WeaponListScreen = () => {
+  const {t} = useTranslation();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -42,11 +44,11 @@ const WeaponListScreen = () => {
             style={styles.backicon}
           />
         </TouchableOpacity>
-        <Text style={styles.headertitle}>Weapons</Text>
+        <Text style={styles.headertitle}>{t('listScreen.weapons')}</Text>
         <View style={styles.dropdowncontainer}>
           <DropDown
             list={seasonNames}
-            name="Act"
+            name={t('common.season')}
             value={selectedSeason}
             onSelect={item => setSelectedSeason(item)}
           />

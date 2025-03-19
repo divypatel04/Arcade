@@ -13,7 +13,7 @@ interface MatchBoxProps {
 }
 
 const MatchBox = ({ isPremium, match, onPress }: MatchBoxProps) => {
-  const isWon = match.general.winningTeam === match.playerVsplayerStat.user.teamId;
+  const isWon = match.stats.general.winningTeam === match.stats.playerVsplayerStat.user.teamId;
 
   return (
     <TouchableOpacity
@@ -22,7 +22,7 @@ const MatchBox = ({ isPremium, match, onPress }: MatchBoxProps) => {
       style={styles.matchBox}>
       <Image
         style={styles.matchAgentImage}
-        source={{ uri: match.general.agent.iconUrl }}
+        source={{ uri: match.stats.general.agent.iconUrl }}
       />
       <View style={styles.matchMetaContainer}>
         <View style={styles.matchMeta}>
@@ -35,13 +35,13 @@ const MatchBox = ({ isPremium, match, onPress }: MatchBoxProps) => {
               {isWon ? 'Victory' : 'Defeat'}
             </Text>{' '}
             <Text style={styles.matchMetaScore}>
-              {match.playerVsplayerStat.user.stats.roundsWon}-
-              {match.playerVsplayerStat.user.stats.roundsPlayed - match.playerVsplayerStat.user.stats.roundsWon}
+              {match.stats.playerVsplayerStat.user.stats.roundsWon}-
+              {match.stats.playerVsplayerStat.user.stats.roundsPlayed - match.stats.playerVsplayerStat.user.stats.roundsWon}
             </Text>
           </Text>
           <Text style={styles.matchMetaSubText}>
-            {match.playerVsplayerStat.user.stats.kills}/{match.playerVsplayerStat.user.stats.deaths}/{match.playerVsplayerStat.user.stats.assists} -{' '}
-            {match.general.map.name} - {match.general.queueId}
+            {match.stats.playerVsplayerStat.user.stats.kills}/{match.stats.playerVsplayerStat.user.stats.deaths}/{match.stats.playerVsplayerStat.user.stats.assists} -{' '}
+            {match.stats.general.map.name} - {match.stats.general.queueId}
           </Text>
         </View>
 

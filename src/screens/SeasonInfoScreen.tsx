@@ -7,9 +7,12 @@ import DetailedStats from '../components/DetailedStats';
 import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '../utils';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 import { seasonStats } from '../data';
+import { useTranslation } from 'react-i18next';
 
 
 const SeasonInfoScreen = () => {
+
+  const {t} = useTranslation();
 
   const seasonName = getSeasonNames(seasonStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonName[1]);
@@ -29,7 +32,7 @@ const SeasonInfoScreen = () => {
 
   const firstStats = [
     {
-      name: 'Win %',
+      name: t('common.winRate'),
       value:
         (
           ((mainSeasonStats?.stats.matchesWon ?? 0) /
@@ -39,11 +42,11 @@ const SeasonInfoScreen = () => {
         ).toFixed(1) + '%',
     },
     {
-      name: 'Hours',
+      name: t('common.hours'),
       value: convertMillisToReadableTime(mainSeasonStats?.stats.playtimeMillis ?? 0),
     },
     {
-      name: 'KD',
+      name: t('common.kd'),
       value: ((mainSeasonStats?.stats.kills ?? 0) / (mainSeasonStats?.stats.deaths ?? 0)).toFixed(
         2,
       ),
@@ -51,17 +54,17 @@ const SeasonInfoScreen = () => {
   ];
 
   const secondStats = [
-    {name: 'Kills', value: mainSeasonStats?.stats.kills ?? 0},
+    {name: t('common.kills'), value: mainSeasonStats?.stats.kills ?? 0},
     {
-      name: 'Damage/R',
+      name: t('common.damageR'),
       value: (
         (mainSeasonStats?.stats.damage ?? 0) / (mainSeasonStats?.stats.totalRounds ?? 0)
       ).toFixed(2),
     },
-    {name: 'Plants', value: mainSeasonStats?.stats.plants ?? 0},
-    {name: 'Aces', value: mainSeasonStats?.stats.aces ?? 0},
-    {name: 'First Blood', value: mainSeasonStats?.stats.firstKill ?? 0},
-    {name: 'mvps', value: mainSeasonStats?.stats.mvps ?? 0},
+    {name: t('common.plants'), value: mainSeasonStats?.stats.plants ?? 0},
+    {name: t('common.aces'), value: mainSeasonStats?.stats.aces ?? 0},
+    {name: t('common.firstBlood'), value: mainSeasonStats?.stats.firstKill ?? 0},
+    {name: t('common.MVPS'), value: mainSeasonStats?.stats.mvps ?? 0},
   ];
 
   const barWidth: number =
@@ -73,11 +76,11 @@ const SeasonInfoScreen = () => {
     <View style={styles.container}>
 
       <View style={styles.header}>
-        <Text style={styles.headertitle}>Statistics</Text>
+        <Text style={styles.headertitle}>{t('infoScreen.statistics')}</Text>
         <View style={styles.filtersection}>
           <DropDown
             list={seasonName}
-            name="Act"
+            name={t('common.season')}
             value={selectedSeason}
             onSelect={item => setSelectedSeason(item)}
           />
@@ -92,7 +95,7 @@ const SeasonInfoScreen = () => {
               source={{uri: 'https://i.imgur.com/1zvz1Zb.png'}}
             />
             <View style={styles.rankmeta}>
-              <Text style={styles.rankepisode}>Highest Rank</Text>
+              <Text style={styles.rankepisode}>{t('infoScreen.highestRank')}</Text>
               <Text style={styles.ranktitle}>Radiant</Text>
             </View>
           </View>
@@ -104,10 +107,10 @@ const SeasonInfoScreen = () => {
               </View>
               <View style={styles.rankmetatexts}>
                 <Text style={styles.ranktext}>
-                  {mainSeasonStats?.stats.matchesWon} Wins
+                  {mainSeasonStats?.stats.matchesWon} {t('common.wins')}
                 </Text>
                 <Text style={styles.ranktext2}>
-                {mainSeasonStats?.stats.matchesLost} Lose
+                {mainSeasonStats?.stats.matchesLost} {t('common.losses')}
                 </Text>
               </View>
             </View>

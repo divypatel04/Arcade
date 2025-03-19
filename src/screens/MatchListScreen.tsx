@@ -9,6 +9,7 @@ import { MatchStatType } from '../types/MatchStatType'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { matchStats } from '../data'
+import { useTranslation } from 'react-i18next'
 
 
 interface resultArray {
@@ -18,6 +19,7 @@ interface resultArray {
 
 const MatchListScreen = () => {
 
+  const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const gameType = extractUniqueMatchType(matchStats);
@@ -37,7 +39,7 @@ const MatchListScreen = () => {
   if (selectedGameType == 'All') {
     setFinalMatchArray(transformMatchStats(matchStats));
   } else {
-    let filterArray = matchStats.filter((m) => m.general.queueId == selectedGameType);
+    let filterArray = matchStats.filter((m) => m.stats.general.queueId == selectedGameType);
     setFinalMatchArray(transformMatchStats(filterArray));
   }
   }, [selectedGameType]);
@@ -45,11 +47,11 @@ const MatchListScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headertitle}>Matches</Text>
+        <Text style={styles.headertitle}>{t('common.matches')}</Text>
         <View style={styles.filtersection}>
           <DropDown
             list={gameType}
-            name="Type"
+            name={t('common.type')}
             value={selectedGameType}
             onSelect={item => setSelectedGameType(item)}
           />

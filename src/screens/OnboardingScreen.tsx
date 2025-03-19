@@ -14,32 +14,11 @@ import {
 import { colors, fonts } from '../theme';
 import { Icon } from '../components/lcon';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const {width, height} = Dimensions.get('window');
 
-const slides = [
-  {
-    id: '1',
-    image: require('../assets/images/screen1.png'),
-    title: 'Welcome to Arcade!',
-    subtitle:
-      'Unlock a world where your Valorant gaming stats and analytics are at your fingertips.',
-  },
-  {
-    id: '2',
-    image: require('../assets/images/screen2.png'),
-    title: 'Power Up Your Strategy!',
-    subtitle:
-      'Explore detailed analytics, discover your strengths and weaknesses',
-  },
-  {
-    id: '3',
-    image: require('../assets/images/screen3.png'),
-    title: 'Ready, Set, Analyze!',
-    subtitle:
-      'Simply link your Valorant account and embark on a journey where each stat propels you closer to victory.',
-  },
-];
+
 
 
 
@@ -64,6 +43,29 @@ const Slide = ({item}: any) => {
 };
 
 const OnboardingScreen = () => {
+
+  const {t} = useTranslation();
+
+  const slides = [
+    {
+      id: '1',
+      image: require('../assets/images/screen1.png'),
+      title: t('onboarding.title1'),
+      subtitle: t('onboarding.description1'),
+    },
+    {
+      id: '2',
+      image: require('../assets/images/screen2.png'),
+      title: t('onboarding.title2'),
+      subtitle: t('onboarding.description2'),
+    },
+    {
+      id: '3',
+      image: require('../assets/images/screen3.png'),
+      title: t('onboarding.title3'),
+      subtitle: t('onboarding.description3'),
+    },
+  ];
 
   const {setIsAuthenticated, login} = useAuth();
 
@@ -117,13 +119,13 @@ const OnboardingScreen = () => {
 
         <View style={{marginBottom: 20}}>
           <Text style={styles.text}>
-            By Login, you confirm that you accept our{' '}
+            {t('onboarding.byLoginYouAgree')}{' '}
             <Text
               style={styles.link}
               onPress={() => {
                 Linking.openURL('https://arcadeapp.site');
               }}>
-              Terms of Use
+              {t('onboarding.termsOfService')}
             </Text>{' '}
             and{' '}
             <Text
@@ -131,7 +133,7 @@ const OnboardingScreen = () => {
               onPress={() => {
                 Linking.openURL('https://arcadeapp.site');
               }}>
-              Privacy Policy
+              {t('onboarding.privacyPolicy')}
             </Text>
           </Text>
           <View style={{height: 55}}>
@@ -145,7 +147,7 @@ const OnboardingScreen = () => {
                   'Loading...'
                 ) : ( */}
                   <>
-                    Login with Riot ID
+                    {t('onboarding.loginWithRiotID')}
                     <Icon
                       name={'external-link-fill'}
                       size={16}

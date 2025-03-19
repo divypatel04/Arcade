@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
 import { AgentStatType } from '../types/AgentStatsType';
+import { useTranslation } from 'react-i18next';
 
 
 interface AgentBoxProps {
@@ -16,6 +17,8 @@ interface AgentBoxProps {
 }
 
 const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
+
+  const { t } = useTranslation();
   return (
     <View>
       <TouchableOpacity
@@ -44,7 +47,7 @@ const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
           </View>
           <View style={styles.rightmeta}>
             <Text style={styles.rightmetatext}>
-              Matches: {agent.numberOfMatches}
+              {t('common.matches')}: {agent.numberOfMatches}
             </Text>
             <Icon name="arrow-right-s-line" size={22} color={colors.darkGray} />
           </View>

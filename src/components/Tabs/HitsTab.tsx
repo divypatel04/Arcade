@@ -4,6 +4,7 @@ import StatsSummary from '../StatsSummary'
 import DetailedStats from '../DetailedStats'
 import { colors, fonts, sizes } from '../../theme';
 import { SeasonPerformance, WeaponStatType } from '../../types/WeaponStatsType';
+import { useTranslation } from 'react-i18next';
 
 
 interface HitStats {
@@ -11,6 +12,8 @@ interface HitStats {
 }
 
 const HitsTab = ({stats}:HitStats) => {
+
+  const {t} = useTranslation();
 
   const calculatePercentage = (value: number) =>
     stats ? (value / (stats.stats.headshots + stats.stats.bodyshots + stats.stats.legshots)) * 100 : 0;
@@ -82,17 +85,17 @@ const HitsTab = ({stats}:HitStats) => {
             {stats && [
               {
                 value: stats.stats.headshots,
-                title: 'Headshots',
+                title: t('common.headshots'),
                 percentage: headshotPer,
               },
               {
                 value: stats.stats.bodyshots,
-                title: 'Bodyshots',
+                title: t('common.bodyshots'),
                 percentage: bodyshotPer,
               },
               {
                 value: stats.stats.legshots,
-                title: 'Legshots',
+                title: t('common.legshots'),
                 percentage: legshotPer,
               },
             ].map((shot, index) => (

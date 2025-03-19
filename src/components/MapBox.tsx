@@ -4,12 +4,14 @@ import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { MapStatsType } from '../types/MapStatsType';
+import { useTranslation } from 'react-i18next';
 
 interface MapBoxProps {
   bestMap: MapStatsType;
 }
 
 const MapBox = ({bestMap}:MapBoxProps) => {
+  const { t } = useTranslation();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -26,7 +28,7 @@ const MapBox = ({bestMap}:MapBoxProps) => {
         />
       </View>
       <View style={styles.mapmeta}>
-        <Text style={styles.mapsubtext}>Best Map</Text>
+        <Text style={styles.mapsubtext}>{t('home.bestMap')}</Text>
         <Text
           style={styles.mapname}
           numberOfLines={1}

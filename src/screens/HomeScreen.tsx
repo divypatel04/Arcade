@@ -28,56 +28,35 @@ const HomeScreen = () => {
 
   if (isLoading) {
     return (
-      <View style={[styles.container, styles.centered]}>
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headertitle}>{t('home.title')}</Text>
-        <LanguageSelector compact />
-      </View>
-      <AgentBox bestAgent={bestAgentStats}/>
-      <View style={styles.twoboxcontainer}>
-        <MapBox bestMap={bestMapStats} />
-        <GunBox bestWeapon={bestWeaponStats}/>
-      </View>
-      <SeasonBox season={currentSeason}/>
-    </ScrollView>
+    <View style={styles.container}>
+       <AgentBox bestAgent={bestAgentStats}/>
+       <View style={styles.twoboxcontainer}>
+         <MapBox bestMap={bestMapStats} />
+         <GunBox bestWeapon={bestWeaponStats}/>
+       </View>
+       <SeasonBox season={currentSeason}/>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'column',
     flex: 1,
+    padding: sizes.xl,
     backgroundColor: colors.white,
   },
   twoboxcontainer: {
     paddingVertical: sizes['3xl'],
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: sizes.xl,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingHorizontal: sizes.xl,
-    paddingTop: sizes.xl,
-    paddingBottom: sizes.sm,
-  },
-  headertitle: {
-    fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes['13xl'],
-    color: colors.black,
-    letterSpacing: -0.7,
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
