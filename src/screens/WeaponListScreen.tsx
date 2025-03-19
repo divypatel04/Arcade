@@ -57,9 +57,10 @@ const WeaponListScreen = () => {
         data={weaponList}
         renderItem={({ item }) => (
           <GunCard
-            isPremium={true}
+            isPremium={item.weapon.isPremiumStats ?? false}
             item={item}
             onPress={() => {
+              // TODO: ADD Premium Stats check
               navigation.navigate('WeaponInfoScreen', { weapon: item.weapon, seasonName: selectedSeason });
             }}
           />

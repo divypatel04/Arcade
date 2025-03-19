@@ -6,9 +6,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentCard from '../components/AgentCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { agentStats } from '../data';
 import { AgentStatType } from '../types/AgentStatsType';
 import { getAllAgentSeasonNames, sortAgentsByMatches } from '../utils';
+import { useDataContext } from '../context/DataContext';
 
 interface AgentListProps {
   agentStat: AgentStatType,
@@ -18,6 +18,8 @@ interface AgentListProps {
 
 
 const AgentListScreen = () => {
+
+  const {agentStats} = useDataContext();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -57,9 +59,10 @@ const AgentListScreen = () => {
         data={agentList}
         renderItem={({ item }) => (
           <AgentCard
-            isPremium={true}
+            isPremium={item.agentStat.isPremiumStats ?? false}
             agent={item}
             onPress={() => {
+              //TODO: Add Premium Check
               navigation.navigate('AgentInfoScreen', { agent: item.agentStat, seasonName: selectedSeason });
             }}
           />

@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStatsType } from '../types/MapStatsType';
 import { getAllMapSeasonNames, sortMapsByMatches } from '../utils';
-import { mapStats } from '../data';
+import { useDataContext } from '../context/DataContext';
 
 
 interface MapListProps {
@@ -18,6 +18,7 @@ interface MapListProps {
 }
 
 const MapListScreen = () => {
+  const {mapStats} = useDataContext();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -56,9 +57,10 @@ const MapListScreen = () => {
         data={mapList}
         renderItem={({ item }) => (
           <MapCard
-            isPremium={true}
+            isPremium={item.mapStat.isPremiumStats ?? false}
             item={item}
             onPress={() => {
+              // TODO: Add Premium Stats check
               navigation.navigate('MapInfoScreen', { map: item.mapStat, seasonName: selectedSeason });
             }}
           />
