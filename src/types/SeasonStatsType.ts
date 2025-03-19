@@ -24,4 +24,5 @@ export interface SeasonStatsType {
     aces: number;
     mvps: number;
   };
+  isPremiumStats?: boolean;
 }

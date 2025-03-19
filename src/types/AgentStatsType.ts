@@ -3,6 +3,7 @@ export type AgentStatType = {
   puuid: string;
   agent: Agent;
   performanceBySeason: SeasonPerformance[];
+  isPremiumStats?: boolean;
 };
 
 type Agent = {

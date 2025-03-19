@@ -1,4 +1,3 @@
-
 // Agent and ability types
 interface Ability {
   id: string;
@@ -187,7 +186,8 @@ interface MatchStatType {
     playerVsplayerStat: PlayerVsPlayerStat;
     teamStats: TeamStat[];
     roundPerformace: RoundPerformance[];
-  }
+  };
+  isPremiumStats?: boolean;
 }
 
 export type {

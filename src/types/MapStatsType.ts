@@ -58,4 +58,5 @@ export type MapStatsType = {
   puuid: string;
   map: MapDetails;
   performanceBySeason: SeasonPerformance[];
+  isPremiumStats?: boolean;
 };

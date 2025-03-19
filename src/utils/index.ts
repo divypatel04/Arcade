@@ -14,11 +14,19 @@ import {
   sortMapsByMatches,
 } from './mapUtils';
 
+
+import {determinePremiumAgentStats,
+  determinePremiumMapStats,
+  determinePremiumWeaponStats,
+  determinePremiumSeasonStats,
+  determinePremiumMatchStats
+} from './premiumUtils';
+
 import {getTopWeaponByKills, getAllWeaponSeasonNames, sortWeaponsByMatches, aggregateWeaponStatsForAllActs} from './weaponUtils';
 
 import {getCurrentorRecentSeasonStats,getSeasonNames, aggregateSeasonStatsForAllActs} from './seasonUtils';
 
-
+import {isPremiumUser} from './userUtils';
 
 function formatDateString(dateString: string) {
   const date = parseDate(dateString);
@@ -72,5 +80,11 @@ export {
   aggregateWeaponStatsForAllActs,
   mergeUtilitiesAndAbilities,
   extractUniqueMatchType,
-  transformMatchStats
+  transformMatchStats,
+  isPremiumUser,
+  determinePremiumAgentStats,
+  determinePremiumMapStats,
+  determinePremiumWeaponStats,
+  determinePremiumSeasonStats,
+  determinePremiumMatchStats
 };

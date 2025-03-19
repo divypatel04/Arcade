@@ -8,6 +8,7 @@ export type WeaponStatType = {
     type: string;
   };
   performanceBySeason: SeasonPerformance[];
+  isPremiumStats?: boolean;
 };
 
 export type SeasonPerformance = {

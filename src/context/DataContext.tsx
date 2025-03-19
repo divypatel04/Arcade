@@ -2,6 +2,12 @@ import React, { createContext, useContext, useState, useRef, useCallback, useEff
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { dataUpdateTracker } from '../services';
+import { AgentStatType } from '../types/AgentStatsType';
+import { MapStatsType } from '../types/MapStatsType';
+import { MatchStatType } from '../types/MatchStatType';
+import { SeasonStatsType } from '../types/SeasonStatsType';
+import { WeaponStatType } from '../types/WeaponStatsType';
+import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '../utils/premiumUtils';
 
 type UserData = {
   puuid: string;
@@ -11,15 +17,16 @@ type UserData = {
   createdAt: string;
   lastUpdated: string;
   matchesId: string[];
+  payments: any[];
 };
 
 interface DataContextState {
   userData: UserData | null;
-  agentStats: any;
-  mapStats: any;
-  weaponStats: any;
-  seasonStats: any;
-  matchStats: any;
+  agentStats: AgentStatType[];
+  mapStats: MapStatsType[];
+  weaponStats: WeaponStatType[];
+  seasonStats: SeasonStatsType[];
+  matchStats: MatchStatType[];
   isLoading: boolean;
   error: Error | null;
   isDataReady: boolean;
@@ -47,11 +54,11 @@ const DataContext = createContext<DataContextValue | undefined>(undefined);
 // Initial state
 const initialState: DataContextState = {
   userData: null,
-  agentStats: null,
-  mapStats: null,
-  weaponStats: null,
-  seasonStats: null,
-  matchStats: null,
+  agentStats: [],
+  mapStats: [],
+  weaponStats: [],
+  seasonStats: [],
+  matchStats: [],
   isLoading: false,
   error: null,
   isDataReady: false,
@@ -166,7 +173,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Fetch user data first
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('*')
+        .select('*, payments(*)')
         .eq('puuid', puuid)
         .single();
 
@@ -222,7 +229,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error || !data || data.length === 0) {
         handleApiError(error, 'agent stats');
-        setState(prev => ({ ...prev, agentStats: null }));
+        setState(prev => ({ ...prev, agentStats: [] }));
         return;
       }
 
@@ -236,10 +243,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         performancebyseason: undefined
       }));
 
+      determinePremiumAgentStats(agentStats);
+
       setState(prev => ({ ...prev, agentStats }));
     } catch (error) {
       console.error('[Process] Error fetching agent stats:', error);
-      setState(prev => ({ ...prev, agentStats: null }));
+      setState(prev => ({ ...prev, agentStats: [] }));
     }
   };
 
@@ -253,7 +262,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error || !data || data.length === 0) {
         handleApiError(error, 'map stats');
-        setState(prev => ({ ...prev, mapStats: null }));
+        setState(prev => ({ ...prev, mapStats: [] }));
         return;
       }
 
@@ -266,10 +275,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         performancebyseason: undefined
       }));
 
+      determinePremiumMapStats(mapStats);
+
       setState(prev => ({ ...prev, mapStats }));
     } catch (error) {
       console.error('[Process] Error fetching map stats:', error);
-      setState(prev => ({ ...prev, mapStats: null }));
+      setState(prev => ({ ...prev, mapStats: [] }));
     }
   };
 
@@ -283,7 +294,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error || !data || data.length === 0) {
         handleApiError(error, 'weapon stats');
-        setState(prev => ({ ...prev, weaponStats: null }));
+        setState(prev => ({ ...prev, weaponStats: [] }));
         return;
       }
 
@@ -296,10 +307,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         performancebyseason: undefined
       }));
 
+      determinePremiumWeaponStats(weaponStats);
+
       setState(prev => ({ ...prev, weaponStats }));
     } catch (error) {
       console.error('[Process] Error fetching weapon stats:', error);
-      setState(prev => ({ ...prev, weaponStats: null }));
+      setState(prev => ({ ...prev, weaponStats: [] }));
     }
   };
 
@@ -320,19 +333,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('[Process] ✅ Season stats fetched:', data.length, 'records');
 
       // Transform the data to ensure correct casing
-      // We're assuming seasonstats table also needs the same transformation
-      // const seasonStats = data.map(item => {
-      //   if (item.performancebyseason) {
-      //     return {
-      //       ...item,
-      //       performanceBySeason: item.performancebyseason,
-      //       performancebyseason: undefined
-      //     };
-      //   }
-      //   return item;
-      // });
-
       const seasonStats = data;
+
+      determinePremiumSeasonStats(seasonStats);
 
       setState(prev => ({ ...prev, seasonStats }));
     } catch (error) {
@@ -360,6 +363,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Transform match stats to ensure consistent casing
       const matchStats = data;
+
+      determinePremiumMatchStats(matchStats);
 
       setState(prev => ({ ...prev, matchStats }));
     } catch (error) {

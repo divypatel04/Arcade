@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { colors, sizes } from '../theme';
 import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
@@ -14,15 +14,12 @@ import { useDataContext } from '../context/DataContext';
 
 
 const HomeScreen = () => {
-
   const {agentStats, mapStats, weaponStats, seasonStats, matchStats} = useDataContext();
-
 
   const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
   const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
   const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
-
 
   return (
     <View style={styles.container}>
