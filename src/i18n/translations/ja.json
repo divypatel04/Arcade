@@ -4,7 +4,9 @@
     "bestAgent": "最高のエージェント",
     "bestMap": "最高のマップ",
     "bestWeapon": "最高の武器",
-    "currentSeason": "現在のシーズン"
+    "currentSeason": "現在のシーズン",
+    "matchPlayed": "プレイした試合",
+    "kills": "キル数"
   },
   "common": {
     "kills": "キル",
@@ -12,10 +14,80 @@
     "kd": "K/D",
     "winRate": "勝率",
     "matches": "試合",
-    "hours": "時間"
+    "hours": "時間",
+    "wins": "勝利",
+    "lose": "敗北",
+    "MVPS": "MVP",
+    "mWins": "M勝利",
+    "mLose": "M敗北",
+    "damageR": "ダメージ/R",
+    "plants": "設置",
+    "defuses": "解除",
+    "aces": "エース",
+    "firstBlood": "ファーストブラッド",
+    "headshots": "ヘッドショット",
+    "bodyshots": "ボディショット",
+    "legshots": "レッグショット",
+    "clutches": "クラッチ",
+    "assists": "アシスト",
+    "agent": "エージェント",
+    "map": "マップ",
+    "weapon": "武器",
+    "season": "シーズン",
+    "type": "タイプ",
+    "losses": "敗北",
+    "killsR": "キル/R",
+    "headshots%": "ヘッドショット %"
   },
   "settings": {
     "language": "言語",
     "selectLanguage": "言語を選択"
+  },
+  "onboarding": {
+    "title1": "Arcadeへようこそ！",
+    "description1": "VALORANTのゲーム統計と分析が手元で確認できる世界へ。",
+    "title2": "戦略をパワーアップ！",
+    "description2": "詳細な分析を探索し、あなたの長所と短所を発見しましょう",
+    "title3": "準備完了、分析開始！",
+    "description3": "VALORANTアカウントを連携するだけで、各統計があなたを勝利へと導く旅が始まります。",
+    "loginWithRiotID": "Riot IDでログイン",
+    "byLoginYouAgree": "ログインすることで、以下に同意したことになります",
+    "termsOfService": "利用規約",
+    "privacyPolicy": "プライバシーポリシー"
+  },
+  "listScreen": {
+    "agents": "エージェント",
+    "maps": "マップ",
+    "weapons": "武器"
+  },
+  "infoScreen": {
+    "aboutMatch": "試合について",
+    "profile": "プロフィール",
+    "accountType": "アカウントタイプ",
+    "none": "なし",
+    "followUs": "フォローする",
+    "privacyPolicy": "プライバシーポリシー",
+    "contactUs": "お問い合わせ",
+    "logout": "ログアウト",
+    "settings": "設定",
+    "statistics": "統計",
+    "highestRank": "最高ランク"
+  },
+  "tabs": {
+    "overview": "概要",
+    "attackDefence": "攻撃/防御",
+    "bestMaps": "ベストマップ",
+    "utilityUsage": "アビリティ使用",
+    "mapHeatmap": "ヒートマップ",
+    "teamStats": "チーム統計",
+    "roundTimeline": "ラウンドタイムライン",
+    "pvp": "PvP",
+    "accuracy": "精度"
+  },
+  "premium": {
+    "notPremiumUser": "プレミアムユーザーではありません",
+    "accessPremiumFeatures": "プレミアム機能にアクセスするには、広告を視聴するかプレミアムプランに加入してください",
+    "watchAd": "広告を視聴",
+    "buyPremium": "プレミアムを購入"
   }
 }

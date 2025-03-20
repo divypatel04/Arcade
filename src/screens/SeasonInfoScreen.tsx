@@ -6,13 +6,15 @@ import StatsSummary from '../components/StatsSummary';
 import DetailedStats from '../components/DetailedStats';
 import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '../utils';
 import { SeasonStatsType } from '../types/SeasonStatsType';
-import { seasonStats } from '../data';
 import { useTranslation } from 'react-i18next';
+import { useDataContext } from '../context/DataContext';
 
 
 const SeasonInfoScreen = () => {
 
   const {t} = useTranslation();
+
+  const {seasonStats} = useDataContext();
 
   const seasonName = getSeasonNames(seasonStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonName[1]);

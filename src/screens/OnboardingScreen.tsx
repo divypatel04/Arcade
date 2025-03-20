@@ -73,7 +73,7 @@ const OnboardingScreen = () => {
   const onLogin = () => {
     console.log('Login with Riot ID');
 
-    login('1234567890');
+    login('-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA');
     setIsAuthenticated(true);
   }
 

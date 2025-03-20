@@ -45,7 +45,7 @@ type MapDetails = {
   name: string;
   location: string;
   image: string;
-  mapCoordinate: {
+  mapcoordinate: {
     xMultiplier: number;
     yMultiplier: number;
     xScalarToAdd: number;

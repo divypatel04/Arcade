@@ -4,7 +4,9 @@
     "bestAgent": "最佳特工",
     "bestMap": "最佳地圖",
     "bestWeapon": "最佳武器",
-    "currentSeason": "當前賽季"
+    "currentSeason": "當前賽季",
+    "matchPlayed": "已玩遊戲",
+    "kills": "擊殺數"
   },
   "common": {
     "kills": "擊殺",
@@ -12,10 +14,80 @@
     "kd": "K/D",
     "winRate": "勝率",
     "matches": "比賽",
-    "hours": "小時"
+    "hours": "小時",
+    "wins": "勝利",
+    "lose": "失敗",
+    "MVPS": "最佳玩家",
+    "mWins": "比賽勝利",
+    "mLose": "比賽失敗",
+    "damageR": "傷害/回合",
+    "plants": "安裝",
+    "defuses": "拆除",
+    "aces": "全隊擊殺",
+    "firstBlood": "首殺",
+    "headshots": "爆頭",
+    "bodyshots": "射中身體",
+    "legshots": "射中腿部",
+    "clutches": "關鍵時刻",
+    "assists": "助攻",
+    "agent": "特工",
+    "map": "地圖",
+    "weapon": "武器",
+    "season": "賽季",
+    "type": "類型",
+    "losses": "失敗",
+    "killsR": "擊殺/回合",
+    "headshots%": "爆頭率"
   },
   "settings": {
     "language": "語言",
     "selectLanguage": "選擇語言"
+  },
+  "onboarding": {
+    "title1": "歡迎來到 Arcade！",
+    "description1": "探索一個讓您的 Valorant 遊戲數據和分析觸手可及的世界。",
+    "title2": "提升您的策略！",
+    "description2": "探索詳細分析，發現您的優勢和劣勢",
+    "title3": "準備好，開始分析！",
+    "description3": "只需連接您的 Valorant 帳戶，踏上每個數據都能帶您更接近勝利的旅程。",
+    "loginWithRiotID": "使用 Riot ID 登入",
+    "byLoginYouAgree": "登入即表示您同意我們的",
+    "termsOfService": "服務條款",
+    "privacyPolicy": "隱私政策"
+  },
+  "listScreen": {
+    "agents": "特工",
+    "maps": "地圖",
+    "weapons": "武器"
+  },
+  "infoScreen": {
+    "aboutMatch": "關於比賽",
+    "profile": "個人資料",
+    "accountType": "帳戶類型",
+    "none": "無",
+    "followUs": "關注我們",
+    "privacyPolicy": "隱私政策",
+    "contactUs": "聯絡我們",
+    "logout": "登出",
+    "settings": "設定",
+    "statistics": "統計",
+    "highestRank": "最高排名"
+  },
+  "tabs": {
+    "overview": "概覽",
+    "attackDefence": "攻擊/防守",
+    "bestMaps": "最佳地圖",
+    "utilityUsage": "技能使用",
+    "mapHeatmap": "熱力圖",
+    "teamStats": "團隊數據",
+    "roundTimeline": "回合時間軸",
+    "pvp": "對戰",
+    "accuracy": "準確度"
+  },
+  "premium": {
+    "notPremiumUser": "您不是高級用戶",
+    "accessPremiumFeatures": "要訪問高級功能，您可以觀看廣告或訂閱我們的高級計劃",
+    "watchAd": "觀看廣告",
+    "buyPremium": "購買高級版"
   }
 }

@@ -64,9 +64,9 @@ const MapInfoScreen = () => {
     ];
 
   const tabs = [
-    { label: t('tabs.Overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
+    { label: t('tabs.overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
     { label: t('tabs.attackDefence'), content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
-    { label: t('tabs.mapHeatmap'), content: <MapHeatmap seasonStats={seasonStat} mapImage={map.map.image} mapCoordinate={map.map.mapCoordinate} /> },
+    { label: t('tabs.mapHeatmap'), content: <MapHeatmap seasonStats={seasonStat} mapImage={map.map.image} mapCoordinate={map.map.mapcoordinate} /> },
   ];
 
   return (

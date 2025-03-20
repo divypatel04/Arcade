@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { Icon } from './lcon';
 import { MatchStatType } from '../types/MatchStatType';
+import { getSupabaseImageUrl } from '../utils';
 
 interface MatchBoxProps {
   isPremium: boolean;
@@ -22,7 +23,7 @@ const MatchBox = ({ isPremium, match, onPress }: MatchBoxProps) => {
       style={styles.matchBox}>
       <Image
         style={styles.matchAgentImage}
-        source={{ uri: match.stats.general.agent.iconUrl }}
+        source={{ uri: getSupabaseImageUrl(match.stats.general.agent.icon) }}
       />
       <View style={styles.matchMetaContainer}>
         <View style={styles.matchMeta}>

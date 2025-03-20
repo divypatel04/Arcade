@@ -83,7 +83,7 @@ const AgentInfoScreen = () => {
             />
           </TouchableOpacity>
           <View style={{ marginTop: 'auto', zIndex: 100 }}>
-            <Text style={styles.subtext}>t('common.agent')</Text>
+            <Text style={styles.subtext}>{t('common.agent')}</Text>
             <Text style={styles.title}>{agent.agent.name}</Text>
             <View style={styles.dropdowncontainer}>
               <DropDown

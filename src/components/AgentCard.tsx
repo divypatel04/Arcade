@@ -4,6 +4,7 @@ import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
 import { AgentStatType } from '../types/AgentStatsType';
 import { useTranslation } from 'react-i18next';
+import { getSupabaseImageUrl } from '../utils';
 
 
 interface AgentBoxProps {
@@ -27,7 +28,7 @@ const AgentCard = ({ isPremium , agent, onPress }: AgentBoxProps) => {
         style={styles.card}>
         <Image
           style={styles.icon}
-          source={{ uri: agent.agentStat.agent.iconUrl }}
+          source={{ uri: getSupabaseImageUrl(agent.agentStat.agent.icon) }}
         />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>

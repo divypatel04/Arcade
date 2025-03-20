@@ -4,9 +4,12 @@ import { Icon } from '../components/lcon'
 import { colors, fonts, sizes } from '../theme'
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
+import { useDataContext } from '../context/DataContext';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
+
+  const {userData} = useDataContext();
 
   return (
     <ScrollView style={styles.container} overScrollMode="never">
@@ -25,7 +28,7 @@ const ProfileScreen = () => {
         <View style={{ paddingLeft: 10 }}>
           <Text style={styles.profilesubtext}>Unstoppable Title</Text>
           <Text style={styles.profilename}>
-            Divy0406#0001
+            {userData?.name}#{userData?.tagline}
           </Text>
         </View>
       </View>

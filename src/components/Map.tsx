@@ -3,6 +3,7 @@
 import React from 'react';
 import {View, Image, StyleSheet, Dimensions} from 'react-native';
 import { colors, sizes } from '../theme';
+import { getSupabaseImageUrl } from '../utils';
 
 interface DeathMapProps {
   locations: {
@@ -31,7 +32,7 @@ const Map: React.FC<DeathMapProps> = ({
 
   return (
     <View style={styles.mapContainer}>
-      <Image source={{uri: mapImage}} style={styles.mapImage} />
+      <Image source={{uri: getSupabaseImageUrl(mapImage)}} style={styles.mapImage} />
       {locations && locations.map((point, index) => {
         const x =
           ((point.y * mapCoordinate.xMultiplier +

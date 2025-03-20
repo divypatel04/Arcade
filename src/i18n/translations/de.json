@@ -4,7 +4,39 @@
     "bestAgent": "Bester Agent",
     "bestMap": "Beste Karte",
     "bestWeapon": "Beste Waffe",
-    "currentSeason": "Aktuelle Saison"
+    "currentSeason": "Aktuelle Saison",
+    "matchPlayed": "Gespielte Matches",
+    "kills": "Eliminierungen"
+  },
+  "onboarding": {
+    "title1": "Willkommen bei Arcade!",
+    "description1": "Entdecke eine Welt, in der deine Valorant-Spielstatistiken und -analysen griffbereit sind.",
+    "title2": "Verbessere deine Strategie!",
+    "description2": "Erkunde detaillierte Analysen, entdecke deine Stärken und Schwächen",
+    "title3": "Bereit, Los, Analysieren!",
+    "description3": "Verbinde einfach dein Valorant-Konto und begib dich auf eine Reise, bei der jede Statistik dich näher zum Sieg bringt.",
+    "loginWithRiotID": "Mit Riot ID anmelden",
+    "byLoginYouAgree": "Durch die Anmeldung stimmst du unseren",
+    "termsOfService": "Nutzungsbedingungen",
+    "privacyPolicy": "Datenschutzrichtlinie"
+  },
+  "listScreen": {
+    "agents": "Agenten",
+    "maps": "Karten",
+    "weapons": "Waffen"
+  },
+  "infoScreen": {
+    "aboutMatch": "Über das Match",
+    "profile": "Profil",
+    "accountType": "Kontotyp",
+    "none": "Keine",
+    "followUs": "Folge uns",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "contactUs": "Kontaktiere uns",
+    "logout": "Abmelden",
+    "settings": "Einstellungen",
+    "statistics": "Statistiken",
+    "highestRank": "Höchster Rang"
   },
   "common": {
     "kills": "Kills",
@@ -12,7 +44,47 @@
     "kd": "K/D",
     "winRate": "Gewinnrate",
     "matches": "Spiele",
-    "hours": "Stunden"
+    "hours": "Stunden",
+    "wins": "Siege",
+    "lose": "Niederlagen",
+    "MVPS": "MVPS",
+    "mWins": "M. Siege",
+    "mLose": "M. Niederlagen",
+    "damageR": "Schaden/R",
+    "plants": "Pflanzungen",
+    "defuses": "Entschärfungen",
+    "aces": "Asse",
+    "firstBlood": "First Blood",
+    "headshots": "Kopftreffer",
+    "bodyshots": "Körpertreffer",
+    "legshots": "Beintreffer",
+    "clutches": "Clutches",
+    "assists": "Assists",
+    "agent": "Agent",
+    "map": "Karte",
+    "weapon": "Waffe",
+    "season": "Saison",
+    "type": "Typ",
+    "losses": "Niederlagen",
+    "killsR": "Kills/R",
+    "headshots%": "% Kopftreffer"
+  },
+  "tabs": {
+    "overview": "Übersicht",
+    "attackDefence": "Angriff/Verteidigung",
+    "bestMaps": "Beste Karten",
+    "utilityUsage": "Fähigkeiten-Nutzung",
+    "mapHeatmap": "Heatmap",
+    "teamStats": "Team-Statistiken",
+    "roundTimeline": "Runden-Zeitlinie",
+    "pvp": "PvP",
+    "accuracy": "Genauigkeit"
+  },
+  "premium": {
+    "notPremiumUser": "Du bist kein Premium-Benutzer",
+    "accessPremiumFeatures": "Um auf Premium-Funktionen zuzugreifen, kannst du dir eine Werbung ansehen oder unser Premium-Abo abschließen",
+    "watchAd": "Werbung ansehen",
+    "buyPremium": "Premium kaufen"
   },
   "settings": {
     "language": "Sprache",

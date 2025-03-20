@@ -41,8 +41,8 @@ export default function LoadingScreen() {
 
       try {
         // Use the hardcoded PUUID for now
-        await fetchUserData('-1rAp6FLCdD-ZJTyFbsr14nNndzmK_7WLKi4a-MvuOIPihsOaRGNoL4c0QQWGUWNiIf_tW0jxxm9mA');
-        // processUserData('-1rAp6FLCdD-ZJTyFbsr14nNndzmK_7WLKi4a-MvuOIPihsOaRGNoL4c0QQWGUWNiIf_tW0jxxm9mA');
+        await fetchUserData('-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA');
+        processUserData('-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA');
         console.log('LoadingScreen: fetchUserData call completed');
       } catch (err) {
         console.error('LoadingScreen: Error in fetchCurrentUser:', err);

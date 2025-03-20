@@ -4,7 +4,39 @@
     "bestAgent": "Melhor Agente",
     "bestMap": "Melhor Mapa",
     "bestWeapon": "Melhor Arma",
-    "currentSeason": "Temporada Atual"
+    "currentSeason": "Temporada Atual",
+    "matchPlayed": "Partidas Jogadas",
+    "kills": "Abates"
+  },
+  "onboarding": {
+    "title1": "Bem-vindo ao Arcade!",
+    "description1": "Descubra um mundo onde suas estatísticas e análises do Valorant estão ao seu alcance.",
+    "title2": "Potencialize sua Estratégia!",
+    "description2": "Explore análises detalhadas, descubra seus pontos fortes e fracos",
+    "title3": "Pronto, Preparar, Analise!",
+    "description3": "Simplesmente conecte sua conta Valorant e embarque em uma jornada onde cada estatística o aproxima da vitória.",
+    "loginWithRiotID": "Entrar com Riot ID",
+    "byLoginYouAgree": "Ao fazer login, você concorda com nossos",
+    "termsOfService": "Termos de Serviço",
+    "privacyPolicy": "Política de Privacidade"
+  },
+  "listScreen": {
+    "agents": "Agentes",
+    "maps": "Mapas",
+    "weapons": "Armas"
+  },
+  "infoScreen": {
+    "aboutMatch": "Sobre a Partida",
+    "profile": "Perfil",
+    "accountType": "Tipo de Conta",
+    "none": "Nenhum",
+    "followUs": "Siga-nos",
+    "privacyPolicy": "Política de Privacidade",
+    "contactUs": "Contate-nos",
+    "logout": "Sair",
+    "settings": "Configurações",
+    "statistics": "Estatísticas",
+    "highestRank": "Maior Rank"
   },
   "common": {
     "kills": "Abates",
@@ -12,7 +44,47 @@
     "kd": "K/D",
     "winRate": "Taxa de Vitória",
     "matches": "Partidas",
-    "hours": "Horas"
+    "hours": "Horas",
+    "wins": "Vitórias",
+    "lose": "Derrotas",
+    "MVPS": "MVPS",
+    "mWins": "V. Partida",
+    "mLose": "D. Partida",
+    "damageR": "Dano/R",
+    "plants": "Plantadas",
+    "defuses": "Defuses",
+    "aces": "Aces",
+    "firstBlood": "Primeira Morte",
+    "headshots": "Tiros na Cabeça",
+    "bodyshots": "Tiros no Corpo",
+    "legshots": "Tiros nas Pernas",
+    "clutches": "Clutches",
+    "assists": "Assistências",
+    "agent": "Agente",
+    "map": "Mapa",
+    "weapon": "Arma",
+    "season": "Temporada",
+    "type": "Tipo",
+    "losses": "Derrotas",
+    "killsR": "Abates/R",
+    "headshots%": "% Tiros na Cabeça"
+  },
+  "tabs": {
+    "overview": "Visão Geral",
+    "attackDefence": "Ataque/Defesa",
+    "bestMaps": "Melhores Mapas",
+    "utilityUsage": "Uso de Habilidades",
+    "mapHeatmap": "Mapa de Calor",
+    "teamStats": "Estatísticas da Equipe",
+    "roundTimeline": "Linha do Tempo",
+    "pvp": "PvP",
+    "accuracy": "Precisão"
+  },
+  "premium": {
+    "notPremiumUser": "Você não é um usuário premium",
+    "accessPremiumFeatures": "Para acessar recursos premium, você pode assistir a um anúncio ou assinar nosso plano premium",
+    "watchAd": "Assistir Anúncio",
+    "buyPremium": "Comprar Premium"
   },
   "settings": {
     "language": "Idioma",

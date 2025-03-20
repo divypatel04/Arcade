@@ -4,7 +4,9 @@
     "bestAgent": "Mejor Agente",
     "bestMap": "Mejor Mapa",
     "bestWeapon": "Mejor Arma",
-    "currentSeason": "Temporada Actual"
+    "currentSeason": "Temporada Actual",
+    "matchPlayed": "Partidas Jugadas",
+    "kills": "Eliminaciones"
   },
   "common": {
     "kills": "Eliminaciones",
@@ -12,10 +14,80 @@
     "kd": "K/D",
     "winRate": "Porcentaje de Victoria",
     "matches": "Partidas",
-    "hours": "Horas"
+    "hours": "Horas",
+    "wins": "Victorias",
+    "lose": "Derrotas",
+    "MVPS": "MVPS",
+    "mWins": "V. Partida",
+    "mLose": "D. Partida",
+    "damageR": "Daño/R",
+    "plants": "Plantas",
+    "defuses": "Desactivaciones",
+    "aces": "Aces",
+    "firstBlood": "Primera Sangre",
+    "headshots": "Tiros a la Cabeza",
+    "bodyshots": "Tiros al Cuerpo",
+    "legshots": "Tiros a las Piernas",
+    "clutches": "Clutches",
+    "assists": "Asistencias",
+    "agent": "Agente",
+    "map": "Mapa",
+    "weapon": "Arma",
+    "season": "Temporada",
+    "type": "Tipo",
+    "losses": "Derrotas",
+    "killsR": "Eliminaciones/R",
+    "headshots%": "% Tiros a la Cabeza"
   },
   "settings": {
     "language": "Idioma",
     "selectLanguage": "Seleccionar Idioma"
+  },
+  "onboarding": {
+    "title1": "¡Bienvenido a Arcade!",
+    "description1": "Descubre un mundo donde tus estadísticas y análisis de Valorant están al alcance de tu mano.",
+    "title2": "¡Mejora tu Estrategia!",
+    "description2": "Explora análisis detallados, descubre tus fortalezas y debilidades",
+    "title3": "¡Listo, Preparado, Analiza!",
+    "description3": "Simplemente conecta tu cuenta de Valorant y embárcate en un viaje donde cada estadística te acerca a la victoria.",
+    "loginWithRiotID": "Iniciar sesión con Riot ID",
+    "byLoginYouAgree": "Al iniciar sesión, aceptas nuestros",
+    "termsOfService": "Términos de Servicio",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "listScreen": {
+    "agents": "Agentes",
+    "maps": "Mapas",
+    "weapons": "Armas"
+  },
+  "infoScreen": {
+    "aboutMatch": "Sobre la Partida",
+    "profile": "Perfil",
+    "accountType": "Tipo de Cuenta",
+    "none": "Ninguno",
+    "followUs": "Síguenos",
+    "privacyPolicy": "Política de Privacidad",
+    "contactUs": "Contáctanos",
+    "logout": "Cerrar Sesión",
+    "settings": "Ajustes",
+    "statistics": "Estadísticas",
+    "highestRank": "Rango Más Alto"
+  },
+  "tabs": {
+    "overview": "Resumen",
+    "attackDefence": "Ataque/Defensa",
+    "bestMaps": "Mejores Mapas",
+    "utilityUsage": "Uso de Habilidades",
+    "mapHeatmap": "Mapa de Calor",
+    "teamStats": "Estadísticas de Equipo",
+    "roundTimeline": "Línea de Tiempo",
+    "pvp": "PvP",
+    "accuracy": "Precisión"
+  },
+  "premium": {
+    "notPremiumUser": "No eres usuario premium",
+    "accessPremiumFeatures": "Para acceder a las funciones premium, puedes ver un anuncio o suscribirte a nuestro plan premium",
+    "watchAd": "Ver Anuncio",
+    "buyPremium": "Comprar Premium"
   }
 }
