@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
-import { convertMillisToReadableTime } from '../../utils';
+import { convertMillisToReadableTime, getSupabaseImageUrl } from '../../utils';
 import StatsSummary from '../StatsSummary';
 import DetailedStats from '../DetailedStats';
 import { MatchStatType } from '../../types/MatchStatType';
@@ -47,7 +47,7 @@ const MatchOverviewTab = ({matchStats}:MatchOverviewTabProps) => {
           <Image
             style={styles.scoreImage}
             source={{
-              uri: matchStats.stats.general.agent.imageUrl,
+              uri: getSupabaseImageUrl(matchStats.stats.general.agent.image),
             }}
           />
           <View style={styles.scoreMeta}>

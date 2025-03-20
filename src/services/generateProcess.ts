@@ -195,8 +195,8 @@ function processAgentStats(
         id: agentId,
         name: "",
         role: "",
-        imageUrl: "",
-        iconUrl: "",
+        image: "",
+        icon: "",
         abilities: []
       },
       performanceBySeason: []
@@ -240,7 +240,7 @@ function processMapStats(
         id: mapId,
         name: "",
         location: "",
-        imageUrl: "",
+        image: "",
         mapCoordinate: {
           xMultiplier: 0,
           yMultiplier: 0,
@@ -303,7 +303,7 @@ function processWeaponStats(
         weapon: {
           id: weaponId,
           name: "",
-          imageUrl: "",
+          image: "",
           type: ""
         },
         performanceBySeason: []
@@ -1302,7 +1302,7 @@ function processAgentMapStats(
       id: mapId,
       name: "",
       location: "",
-      imageUrl: "",
+      image: "",
       wins: 0,
       losses: 0
     };

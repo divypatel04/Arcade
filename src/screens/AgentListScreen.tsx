@@ -4,10 +4,11 @@ import { colors, fonts, sizes } from '../theme';
 import DropDown from '../components/DropDown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import AgentCard from '../components/AgentCard';
+import PremiumModal from '../components/PremiumModal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { AgentStatType } from '../types/AgentStatsType';
-import { getAllAgentSeasonNames, sortAgentsByMatches } from '../utils';
+import { getAllAgentSeasonNames, isPremiumUser, sortAgentsByMatches } from '../utils';
 import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
 
@@ -17,24 +18,48 @@ interface AgentListProps {
   numberOfMatches: number
 }
 
-
 const AgentListScreen = () => {
 
   const { t } = useTranslation();
 
-  const {agentStats} = useDataContext();
-
+  const {agentStats, userData} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const seasonNames = getAllAgentSeasonNames(agentStats);
   const [selectedSeason, setselectedSeason] = useState(seasonNames[1]);
-
   const [agentList,setAgentList] = useState<AgentListProps[]>();
+  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
+  const [selectedPremiumAgent, setSelectedPremiumAgent] = useState<AgentStatType | null>(null);
 
   useEffect(() => {
     const agentList = sortAgentsByMatches(agentStats, selectedSeason);
     setAgentList(agentList);
   }, [selectedSeason]);
+
+  const handleAgentPress = (agent: AgentStatType) => {
+    if (agent.isPremiumStats && !isPremiumUser(userData)) {
+      // Only show modal if user is not premium and trying to access premium content
+      setSelectedPremiumAgent(agent);
+      setPremiumModalVisible(true);
+    } else {
+      // Either not premium content or user is a premium user, navigate directly
+      navigation.navigate('AgentInfoScreen', { agent: agent, seasonName: selectedSeason });
+    }
+  };
+
+  const handleWatchAd = () => {
+    // TODO: Implement ad watching functionality
+    setPremiumModalVisible(false);
+    if (selectedPremiumAgent) {
+      navigation.navigate('AgentInfoScreen', { agent: selectedPremiumAgent, seasonName: selectedSeason });
+    }
+  };
+
+  const handleBuyPremium = () => {
+    // TODO: Navigate to premium purchase screen
+    setPremiumModalVisible(false);
+    navigation.navigate('PremiumSubscription'); // Assuming this screen exists
+  };
 
   return (
     <View style={styles.container}>
@@ -64,14 +89,18 @@ const AgentListScreen = () => {
           <AgentCard
             isPremium={item.agentStat.isPremiumStats ?? false}
             agent={item}
-            onPress={() => {
-              //TODO: Add Premium Check
-              navigation.navigate('AgentInfoScreen', { agent: item.agentStat, seasonName: selectedSeason });
-            }}
+            onPress={() => handleAgentPress(item.agentStat)}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
+      />
+
+      <PremiumModal
+        visible={premiumModalVisible}
+        onClose={() => setPremiumModalVisible(false)}
+        onWatchAd={handleWatchAd}
+        onBuyPremium={handleBuyPremium}
       />
     </View>
   )

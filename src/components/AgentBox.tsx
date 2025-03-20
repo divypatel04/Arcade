@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { AgentStatType } from '../types/AgentStatsType';
-import { getCurrentOrMostRecentSeason } from '../utils';
+import { getCurrentOrMostRecentSeason, getSupabaseImageUrl } from '../utils';
 import { useTranslation } from 'react-i18next';
 
 interface AgentBoxType {
@@ -16,6 +16,7 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
   const currentStats = getCurrentOrMostRecentSeason(bestAgent);
+
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate('AgentListScreen')} activeOpacity={0.6} style={styles.agentcontainer}>
@@ -36,7 +37,7 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
       </View>
       <Image
         style={styles.agentimage}
-        source={{uri: bestAgent.agent.imageUrl}}
+        source={{uri: getSupabaseImageUrl(bestAgent.agent.image)}}
       />
     </TouchableOpacity>
   )

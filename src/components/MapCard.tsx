@@ -4,6 +4,7 @@ import { Icon } from './lcon'
 import { colors, fonts, sizes } from '../theme'
 import { MapStatsType } from '../types/MapStatsType';
 import { useTranslation } from 'react-i18next';
+import { getSupabaseImageUrl } from '../utils';
 
 interface MapBoxProps {
   isPremium: boolean;
@@ -24,7 +25,7 @@ const MapCard = ({ isPremium, item, onPress }: MapBoxProps) => {
         onPress={onPress}
         activeOpacity={0.5}
         style={styles.card}>
-        <Image style={styles.icon} source={{ uri: item.mapStat.map.imageUrl }} />
+        <Image style={styles.icon} source={{ uri: getSupabaseImageUrl(item.mapStat.map.image) }} />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>
             <View style={styles.meta}>

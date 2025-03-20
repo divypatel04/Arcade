@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
 import { useTranslation } from 'react-i18next';
+import { getSupabaseImageUrl } from '../../utils';
 
 interface mapListType {
   id: string;
-  imageUrl: string;
+  image: string;
   name: string;
   location: string;
   wins: number;
@@ -33,7 +34,7 @@ const BestMapTab = ({mapList}:BestMapType) => {
   const renderMapBox = (item: mapListType) => (
     <View key={item.id}>
       <TouchableOpacity activeOpacity={0.5} style={styles.mapBox}>
-        <Image style={styles.mapImage} source={{uri: item.imageUrl}} />
+        <Image style={styles.mapImage} source={{uri: getSupabaseImageUrl(item.image)}} />
         <View style={styles.metaContainer}>
           <View style={styles.mapMeta}>
             <Text style={styles.metaTitle}>{item.name}</Text>

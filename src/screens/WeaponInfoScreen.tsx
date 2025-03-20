@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { SeasonPerformance, WeaponStatType } from '../types/WeaponStatsType';
-import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames } from '../utils';
+import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames, getSupabaseImageUrl } from '../utils';
 import OverviewTab from '../components/Tabs/OverviewTab';
 import TabBar from '../components/TabBar';
 import HitsTab from '../components/Tabs/HitsTab';
@@ -66,7 +66,7 @@ const WeaponInfoScreen = () => {
       <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={{ uri: weapon.weapon.imageUrl }}
+            source={{ uri: getSupabaseImageUrl(weapon.weapon.image) }}
           />
       </View>
       <View style={styles.meta}>

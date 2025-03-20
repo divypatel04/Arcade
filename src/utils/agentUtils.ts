@@ -222,7 +222,7 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
       if (!acc.mapStats[map.id]) {
         acc.mapStats[map.id] = {
           id: map.id,
-          imageUrl: map.imageUrl,
+          image: map.image,
           name: map.name,
           losses: map.losses,
           location: map.location,

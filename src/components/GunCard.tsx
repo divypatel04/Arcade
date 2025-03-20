@@ -4,6 +4,7 @@ import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';
+import { getSupabaseImageUrl } from '../utils';
 
 
 interface GunBoxProps {
@@ -27,7 +28,7 @@ const GunCard = ({ isPremium, item, onPress }: GunBoxProps) => {
         style={styles.card}>
         <Image
           style={styles.icon}
-          source={{ uri: item.weapon.weapon.imageUrl }}
+          source={{ uri: getSupabaseImageUrl(item.weapon.weapon.image) }}
         />
         <View style={styles.metacontainer}>
           <View style={{ flexDirection: 'row' }}>

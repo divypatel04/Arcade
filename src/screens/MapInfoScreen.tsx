@@ -11,7 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 import MapHeatmap from '../components/Tabs/MapHeatmap';
-import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames } from '../utils';
+import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames, getSupabaseImageUrl } from '../utils';
 import { mapStats } from '../data';
 import { useTranslation } from 'react-i18next';
 
@@ -66,7 +66,7 @@ const MapInfoScreen = () => {
   const tabs = [
     { label: t('tabs.Overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
     { label: t('tabs.attackDefence'), content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },
-    { label: t('tabs.mapHeatmap'), content: <MapHeatmap seasonStats={seasonStat} mapImage={map.map.imageUrl} mapCoordinate={map.map.mapCoordinate} /> },
+    { label: t('tabs.mapHeatmap'), content: <MapHeatmap seasonStats={seasonStat} mapImage={map.map.image} mapCoordinate={map.map.mapCoordinate} /> },
   ];
 
   return (
@@ -75,7 +75,7 @@ const MapInfoScreen = () => {
       <View style={styles.imagecontainer}>
           <ImageBackground
             style={styles.image}
-            source={{ uri: map.map.imageUrl }}
+            source={{ uri: getSupabaseImageUrl(map.map.image) }}
           />
       </View>
       <View style={styles.meta}>

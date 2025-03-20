@@ -2,7 +2,7 @@
 interface Ability {
   id: string;
   name: string;
-  imageUrl: string;
+  image: string;
   type: string;
   cost: number;
 }
@@ -11,8 +11,8 @@ interface Agent {
   id: string;
   name: string;
   role: string;
-  imageUrl: string;
-  iconUrl: string;
+  image: string;
+  icon: string;
   abilities: Ability[];
 }
 
@@ -28,7 +28,7 @@ interface Map {
   id: string;
   name: string;
   location: string;
-  imageUrl: string;
+  image: string;
   mapCoordinate: MapCoordinate;
 }
 

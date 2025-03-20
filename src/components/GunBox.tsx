@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';
+import { getSupabaseImageUrl } from '../utils';
 
 type GunBoxProps = {
   bestWeapon: WeaponStatType;
@@ -15,7 +16,6 @@ const GunBox = ({bestWeapon}:GunBoxProps) => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('WeaponListScreen')}
@@ -23,7 +23,7 @@ const GunBox = ({bestWeapon}:GunBoxProps) => {
       style={styles.weaponcontainer}>
       <View style={styles.weaponimagecontainer}>
         <Image
-          source={{ uri: bestWeapon.weapon.imageUrl }}
+          source={{ uri: getSupabaseImageUrl(bestWeapon.weapon.image) }}
           resizeMode="contain"
           style={styles.weaponimage}
         />

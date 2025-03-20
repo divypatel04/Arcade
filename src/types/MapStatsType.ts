@@ -44,7 +44,7 @@ type MapDetails = {
   id: string;
   name: string;
   location: string;
-  imageUrl: string;
+  image: string;
   mapCoordinate: {
     xMultiplier: number;
     yMultiplier: number;

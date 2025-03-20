@@ -10,15 +10,15 @@ type Agent = {
   id: string;
   name: string;
   role: string;
-  imageUrl: string;
-  iconUrl: string;
+  image: string;
+  icon: string;
   abilities: Ability[];
 };
 
 type Ability = {
   id: string;
   name: string;
-  imageUrl: string;
+  image: string;
   type: string;
   cost: number;
 };
@@ -55,7 +55,7 @@ type Stats = {
 
 type MapStat = {
   id: string;
-  imageUrl: string;
+  image: string;
   name: string;
   location: string;
   wins: number;

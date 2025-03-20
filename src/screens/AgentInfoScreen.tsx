@@ -11,7 +11,7 @@ import BestMapTab from '../components/Tabs/BestMapTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
-import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, mergeUtilitiesAndAbilities } from '../utils';
+import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, getSupabaseImageUrl, mergeUtilitiesAndAbilities } from '../utils';
 import UtilityTab from '../components/Tabs/UtilityTab';
 import { useTranslation } from 'react-i18next';
 
@@ -97,7 +97,7 @@ const AgentInfoScreen = () => {
         </View>
         <Image
           style={styles.agentImage}
-          source={{uri: agent.agent.imageUrl}}
+          source={{uri: getSupabaseImageUrl(agent.agent.image)}}
         />
       </View>
       <View style={styles.tabs}>

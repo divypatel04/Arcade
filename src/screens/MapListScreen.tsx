@@ -4,13 +4,13 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import DropDown from '../components/DropDown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import MapCard from '../components/MapCard';
+import PremiumModal from '../components/PremiumModal';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStatsType } from '../types/MapStatsType';
-import { getAllMapSeasonNames, sortMapsByMatches } from '../utils';
+import { getAllMapSeasonNames, isPremiumUser, sortMapsByMatches } from '../utils';
 import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
-
 
 interface MapListProps {
   mapStat: MapStatsType,
@@ -20,18 +20,44 @@ interface MapListProps {
 
 const MapListScreen = () => {
   const {t} = useTranslation();
-  const {mapStats} = useDataContext();
-
+  const {mapStats, userData} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const seasonNames = getAllMapSeasonNames(mapStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
   const [mapList,setMapList] = useState<MapListProps[]>();
+  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
+  const [selectedPremiumMap, setSelectedPremiumMap] = useState<MapStatsType | null>(null);
 
   useEffect(() => {
-      const maplist = sortMapsByMatches(mapStats, selectedSeason);
-      setMapList(maplist);
-    }, [selectedSeason]);
+    const maplist = sortMapsByMatches(mapStats, selectedSeason);
+    setMapList(maplist);
+  }, [selectedSeason]);
+
+  const handleMapPress = (map: MapStatsType) => {
+    if (map.isPremiumStats && !isPremiumUser(userData)) {
+      // Only show modal if user is not premium and trying to access premium content
+      setSelectedPremiumMap(map);
+      setPremiumModalVisible(true);
+    } else {
+      // Either not premium content or user is a premium user, navigate directly
+      navigation.navigate('MapInfoScreen', { map: map, seasonName: selectedSeason });
+    }
+  };
+
+  const handleWatchAd = () => {
+    // TODO: Implement ad watching functionality
+    setPremiumModalVisible(false);
+    if (selectedPremiumMap) {
+      navigation.navigate('MapInfoScreen', { map: selectedPremiumMap, seasonName: selectedSeason });
+    }
+  };
+
+  const handleBuyPremium = () => {
+    // TODO: Navigate to premium purchase screen
+    setPremiumModalVisible(false);
+    navigation.navigate('PremiumSubscription'); // Assuming this screen exists
+  };
 
   return (
     <View style={styles.container}>
@@ -61,14 +87,18 @@ const MapListScreen = () => {
           <MapCard
             isPremium={item.mapStat.isPremiumStats ?? false}
             item={item}
-            onPress={() => {
-              // TODO: Add Premium Stats check
-              navigation.navigate('MapInfoScreen', { map: item.mapStat, seasonName: selectedSeason });
-            }}
+            onPress={() => handleMapPress(item.mapStat)}
           />
         )}
         // keyExtractor={item => item}
         showsVerticalScrollIndicator={false}
+      />
+
+      <PremiumModal
+        visible={premiumModalVisible}
+        onClose={() => setPremiumModalVisible(false)}
+        onWatchAd={handleWatchAd}
+        onBuyPremium={handleBuyPremium}
       />
     </View>
   )

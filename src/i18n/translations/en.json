@@ -80,6 +80,12 @@
     "pvp": "PvP",
     "accuracy": "Accuracy"
   },
+  "premium": {
+    "notPremiumUser": "You are not a premium user",
+    "accessPremiumFeatures": "To access premium features, you can watch an ad or subscribe to our premium plan",
+    "watchAd": "Watch Ad",
+    "buyPremium": "Buy Premium"
+  },
   "settings": {
     "language": "Language",
     "selectLanguage": "Select Language"

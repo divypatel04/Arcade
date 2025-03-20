@@ -72,7 +72,7 @@ const ProfileScreen = () => {
       </View>
 
       <View>
-        <Text style={styles.sectiontitle}>{t('settings.language')}</Text>
+        <Text style={styles.sectiontitle2}>{t('settings.language')}</Text>
         <LanguageSelector />
       </View>
     </ScrollView>
@@ -191,6 +191,14 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginTop: 'auto',
     marginBottom: 'auto',
+  },
+  sectiontitle2: {
+    fontFamily: fonts.family.proximaBold,
+    fontSize: fonts.sizes.md,
+    textTransform: 'uppercase',
+    color: colors.black,
+    // paddingBottom: sizes.xl,
+    paddingTop: sizes['7xl'],
   },
 });
 

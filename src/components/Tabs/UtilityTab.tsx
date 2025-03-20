@@ -10,11 +10,12 @@ import {
 import { colors, fonts, sizes } from '../../theme';
 import DropDown from '../DropDown';
 import StatsSummary from '../StatsSummary';
+import { getSupabaseImageUrl } from '../../utils';
 
 interface AbilityData {
   id: string;
   name: string;
-  imageUrl: string;
+  image: string;
   type: string;
   cost: number;
 }
@@ -63,7 +64,7 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
       <View style={styles.abilityBox}>
         <Image
           style={styles.abilityImage}
-          source={{ uri: currentAbility?.imageUrl ?? '' }}
+          source={{ uri: getSupabaseImageUrl(currentAbility?.image) }}
         />
         <View style={styles.abilityMeta}>
           <Text style={styles.abilitySubText}>Ability</Text>

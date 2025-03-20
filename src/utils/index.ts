@@ -58,6 +58,7 @@ function parseDate(dateString: string) {
 }
 
 import {extractUniqueMatchType, transformMatchStats} from './matchUtils';
+import { supabase } from '../lib/supabase';
 
 export {
   formatDateString,
@@ -87,4 +88,18 @@ export {
   determinePremiumWeaponStats,
   determinePremiumSeasonStats,
   determinePremiumMatchStats
+};
+
+
+export const getSupabaseImageUrl = (imagePath: string) => {
+    // If the image URL is already a full URL, return it as is
+    if (imagePath?.startsWith('http')) {
+      return imagePath;
+    }
+    // Assuming images are stored in a 'agents' bucket with path structure
+    // You may need to adjust this based on your actual Supabase storage structure
+    const bucket = 'static-data';
+    // Get public URL from Supabase
+    const { data } = supabase.storage.from(bucket).getPublicUrl(imagePath);
+    return data?.publicUrl || '';
 };

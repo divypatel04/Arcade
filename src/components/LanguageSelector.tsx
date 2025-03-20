@@ -83,22 +83,23 @@ const styles = StyleSheet.create({
   },
   compactContainer: {
     marginLeft: sizes.sm,
+
   },
   selector: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.primary,
-    paddingHorizontal: sizes.xl,
-    paddingVertical: sizes.lg,
-    borderRadius: 4,
+    paddingHorizontal: sizes['5xl'],
+    paddingVertical: sizes['3xl'],
   },
   compactSelector: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: sizes.sm,
   },
   text: {
     fontFamily: fonts.family.proximaBold,
-    fontSize: fonts.sizes.md,
+    fontSize: fonts.sizes.lg,
     color: colors.black,
     marginRight: sizes.sm,
   },
@@ -118,7 +119,6 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '70%',
     backgroundColor: colors.white,
-    borderRadius: 8,
     overflow: 'hidden',
   },
   modalHeader: {
@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: fonts.sizes.xl,
+    fontSize: fonts.sizes['3xl'],
+    textTransform:'lowercase',
     color: colors.black,
   },
   languageItem: {
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
   },
   languageText: {
     fontFamily: fonts.family.proximaRegular,
-    fontSize: fonts.sizes.md,
+    fontSize: fonts.sizes.lg,
     color: colors.black,
   },
   selectedLanguageText: {

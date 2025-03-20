@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { MapStatsType } from '../types/MapStatsType';
 import { useTranslation } from 'react-i18next';
+import { getSupabaseImageUrl } from '../utils';
 
 interface MapBoxProps {
   bestMap: MapStatsType;
@@ -22,7 +23,7 @@ const MapBox = ({bestMap}:MapBoxProps) => {
       style={styles.mapcontainer}>
       <View style={styles.mapimagecontainer}>
         <Image
-          source={{ uri: bestMap.map.imageUrl }}
+          source={{ uri: getSupabaseImageUrl(bestMap.map.image) }}
           resizeMode="cover"
           style={styles.mapimage}
         />

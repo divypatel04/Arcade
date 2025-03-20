@@ -4,7 +4,7 @@ export type WeaponStatType = {
   weapon: {
     id: string;
     name: string;
-    imageUrl: string;
+    image: string;
     type: string;
   };
   performanceBySeason: SeasonPerformance[];

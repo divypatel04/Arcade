@@ -14,6 +14,7 @@ import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
+import { SeasonStatsType } from '../types/SeasonStatsType';
 
 
 const HomeScreen = () => {
@@ -24,7 +25,7 @@ const HomeScreen = () => {
   const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
   const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
-  const currentSeason = getCurrentorRecentSeasonStats(seasonStats);
+  const currentSeason: SeasonStatsType = getCurrentorRecentSeasonStats(seasonStats);
 
   if (isLoading) {
     return (
