@@ -241,7 +241,7 @@ function processMapStats(
         name: "",
         location: "",
         image: "",
-        mapCoordinate: {
+        mapcoordinate: {
           xMultiplier: 0,
           yMultiplier: 0,
           xScalarToAdd: 0,

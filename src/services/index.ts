@@ -11,7 +11,7 @@ export const dataUpdateTracker = {
   markUpdated: function(puuid: string) {
     this.lastProcessedPuuid = puuid;
     this.lastUpdateTimestamp = new Date();
-    console.log('[BackgroundProcess] ✅ Data updated at:', this.lastUpdateTimestamp);
+    console.log('[BACKGROUND_PROCESS] ✅ Data updated at:', this.lastUpdateTimestamp);
   }
 };
 
@@ -22,7 +22,7 @@ export const dataUpdateTracker = {
  * @param puuid User's PUUID to process data for
  */
 export const processUserData = async (puuid: string): Promise<void> => {
-  console.log('[BackgroundProcess] 🔄 Starting data processing for PUUID:', puuid);
+  console.log('[BACKGROUND_PROCESS] 🔄 Starting data processing for PUUID:', puuid);
 
   try {
     // 1. Fetch the user data to get matchIds
@@ -33,37 +33,37 @@ export const processUserData = async (puuid: string): Promise<void> => {
       .single();
 
     if (userError) {
-      throw new Error(`Failed to fetch user data: ${userError.message}`);
+      throw new Error(`[ERROR] Failed to fetch user data: ${userError.message}`);
     }
 
     if (!userData) {
-      throw new Error('User not found');
+      throw new Error('[ERROR] User not found');
     }
 
-    console.log('✅ User data fetched:', userData);
+    console.log('[BACKGROUND_PROCESS] ✅ User data fetched');
 
     // 2. Compare with dummy data to find unique/new matchIds
     const newMatchIds = await findNewMatchIds(userData.puuid, userData.region, userData.matchid || []);
 
     if (newMatchIds.length === 0) {
-      console.log('📝 No new matches found, processing completed');
+      console.log('[BACKGROUND_PROCESS] 📝 No new matches found, processing completed');
       // Update the tracker to signal that processing is complete
       dataUpdateTracker.markUpdated(puuid);
       return;
     }
 
-    console.log('🎮 Found new matches to process:', newMatchIds);
+    console.log('[BACKGROUND_PROCESS] 🎮 Found new matches to process:', newMatchIds);
 
     // 3. Process the data with new matchIds
     await processData(puuid, newMatchIds, userData.region);
 
-    console.log('✅ All data processed and updated successfully');
+    console.log('[BACKGROUND_PROCESS] ✅ All data processed and updated successfully');
 
     // 4. Update the tracker to signal that processing is complete
     dataUpdateTracker.markUpdated(puuid);
 
   } catch (error) {
-    console.error('[BackgroundProcess] ❌ Error processing data:', error);
+    console.error('[ERROR] ❌ Error processing data:', error);
     throw error;
   }
 };
@@ -97,7 +97,7 @@ async function processData(puuid: string, newMatchIds: string[], region: string)
       fetchMatchStats(puuid)
     ]);
 
-    console.log('[BackgroundProcess] 📊 Fetched all current stats data');
+    console.log('[BACKGROUND_PROCESS] 📊 Fetched all current stats data');
 
     // 2. Process all stats with new matchIds
     const processedStats = await processAllStatsData({
@@ -111,9 +111,7 @@ async function processData(puuid: string, newMatchIds: string[], region: string)
       newMatchIds
     });
 
-    console.log('[BackgroundProcess] 🧮 Data processing complete');
-
-    console.log('Processed stats:', processedStats);
+    console.log('[BACKGROUND_PROCESS] 🧮 Data processing complete');
 
     // 3. Update all tables with the processed data
     await Promise.all([
@@ -126,10 +124,10 @@ async function processData(puuid: string, newMatchIds: string[], region: string)
       updateUserMatchIds(puuid, newMatchIds)
     ]);
 
-    console.log('[BackgroundProcess] 💾 All database tables updated with processed data');
+    console.log('[BACKGROUND_PROCESS] 💾 All database tables updated with processed data');
 
   } catch (error) {
-    console.error('[BackgroundProcess] Error in processData function:', error);
+    console.error('[ERROR] Error in processData function:', error);
     throw error;
   }
 }
@@ -152,7 +150,7 @@ async function updateUserMatchIds(puuid: string, newMatchIds: string[]): Promise
       .single();
 
     if (fetchError) {
-      console.error('Error fetching user matchesId:', fetchError);
+      console.error('[ERROR] Error fetching user matchesId:', fetchError);
       throw fetchError;
     }
 
@@ -170,13 +168,13 @@ async function updateUserMatchIds(puuid: string, newMatchIds: string[]): Promise
       .eq('puuid', puuid);
 
     if (updateError) {
-      console.error('Error updating user matchesId:', updateError);
+      console.error('[ERROR] Error updating user matchesId:', updateError);
       throw updateError;
     }
 
-    console.log(`[BackgroundProcess] ✅ Updated user's matchesId with ${newMatchIds.length} new matches`);
+    console.log(`[BACKGROUND_PROCESS] ✅ Updated user's matchesId with ${newMatchIds.length} new matches`);
   } catch (error) {
-    console.error('Error in updateUserMatchIds:', error);
+    console.error('[ERROR] Error in updateUserMatchIds:', error);
     throw error;
   }
 }
@@ -319,11 +317,11 @@ async function updateAgentStats(agentStats: any[], puuid: string): Promise<void>
       .upsert(formattedAgentStats, { onConflict: 'id' });
 
     if (upsertError) {
-      console.error('Error upserting agent stats:', upsertError);
+      console.error('[ERROR] Error upserting agent stats:', upsertError);
       throw upsertError;
     }
   } catch (error) {
-    console.error('Error in updateAgentStats:', error);
+    console.error('[ERROR] Error in updateAgentStats:', error);
     throw error;
   }
 }
@@ -352,11 +350,11 @@ async function updateMapStats(mapStats: any[], puuid: string): Promise<void> {
       .upsert(formattedMapStats, { onConflict: 'id' });
 
     if (upsertError) {
-      console.error('Error upserting map stats:', upsertError);
+      console.error('[ERROR] Error upserting map stats:', upsertError);
       throw upsertError;
     }
   } catch (error) {
-    console.error('Error in updateMapStats:', error);
+    console.error('[ERROR] Error in updateMapStats:', error);
     throw error;
   }
 }
@@ -385,11 +383,11 @@ async function updateWeaponStats(weaponStats: any[], puuid: string): Promise<voi
       .upsert(formattedWeaponStats, { onConflict: 'id' });
 
     if (upsertError) {
-      console.error('Error upserting weapon stats:', upsertError);
+      console.error('[ERROR] Error upserting weapon stats:', upsertError);
       throw upsertError;
     }
   } catch (error) {
-    console.error('Error in updateWeaponStats:', error);
+    console.error('[ERROR] Error in updateWeaponStats:', error);
     throw error;
   }
 }
@@ -418,11 +416,11 @@ async function updateSeasonStats(seasonStats: any[], puuid: string): Promise<voi
       .upsert(formattedSeasonStats, { onConflict: 'id' });
 
     if (upsertError) {
-      console.error('Error upserting season stats:', upsertError);
+      console.error('[ERROR] Error upserting season stats:', upsertError);
       throw upsertError;
     }
   } catch (error) {
-    console.error('Error in updateSeasonStats:', error);
+    console.error('[ERROR] Error in updateSeasonStats:', error);
     throw error;
   }
 }
@@ -450,11 +448,11 @@ async function updateMatchStats(matchStats: any[], puuid: string): Promise<void>
       .upsert(formattedMatchStats, { onConflict: 'id' });
 
     if (upsertError) {
-      console.error('Error upserting match stats:', upsertError);
+      console.error('[ERROR] Error upserting match stats:', upsertError);
       throw upsertError;
     }
   } catch (error) {
-    console.error('Error in updateMatchStats:', error);
+    console.error('[ERROR] Error in updateMatchStats:', error);
     throw error;
   }
 }

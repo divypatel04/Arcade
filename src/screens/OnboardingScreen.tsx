@@ -18,10 +18,6 @@ import { useTranslation } from 'react-i18next';
 
 const {width, height} = Dimensions.get('window');
 
-
-
-
-
 const Slide = ({item}: any) => {
   return (
     <View style={{alignItems: 'center', width}}>

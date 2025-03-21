@@ -13,11 +13,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { useDataContext } from '../context/DataContext';
 import { processUserData } from '../services';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoadingScreen() {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [loadingStarted, setLoadingStarted] = useState<boolean>(false);
-  // Use ref to track if data fetch has been initiated
   const dataFetchInitiated = useRef<boolean>(false);
 
   const {
@@ -28,24 +28,25 @@ export default function LoadingScreen() {
     userData
   } = useDataContext();
 
+  const {userPuuid} = useAuth();
+
   // Fetch data only once
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      // Only fetch if not already initiated
       if (dataFetchInitiated.current) return;
 
       dataFetchInitiated.current = true;
-      console.log('LoadingScreen: Initiating data fetch (once)');
+      console.log('[LOG] LoadingScreen: Initiating data fetch (once)');
       setLoadingStarted(true);
 
 
       try {
-        // Use the hardcoded PUUID for now
-        await fetchUserData('-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA');
-        processUserData('-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA');
-        console.log('LoadingScreen: fetchUserData call completed');
+        await fetchUserData(userPuuid);
+        processUserData(userPuuid);
+
+        console.log('[LOG] LoadingScreen: fetchUserData call completed');
       } catch (err) {
-        console.error('LoadingScreen: Error in fetchCurrentUser:', err);
+        console.error('[ERROR] LoadingScreen: Error in fetchCurrentUser:', err);
       }
     };
 
@@ -55,8 +56,7 @@ export default function LoadingScreen() {
   // Navigate to BottomTabs when data is ready
   useEffect(() => {
     if (isDataReady) {
-      console.log('LoadingScreen: Data ready, navigating to BottomTabs');
-      // Small delay to ensure any final state updates complete
+      console.log('[LOG] LoadingScreen: Data ready, navigating to BottomTabs');
       setTimeout(() => {
         navigation.navigate('BottomTabs');
       }, 300);
@@ -66,7 +66,7 @@ export default function LoadingScreen() {
   // Handle errors
   useEffect(() => {
     if (contextError) {
-      console.error('Error from context:', contextError);
+      console.error('[ERROR] Error from context:', contextError);
 
       Alert.alert(
         'Error',
