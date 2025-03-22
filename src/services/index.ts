@@ -436,7 +436,7 @@ async function updateMatchStats(matchStats: any[], puuid: string): Promise<void>
   try {
     // Transform data structure for database insertion/update
     const formattedMatchStats = matchStats.map(stat => ({
-      id: `${puuid}-${stat.stats.general.matchId}`,
+      id: stat.id || `${puuid}-${stat.stats.general.matchId}`,
       puuid: puuid,
       stats: stat.stats,
       lastupdated: new Date().toISOString()

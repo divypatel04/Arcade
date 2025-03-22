@@ -9,12 +9,14 @@ interface ProcessDataInput {
     mapStats: MapStatsType[];
     weaponStats: WeaponStatType[];
     seasonStats: SeasonStatsType[];
+    matchStats: any[]; // Add matchStats
   };
   newData: {
     agentStats: AgentStatType[];
     mapStats: MapStatsType[];
     weaponStats: WeaponStatType[];
     seasonStats: SeasonStatsType[];
+    matchStats: any[]; // Add matchStats
   };
 }
 
@@ -23,6 +25,7 @@ interface ProcessDataOutput {
   mergedMapStats: MapStatsType[];
   mergedWeaponStats: WeaponStatType[];
   mergedSeasonStats: SeasonStatsType[];
+  mergedMatchStats: any[]; // Add mergedMatchStats
 }
 
 // Helper function to merge agent stats
@@ -322,6 +325,39 @@ const mergeSeasonStats = (oldStats: SeasonStatsType[], newStats: SeasonStatsType
   return mergedStats;
 };
 
+// Helper function to merge match stats and keep only the 30 most recent
+const mergeMatchStats = (oldStats: any[], newStats: any[]): any[] => {
+  // Combine old and new stats
+  const allMatchStats = [...oldStats, ...newStats];
+
+  // Remove duplicates based on match ID
+  const uniqueMatches = new Map();
+
+  for (const match of allMatchStats) {
+    const matchId = match.stats?.general?.matchId || match.id;
+    if (matchId) {
+      // Use the match with the most recent data if there are duplicates
+      if (!uniqueMatches.has(matchId) ||
+          (match.stats?.general?.gameStartMillis > uniqueMatches.get(matchId).stats?.general?.gameStartMillis)) {
+        uniqueMatches.set(matchId, match);
+      }
+    }
+  }
+
+  // Convert back to array
+  const mergedStats = Array.from(uniqueMatches.values());
+
+  // Sort by gameStartMillis in descending order (newest first)
+  mergedStats.sort((a, b) => {
+    const timeA = a.stats?.general?.gameStartMillis || 0;
+    const timeB = b.stats?.general?.gameStartMillis || 0;
+    return timeB - timeA;
+  });
+
+  // Limit to 30 most recent matches
+  return mergedStats.slice(0, 30);
+};
+
 export const mergeProcess = async ({oldData, newData}: ProcessDataInput): Promise<ProcessDataOutput> => {
   try {
     // Validate inputs to prevent errors
@@ -329,14 +365,16 @@ export const mergeProcess = async ({oldData, newData}: ProcessDataInput): Promis
       agentStats: Array.isArray(oldData.agentStats) ? oldData.agentStats : [],
       mapStats: Array.isArray(oldData.mapStats) ? oldData.mapStats : [],
       weaponStats: Array.isArray(oldData.weaponStats) ? oldData.weaponStats : [],
-      seasonStats: Array.isArray(oldData.seasonStats) ? oldData.seasonStats : []
+      seasonStats: Array.isArray(oldData.seasonStats) ? oldData.seasonStats : [],
+      matchStats: Array.isArray(oldData.matchStats) ? oldData.matchStats : [], // Add matchStats validation
     };
 
     const validatedNewData = {
       agentStats: Array.isArray(newData.agentStats) ? newData.agentStats : [],
       mapStats: Array.isArray(newData.mapStats) ? newData.mapStats : [],
       weaponStats: Array.isArray(newData.weaponStats) ? newData.weaponStats : [],
-      seasonStats: Array.isArray(newData.seasonStats) ? newData.seasonStats : []
+      seasonStats: Array.isArray(newData.seasonStats) ? newData.seasonStats : [],
+      matchStats: Array.isArray(newData.matchStats) ? newData.matchStats : [], // Add matchStats validation
     };
 
     // Perform merges with proper error handling
@@ -344,6 +382,7 @@ export const mergeProcess = async ({oldData, newData}: ProcessDataInput): Promis
     let mergedMapStats = [];
     let mergedWeaponStats = [];
     let mergedSeasonStats = [];
+    let mergedMatchStats = []; // Add mergedMatchStats
 
     try {
       mergedAgentStats = mergeAgentStats(validatedOldData.agentStats, validatedNewData.agentStats);
@@ -373,11 +412,19 @@ export const mergeProcess = async ({oldData, newData}: ProcessDataInput): Promis
       mergedSeasonStats = [...validatedOldData.seasonStats]; // Fallback to old data
     }
 
+    try {
+      mergedMatchStats = mergeMatchStats(validatedOldData.matchStats, validatedNewData.matchStats);
+    } catch (error) {
+      console.error('Error merging match stats:', error);
+      mergedMatchStats = [...validatedOldData.matchStats]; // Fallback to old data
+    }
+
     return {
       mergedAgentStats,
       mergedMapStats,
       mergedWeaponStats,
-      mergedSeasonStats
+      mergedSeasonStats,
+      mergedMatchStats // Add mergedMatchStats to return
     };
   } catch (error) {
     console.error('Fatal error in mergeProcess:', error);
@@ -386,7 +433,8 @@ export const mergeProcess = async ({oldData, newData}: ProcessDataInput): Promis
       mergedAgentStats: oldData.agentStats || [],
       mergedMapStats: oldData.mapStats || [],
       mergedWeaponStats: oldData.weaponStats || [],
-      mergedSeasonStats: oldData.seasonStats || []
+      mergedSeasonStats: oldData.seasonStats || [],
+      mergedMatchStats: oldData.matchStats || [] // Add matchStats to fallback return
     };
   }
 };

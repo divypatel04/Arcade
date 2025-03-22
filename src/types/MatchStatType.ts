@@ -197,5 +197,10 @@ export type {
   MatchStatType,
   KillEvent,
   ClutchEvent,
-
+  CombatStats,
+  EconomyStats,
+  PositioningStats,
+  UtilityStats,
+  MapData,
+  Coordinate
 };

@@ -185,7 +185,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Update state with user data
       setState(prev => ({
         ...prev,
-        userData: userData as UserData,
+        userData: userData[0] as UserData,
       }));
 
       // Setup subscriptions

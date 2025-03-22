@@ -6,9 +6,9 @@ export const extractUniqueMatchType = (matchStats: MatchStatType[]) => {
 
   if (matchStats) {
     for (const match of matchStats) {
-      if (!MatchTypeSet[match.general.queueId]) {
-        MatchTypeSet[match.general.queueId] = {
-          queueId: match.general.queueId,
+      if (!MatchTypeSet[match.stats.general.queueId]) {
+        MatchTypeSet[match.stats.general.queueId] = {
+          queueId: match.stats.general.queueId,
         };
       }
     }
@@ -41,7 +41,7 @@ export function transformMatchStats(
   if (matchStats) {
     for (const matchStat of matchStats) {
       // Convert gameStartMillis to a Date object
-      const gameStartDate = new Date(matchStat.general.gameStartMillis);
+      const gameStartDate = new Date(matchStat.stats.general.gameStartMillis);
 
       // Format the date as "dd/mm/yyyy"
       const formattedDate = `${gameStartDate.getDate()}/${

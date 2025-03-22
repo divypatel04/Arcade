@@ -8,8 +8,8 @@ import MatchBox from '../components/MatchBox'
 import { MatchStatType } from '../types/MatchStatType'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { matchStats } from '../data'
 import { useTranslation } from 'react-i18next'
+import { useDataContext } from '../context/DataContext'
 
 
 interface resultArray {
@@ -18,6 +18,10 @@ interface resultArray {
 }
 
 const MatchListScreen = () => {
+
+  const {matchStats} = useDataContext();
+
+  console.log(JSON.stringify(matchStats[0]));
 
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();

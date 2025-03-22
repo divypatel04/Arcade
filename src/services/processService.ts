@@ -82,26 +82,30 @@ export async function processAllStatsData(data: ProcessDataInput): Promise<Proce
       agentStats,
       mapStats,
       weaponStats,
-      seasonStats
+      seasonStats,
+      matchStats // Add matchStats to the destructuring
     } = await generateStats(matchDetails, data.puuid);
 
     const {
       mergedAgentStats,
       mergedMapStats,
       mergedWeaponStats,
-      mergedSeasonStats
+      mergedSeasonStats,
+      mergedMatchStats // Add mergedMatchStats to the destructuring
     } = await mergeProcess({
       oldData: {
         agentStats: data.agentStats || [],
         mapStats: data.mapStats || [],
         weaponStats: data.weaponStats || [],
-        seasonStats: data.seasonStats || []
+        seasonStats: data.seasonStats || [],
+        matchStats: data.matchStats || [] // Add matchStats to oldData
       },
       newData:{
         agentStats: agentStats || [],
         mapStats: mapStats || [],
         weaponStats: weaponStats || [],
-        seasonStats: seasonStats || []
+        seasonStats: seasonStats || [],
+        matchStats: matchStats || [] // Add matchStats to newData
       }
     });
 
@@ -110,7 +114,7 @@ export async function processAllStatsData(data: ProcessDataInput): Promise<Proce
       mapStats: mergedMapStats,
       weaponStats: mergedWeaponStats,
       seasonStats: mergedSeasonStats,
-      matchStats: data.matchStats || []
+      matchStats: mergedMatchStats // Add mergedMatchStats to return
     };
   } catch (error) {
     console.error('[BackgroundProcess] Error processing stats data:', error);

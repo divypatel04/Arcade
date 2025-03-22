@@ -3,6 +3,7 @@ import { MapStatsType, SeasonPerformance as MapSeasonPerformance } from "../type
 import { SeasonStatsType } from "../types/SeasonStatsType";
 import { WeaponStatType, SeasonPerformance as WeaponSeasonPerformance } from "../types/WeaponStatsType";
 import { supabase } from "../lib/supabase";
+import { ClutchEvent, CombatStats, Coordinate, EconomyStats, KillEvent, MapData, PlayerVsPlayerStat, PositioningStats, RoundPerformance, TeamStat, UtilityStats } from "../types/MatchStatType";
 
 // Define a simplified MatchDetails interface for clarity
 interface MatchDetails {
@@ -14,6 +15,7 @@ interface MatchDetails {
     seasonId: string;
     isRanked: boolean;
     gameMode: string;
+    queueId: string;
   };
   players: {
     puuid: string;
@@ -54,6 +56,11 @@ interface MatchDetails {
       kills: {
         killer: string;
         victim: string;
+        location: {
+          x: number;
+          y: number;
+        }
+        timeSinceRoundStartMillis: number;
         victimLocation: {
           x: number;
           y: number;
@@ -72,12 +79,17 @@ interface MatchDetails {
       }[];
       score: number;
       economy: {
+        loadoutValue: number;
         weapon: string;
+        armor: string;
+        remaining: number;
+        spent: number;
       };
     }[];
   }[];
 }
 
+// Update the generateStats function to also generate match stats
 export const generateStats = async (matchDetails: MatchDetails[], puuid: string) => {
   // Validate inputs
   if (!Array.isArray(matchDetails) || !puuid) {
@@ -86,7 +98,8 @@ export const generateStats = async (matchDetails: MatchDetails[], puuid: string)
       agentStats: [],
       mapStats: [],
       weaponStats: [],
-      seasonStats: []
+      seasonStats: [],
+      matchStats: [] // Add matchStats to the return object
     };
   }
 
@@ -138,38 +151,46 @@ export const generateStats = async (matchDetails: MatchDetails[], puuid: string)
   }
 
   // Convert maps to arrays and assign IDs
-  const result = {
-    agentStats: Array.from(agentMap.values()).map(stat => ({
-      ...stat,
-      id: `${puuid}_${stat.agent.id}`,
-      puuid
-    })),
-    mapStats: Array.from(mapMap.values()).map(stat => ({
-      ...stat,
-      id: `${puuid}_${stat.map.id}`,
-      puuid
-    })),
-    weaponStats: Array.from(weaponMap.values()).map(stat => ({
-      ...stat,
-      id: `${puuid}_${stat.weapon.id}`,
-      puuid
-    })),
-    seasonStats: Array.from(seasonMap.values()).map(stat => ({
-      ...stat,
-      id: `${puuid}_${stat.season.id}`,
-      puuid
-    }))
-  };
+  const agentStats = Array.from(agentMap.values()).map(stat => ({
+    ...stat,
+    id: `${puuid}_${stat.agent.id}`,
+    puuid
+  }));
+  const mapStats = Array.from(mapMap.values()).map(stat => ({
+    ...stat,
+    id: `${puuid}_${stat.map.id}`,
+    puuid
+  }));
+  const weaponStats = Array.from(weaponMap.values()).map(stat => ({
+    ...stat,
+    id: `${puuid}_${stat.weapon.id}`,
+    puuid
+  }));
+  const seasonStats = Array.from(seasonMap.values()).map(stat => ({
+    ...stat,
+    id: `${puuid}_${stat.season.id}`,
+    puuid
+  }));
+
+  // Generate match stats
+  const matchStats = await generateMatchStats(matchDetails, puuid);
 
   try {
-    // Fetch missing details for all entities
-    await enrichStatsWithDetails(result);
+    // Fetch missing details for all entities including match stats
+    await enrichStatsWithDetails({ agentStats, mapStats, weaponStats, seasonStats, matchStats });
   } catch (error) {
     console.error('Error enriching stats with details:', error);
     // Continue with unenriched data rather than failing
   }
 
-  return result;
+  // Return all generated stats
+  return {
+    agentStats,
+    mapStats,
+    weaponStats,
+    seasonStats,
+    matchStats
+  };
 };
 
 // Helper functions for processing stats
@@ -907,7 +928,8 @@ async function enrichStatsWithDetails(stats: {
   agentStats: AgentStatType[],
   mapStats: MapStatsType[],
   weaponStats: WeaponStatType[],
-  seasonStats: SeasonStatsType[]
+  seasonStats: SeasonStatsType[],
+  matchStats?: any[] // Add optional matchStats parameter
 }) {
   try {
     // Process agents
@@ -1005,6 +1027,46 @@ async function enrichStatsWithDetails(stats: {
         }
       } catch (error) {
         console.error(`Error enriching season stats for season ${seasonStat.season.id}:`, error);
+      }
+    }
+
+    // Process match stats if provided
+    if (stats.matchStats && stats.matchStats.length > 0) {
+      for (const matchStat of stats.matchStats) {
+        try {
+          if (matchStat.stats && matchStat.stats.general) {
+            const general = matchStat.stats.general;
+
+            // Enrich agent details
+            if (general.agent && general.agent.id && (!general.agent.name || !general.agent.role)) {
+              const agentDetails = await fetchAgentDetails(general.agent.id);
+              general.agent = {
+                ...general.agent,
+                ...agentDetails
+              };
+            }
+
+            // Enrich map details
+            if (general.map && general.map.id && (!general.map.name || !general.map.location)) {
+              const mapDetails = await fetchMapDetails(general.map.id);
+              general.map = {
+                ...general.map,
+                ...mapDetails
+              };
+            }
+
+            // Enrich season details
+            if (general.season && general.season.id && !general.season.name) {
+              const seasonDetails = await fetchSeasonDetails(general.season.id);
+              general.season = {
+                ...general.season,
+                ...seasonDetails
+              };
+            }
+          }
+        } catch (error) {
+          console.error(`Error enriching match stats for match ${matchStat.id || matchStat?.stats?.general?.matchId}:`, error);
+        }
       }
     }
   } catch (error) {
@@ -1430,3 +1492,860 @@ function processClutchStats(
     }
   }
 }
+
+/**
+ * Generate match stats from match details
+ * @param matchDetails Match details from API
+ * @param puuid User PUUID
+ * @returns Array of processed match stats
+ */
+export const generateMatchStats = async (matchDetails: MatchDetails[], puuid: string): Promise<any[]> => {
+  if (!Array.isArray(matchDetails) || !puuid) {
+    console.error('[BackgroundProcess] Invalid input to generateMatchStats:', { matchDetailsLength: matchDetails?.length, puuid });
+    return [];
+  }
+
+  const matchStats = [];
+
+  for (const match of matchDetails) {
+    try {
+      // Skip invalid match data
+      if (!match?.matchInfo || !Array.isArray(match.players) || !Array.isArray(match.teams)) {
+        console.warn('Skipping invalid match data:', match);
+        continue;
+      }
+
+      // Find the player in this match
+      const player = match.players.find(player => player?.puuid === puuid);
+      if (!player) {
+        console.warn(`Player ${puuid} not found in match ${match.matchInfo.matchId}`);
+        continue;
+      }
+
+      // Find player's team
+      const playerTeam = match.teams.find(team => team?.teamId === player.teamId);
+      if (!playerTeam) {
+        console.warn(`Player's team ${player.teamId} not found in match ${match.matchInfo.matchId}`);
+        continue;
+      }
+
+      // Find enemy team
+      const enemyTeam = match.teams.find(team => team?.teamId !== player.teamId);
+      if (!enemyTeam) {
+        console.warn(`Enemy team not found in match ${match.matchInfo.matchId}`);
+        continue;
+      }
+
+      // Get opponent players (enemy team)
+      const enemyPlayers = match.players.filter(p => p.teamId !== player.teamId);
+
+      // Generate team stats
+      const teamStats = generateTeamStats(match, player, playerTeam, enemyTeam);
+
+      // Generate player vs player stats
+      const playerVsPlayerStat = generatePlayerVsPlayerStats(match, player, enemyPlayers, puuid);
+
+      // Generate round performance data
+      const roundPerformance = generateRoundPerformance(match, player);
+
+      // Create general info with only IDs (for later enrichment)
+      const generalInfo = {
+        matchId: match.matchInfo.matchId,
+        mapId: match.matchInfo.mapId,
+        seasonId: match.matchInfo.seasonId,
+        queueId: match.matchInfo.queueId,
+        gameStartMillis: match.matchInfo.gameStartMillis,
+        gameLengthMillis: match.matchInfo.gameLengthMillis,
+        isRanked: match.matchInfo.isRanked,
+        winningTeam: playerTeam.won ? player.teamId : enemyTeam.teamId,
+        roundsPlayed: match.teams.reduce((sum, team) => sum + team.roundsPlayed, 0) / 2, // Divide by 2 since both teams play the same rounds
+        agent: {
+          id: player.characterId
+        },
+        map: {
+          id: match.matchInfo.mapId
+        },
+        season: {
+          id: match.matchInfo.seasonId
+        }
+      };
+
+      // Build full match stat object
+      const matchStat = {
+        id: `${puuid}_${match.matchInfo.matchId}`,
+        puuid,
+        stats: {
+          general: generalInfo,
+          playerVsplayerStat: playerVsPlayerStat,
+          teamStats: teamStats,
+          roundPerformace: roundPerformance
+        }
+      };
+
+      matchStats.push(matchStat);
+    } catch (error) {
+      console.error(`Error processing match ${match?.matchInfo?.matchId}:`, error);
+      // Continue to next match instead of failing the whole process
+    }
+  }
+
+  return matchStats;
+};
+
+/**
+ * Generate team statistics
+ */
+function generateTeamStats(match: MatchDetails, player: any, playerTeam: any, enemyTeam: any): TeamStat[] {
+  // Initialize team stats for player's team and enemy team
+  const yourTeamStat: TeamStat = {
+    team: "Your Team",
+    teamId: playerTeam.teamId,
+    firstKills: 0,
+    thrifties: 0,
+    postPlantsWon: 0,
+    postPlantsLost: 0,
+    clutchesWon: 0
+  };
+
+  const enemyTeamStat: TeamStat = {
+    team: "Enemy Team",
+    teamId: enemyTeam.teamId,
+    firstKills: 0,
+    thrifties: 0,
+    postPlantsWon: 0,
+    postPlantsLost: 0,
+    clutchesWon: 0
+  };
+
+  // Process rounds to populate team stats
+  for (const round of match.roundResults) {
+    // Count first kills
+    const firstKill = getFirstKillInRound(round);
+    if (firstKill) {
+      const killerTeam = match.players.find(p => p.puuid === firstKill.killer)?.teamId;
+      if (killerTeam === playerTeam.teamId) {
+        yourTeamStat.firstKills++;
+      } else {
+        enemyTeamStat.firstKills++;
+      }
+    }
+
+    // Process thrifties (winning a round with significantly lower economy)
+    const yourTeamEconomy = calculateTeamEconomy(match, round, playerTeam.teamId);
+    const enemyTeamEconomy = calculateTeamEconomy(match, round, enemyTeam.teamId);
+    const economyThreshold = 0.6; // 60% threshold for thrifty
+
+    if (round.winningTeam === playerTeam.teamId && yourTeamEconomy < enemyTeamEconomy * economyThreshold) {
+      yourTeamStat.thrifties++;
+    } else if (round.winningTeam === enemyTeam.teamId && enemyTeamEconomy < yourTeamEconomy * economyThreshold) {
+      enemyTeamStat.thrifties++;
+    }
+
+    // Process post-plants (if bomb was planted)
+    if (round.bombPlanter) {
+      const planterTeam = match.players.find(p => p.puuid === round.bombPlanter)?.teamId;
+
+      if (planterTeam === playerTeam.teamId) {
+        if (round.winningTeam === playerTeam.teamId) {
+          yourTeamStat.postPlantsWon++;
+        } else {
+          yourTeamStat.postPlantsLost++;
+        }
+      } else if (planterTeam === enemyTeam.teamId) {
+        if (round.winningTeam === enemyTeam.teamId) {
+          enemyTeamStat.postPlantsWon++;
+        } else {
+          enemyTeamStat.postPlantsLost++;
+        }
+      }
+    }
+
+    // Process clutches (last player alive winning the round)
+    const yourTeamClutch = detectClutch(match, round, playerTeam.teamId);
+    const enemyTeamClutch = detectClutch(match, round, enemyTeam.teamId);
+
+    if (yourTeamClutch && round.winningTeam === playerTeam.teamId) {
+      yourTeamStat.clutchesWon++;
+    }
+
+    if (enemyTeamClutch && round.winningTeam === enemyTeam.teamId) {
+      enemyTeamStat.clutchesWon++;
+    }
+  }
+
+  return [yourTeamStat, enemyTeamStat];
+}
+
+/**
+ * Generate player vs player statistics
+ */
+function generatePlayerVsPlayerStats(match: MatchDetails, player: any, enemies: any[], puuid: string): PlayerVsPlayerStat {
+  // Create user player object
+  const userPlayer: any = {
+    id: player.puuid,
+    teamId: player.teamId,
+    name: `${player.gameName}#${player.tagLine}`,
+    stats: {
+      name: `${player.gameName}#${player.tagLine}`,
+      kills: player.stats.kills,
+      deaths: player.stats.deaths,
+      assists: player.stats.assists || 0,
+      firstBloods: 0,
+      clutchesWon: 0,
+      clutchAttempts: 0,
+      headshotPercentage: calculateHeadshotPercentage(match, player.puuid),
+      damagePerRound: calculateDamagePerRound(match, player.puuid),
+      kdRatio: player.stats.kills / Math.max(1, player.stats.deaths),
+      aces: countAces(match, player.puuid),
+      playtimeMillis: match.matchInfo.gameLengthMillis,
+      roundsPlayed: player.stats.roundsPlayed,
+      roundsWon: match.teams.find(team => team.teamId === player.teamId)?.roundsWon || 0,
+      roundsLost: (player.stats.roundsPlayed || 0) - (match.teams.find(team => team.teamId === player.teamId)?.roundsWon || 0)
+    }
+  };
+
+  // Create enemy player objects
+  const enemyPlayers: any[] = enemies.map(enemy => ({
+    id: enemy.puuid,
+    teamId: enemy.teamId,
+    name: `${enemy.gameName}#${enemy.tagLine}`,
+    stats: {
+      name: `${enemy.gameName}#${enemy.tagLine}`,
+      kills: enemy.stats.kills,
+      deaths: enemy.stats.deaths,
+      assists: enemy.stats.assists || 0,
+      firstBloods: 0,
+      clutchesWon: 0,
+      clutchAttempts: 0,
+      headshotPercentage: calculateHeadshotPercentage(match, enemy.puuid),
+      damagePerRound: calculateDamagePerRound(match, enemy.puuid),
+      kdRatio: enemy.stats.kills / Math.max(1, enemy.stats.deaths),
+      aces: countAces(match, enemy.puuid),
+      playtimeMillis: match.matchInfo.gameLengthMillis,
+      roundsPlayed: enemy.stats.roundsPlayed,
+      roundsWon: match.teams.find(team => team.teamId === enemy.teamId)?.roundsWon || 0,
+      roundsLost: (enemy.stats.roundsPlayed || 0) - (match.teams.find(team => team.teamId === enemy.teamId)?.roundsWon || 0)
+    }
+  }));
+
+  // Generate kill events
+  const killEvents: KillEvent[] = extractKillEvents(match, player.puuid);
+
+  // Generate clutch events
+  const clutchEvents: ClutchEvent[] = extractClutchEvents(match, player.puuid);
+
+  // Generate map data for heat maps
+  const mapData = generateMapData(match, player.puuid);
+
+  // Get map coordinates from the match
+  // This is a placeholder - you would need to fetch the actual coordinates
+  const mapCoordinates = {
+    xMultiplier: 1,
+    yMultiplier: 1,
+    xScalarToAdd: 0,
+    yScalarToAdd: 0
+  };
+
+  // Update first bloods and clutch stats for user and enemies
+  updateFirstBloodsAndClutches(userPlayer, enemyPlayers, killEvents, clutchEvents);
+
+  return {
+    user: userPlayer,
+    enemies: enemyPlayers,
+    killEvents,
+    clutchEvents,
+    mapData,
+    mapCoordinates
+  };
+}
+
+/**
+ * Generate round performance data
+ */
+function generateRoundPerformance(match: MatchDetails, player: any): RoundPerformance[] {
+  const roundPerformances: RoundPerformance[] = [];
+
+  // Process each round
+  for (let i = 0; i < match.roundResults.length; i++) {
+    const round = match.roundResults[i];
+    const playerStats = round.playerStats.find(stats => stats.puuid === player.puuid);
+
+    if (!playerStats) continue;
+
+    const playerTeam = player.teamId;
+    const outcome = round.winningTeam === playerTeam ? "Won" : "Lost";
+
+    // Calculate combat stats
+    const combatStats: CombatStats = {
+      kills: playerStats.kills.length,
+      deaths: wasPlayerKilled(round, player.puuid),
+      assists: countAssists(round, player.puuid),
+      damageDealt: calculateDamageDealt(playerStats),
+      headshotPercentage: calculateHeadshotPercentageForRound(playerStats),
+      tradedKill: wasPlayerTradedKill(round, player.puuid),
+      tradeKill: didPlayerTradeKill(round, player.puuid)
+    };
+
+    // Build economy stats
+    const economyStats: EconomyStats = {
+      weaponType: playerStats.economy.weapon || "",
+      armorType: playerStats.economy.armor || "",
+      creditSpent: playerStats.economy.spent || 0,
+      loadoutValue: playerStats.economy.loadoutValue || 0,
+      enemyLoadoutValue: calculateAverageEnemyLoadout(match, round, player.teamId)
+    };
+
+    // Positioning is more abstract and requires more detailed data
+    // This is a simplification
+    const positioningStats: PositioningStats = {
+      site: determineSite(round, player.puuid),
+      positionType: determinePositionType(round, player.puuid),
+      firstContact: wasFirstContact(round, player.puuid),
+      timeToFirstContact: calculateTimeToFirstContact(round, player.puuid)
+    };
+
+    // Utility stats
+    const utilityStats: UtilityStats = {
+      abilitiesUsed: countAbilitiesUsed(playerStats),
+      totalAbilities: 4, // Typical number of abilities in Valorant
+      utilityDamage: calculateUtilityDamage(playerStats)
+    };
+
+    // Generate improvement suggestions
+    const improvement = generateImprovementSuggestions(
+      combatStats,
+      economyStats,
+      positioningStats,
+      utilityStats,
+      outcome
+    );
+
+    // Calculate impact score (simplified approach)
+    const impactScore = calculateImpactScore(
+      combatStats,
+      economyStats,
+      positioningStats,
+      utilityStats,
+      outcome,
+      round.winningTeam === playerTeam
+    );
+
+    roundPerformances.push({
+      roundNumber: i + 1,
+      outcome,
+      impactScore,
+      combat: combatStats,
+      economy: economyStats,
+      positioning: positioningStats,
+      utility: utilityStats,
+      improvement
+    });
+  }
+
+  return roundPerformances;
+}
+
+// Helper functions for match stat generation
+function getFirstKillInRound(round: any): any | null {
+  let firstKill: any | null = null;
+  let earliestTime = Infinity;
+
+  for (const playerStat of round.playerStats) {
+    for (const kill of playerStat.kills) {
+      if (kill.timeSinceRoundStartMillis < earliestTime) {
+        earliestTime = kill.timeSinceRoundStartMillis;
+        firstKill = {
+          ...kill,
+          killer: playerStat.puuid
+        };
+      }
+    }
+  }
+
+  return firstKill;
+}
+
+function calculateTeamEconomy(match: MatchDetails, round: any, teamId: string): number {
+  let totalEconomy = 0;
+  let playerCount = 0;
+
+  for (const playerStat of round.playerStats) {
+    const player = match.players.find(p => p.puuid === playerStat.puuid);
+    if (player && player.teamId === teamId) {
+      totalEconomy += playerStat.economy.loadoutValue || 0;
+      playerCount++;
+    }
+  }
+
+  return playerCount > 0 ? totalEconomy / playerCount : 0;
+}
+
+function detectClutch(match: MatchDetails, round: any, teamId: string): boolean {
+  // This is a simplification. A proper clutch detection would need more detailed data
+  // about when players died during the round
+  const teamPlayers = match.players.filter(p => p.teamId === teamId);
+  const aliveTeamPlayers = new Set(teamPlayers.map(p => p.puuid));
+
+  // Count deaths from this team in the round
+  for (const playerStat of round.playerStats) {
+    for (const kill of playerStat.kills) {
+      const victim = kill.victim;
+      if (teamPlayers.some(p => p.puuid === victim)) {
+        aliveTeamPlayers.delete(victim);
+      }
+    }
+  }
+
+  // If only one player remained alive and the team won, it's a clutch
+  return aliveTeamPlayers.size === 1 && round.winningTeam === teamId;
+}
+
+function calculateHeadshotPercentage(match: MatchDetails, puuid: string): number {
+  let totalShots = 0;
+  let headshots = 0;
+
+  for (const round of match.roundResults) {
+    const playerStats = round.playerStats.find(stat => stat.puuid === puuid);
+    if (!playerStats) continue;
+
+    for (const damage of playerStats.damage) {
+      totalShots += damage.legshots + damage.bodyshots + damage.headshots;
+      headshots += damage.headshots;
+    }
+  }
+
+  return totalShots > 0 ? (headshots / totalShots) * 100 : 0;
+}
+
+function calculateDamagePerRound(match: MatchDetails, puuid: string): number {
+  let totalDamage = 0;
+  let roundsPlayed = 0;
+
+  for (const round of match.roundResults) {
+    const playerStats = round.playerStats.find(stat => stat.puuid === puuid);
+    if (!playerStats) continue;
+
+    let roundDamage = 0;
+    for (const damage of playerStats.damage) {
+      roundDamage += damage.damage;
+    }
+
+    totalDamage += roundDamage;
+    roundsPlayed++;
+  }
+
+  return roundsPlayed > 0 ? totalDamage / roundsPlayed : 0;
+}
+
+function countAces(match: MatchDetails, puuid: string): number {
+  let aces = 0;
+
+  for (const round of match.roundResults) {
+    const playerStats = round.playerStats.find(stat => stat.puuid === puuid);
+    if (!playerStats) continue;
+
+    // An ace is 5 kills in a round
+    if (playerStats.kills.length >= 5) {
+      aces++;
+    }
+  }
+
+  return aces;
+}
+
+function extractKillEvents(match: MatchDetails, puuid: string): KillEvent[] {
+  const killEvents: KillEvent[] = [];
+
+  for (let roundIndex = 0; roundIndex < match.roundResults.length; roundIndex++) {
+    const round = match.roundResults[roundIndex];
+
+    for (const playerStat of round.playerStats) {
+      for (const kill of playerStat.kills) {
+        // Include kills where player is killer or victim
+        if (playerStat.puuid === puuid || kill.victim === puuid) {
+          killEvents.push({
+            killer: playerStat.puuid,
+            victim: kill.victim,
+            weapon: kill.finishingDamage.damageItem,
+            headshot: kill.finishingDamage.damageType.toLowerCase().includes('head'),
+            timestamp: new Date(match.matchInfo.gameStartMillis + kill.timeSinceRoundStartMillis).toISOString(),
+            round: roundIndex + 1
+          });
+        }
+      }
+    }
+  }
+
+  return killEvents;
+}
+
+function extractClutchEvents(match: MatchDetails, puuid: string): ClutchEvent[] {
+  const clutchEvents: ClutchEvent[] = [];
+
+  for (let roundIndex = 0; roundIndex < match.roundResults.length; roundIndex++) {
+    const round = match.roundResults[roundIndex];
+
+    // Get the player's team
+    const player = match.players.find(p => p.puuid === puuid);
+    if (!player) continue;
+
+    const playerTeam = player.teamId;
+
+    // Check if player was in a clutch situation
+    const clutchSituation = detectClutchSituationForPlayer(match, round, puuid, playerTeam);
+
+    if (clutchSituation) {
+      const won = round.winningTeam === playerTeam;
+      clutchEvents.push({
+        player: puuid,
+        situation: clutchSituation,
+        round: roundIndex + 1,
+        won
+      });
+    }
+  }
+
+  return clutchEvents;
+}
+
+function detectClutchSituationForPlayer(match: MatchDetails, round: any, puuid: string, teamId: string): string | null {
+  // This is a simplification. A real implementation would need detailed data
+  // about player deaths during the round
+
+  // Check if player's team won the round
+  if (round.winningTeam !== teamId) return null;
+
+  // Check if player is alive
+  const playerIsAlive = !round.playerStats.some((stat:any) =>
+    stat.kills.some((kill:any) => kill.victim === puuid)
+  );
+
+  if (!playerIsAlive) return null;
+
+  // Count alive teammates
+  const teamPlayers = match.players.filter(p => p.teamId === teamId);
+  const aliveTeamPlayers = new Set(teamPlayers.map(p => p.puuid));
+
+  // Remove dead teammates
+  for (const playerStat of round.playerStats) {
+    for (const kill of playerStat.kills) {
+      const victim = kill.victim;
+      if (teamPlayers.some(p => p.puuid === victim)) {
+        aliveTeamPlayers.delete(victim);
+      }
+    }
+  }
+
+  // Only count if player is sole survivor
+  if (aliveTeamPlayers.size !== 1 || !aliveTeamPlayers.has(puuid)) return null;
+
+  // Count alive enemies
+  const enemyPlayers = match.players.filter(p => p.teamId !== teamId);
+  const aliveEnemyPlayers = new Set(enemyPlayers.map(p => p.puuid));
+
+  // Remove dead enemies
+  for (const playerStat of round.playerStats) {
+    for (const kill of playerStat.kills) {
+      const victim = kill.victim;
+      if (enemyPlayers.some(p => p.puuid === victim)) {
+        aliveEnemyPlayers.delete(victim);
+      }
+    }
+  }
+
+  // Determine clutch situation based on number of enemies
+  const enemyCount = aliveEnemyPlayers.size;
+
+  if (enemyCount >= 1 && enemyCount <= 5) {
+    return `1v${enemyCount}`;
+  }
+
+  return null;
+}
+
+function generateMapData(match: MatchDetails, puuid: string): MapData {
+  const kills: { [playerId: string]: Coordinate[] } = {};
+  const deaths: { [playerId: string]: Coordinate[] } = {};
+
+  // Initialize for the player
+  kills[puuid] = [];
+  deaths[puuid] = [];
+
+  // Process each round
+  for (const round of match.roundResults) {
+    // Process kills
+    for (const playerStat of round.playerStats) {
+      // When player gets kills
+      if (playerStat.puuid === puuid) {
+        for (const kill of playerStat.kills) {
+          if (kill.location) {
+            // Add kill location to player's kills
+            kills[puuid].push({
+              x: kill.location.x,
+              y: kill.location.y
+            });
+          }
+        }
+      }
+
+      // When player is killed
+      for (const kill of playerStat.kills) {
+        if (kill.victim === puuid && kill.location) {
+          // Add death location to player's deaths
+          deaths[puuid].push({
+            x: kill.location.x,
+            y: kill.location.y
+          });
+        }
+      }
+    }
+  }
+
+  return { kills, deaths };
+}
+
+function updateFirstBloodsAndClutches(userPlayer: any, enemyPlayers: any[], killEvents: KillEvent[], clutchEvents: ClutchEvent[]): void {
+  // Count first bloods (first kills of each round)
+  const roundFirstKills = new Map<number, string>();
+
+  for (const kill of killEvents) {
+    if (!roundFirstKills.has(kill.round)) {
+      roundFirstKills.set(kill.round, kill.killer);
+
+      // Update first blood count for the player who got it
+      if (kill.killer === userPlayer.id) {
+        userPlayer.stats.firstBloods++;
+      } else {
+        const enemyPlayer = enemyPlayers.find(e => e.id === kill.killer);
+        if (enemyPlayer) {
+          enemyPlayer.stats.firstBloods++;
+        }
+      }
+    }
+  }
+
+  // Update clutch stats
+  for (const clutch of clutchEvents) {
+    if (clutch.player === userPlayer.id) {
+      userPlayer.stats.clutchAttempts++;
+      if (clutch.won) {
+        userPlayer.stats.clutchesWon++;
+      }
+    } else {
+      const enemyPlayer = enemyPlayers.find(e => e.id === clutch.player);
+      if (enemyPlayer) {
+        enemyPlayer.stats.clutchAttempts++;
+        if (clutch.won) {
+          enemyPlayer.stats.clutchesWon++;
+        }
+      }
+    }
+  }
+}
+
+// Helper functions for generateRoundPerformance
+
+function wasPlayerKilled(round: any, puuid: string): number {
+  // Check if any kill in the round has this player as victim
+  return round.playerStats.some((stat:any) =>
+    stat.kills.some((kill:any) => kill.victim === puuid)
+  ) ? 1 : 0;
+}
+
+function countAssists(round: any, puuid: string): number {
+  // This is a simplification - assist data might not be directly available
+  // A more accurate implementation would need detailed assist data
+  return 0;
+}
+
+function calculateDamageDealt(playerStats: any): number {
+  return playerStats.damage.reduce((total:any, damage:any) => total + damage.damage, 0);
+}
+
+function calculateHeadshotPercentageForRound(playerStats: any): number {
+  let totalShots = 0;
+  let headshots = 0;
+
+  for (const damage of playerStats.damage) {
+    totalShots += damage.legshots + damage.bodyshots + damage.headshots;
+    headshots += damage.headshots;
+  }
+
+  return totalShots > 0 ? (headshots / totalShots) * 100 : 0;
+}
+
+function wasPlayerTradedKill(round: any, puuid: string): boolean {
+  // Check if player was killed and then their killer was killed shortly after
+  // This is a simplification - proper trade kill detection would need timestamps
+  const playerDeath = round.playerStats
+    .flatMap((stat:any) => stat.kills)
+    .find((kill:any) => kill.victim === puuid);
+
+  if (!playerDeath) return false;
+
+  const killerPuuid = round.playerStats.find((stat:any) =>
+    stat.kills.some((kill:any) => kill.victim === puuid)
+  )?.puuid;
+
+  if (!killerPuuid) return false;
+
+  // Check if killer was killed in this round
+  return round.playerStats.some((stat:any) =>
+    stat.kills.some((kill:any) => kill.victim === killerPuuid)
+  );
+}
+
+function didPlayerTradeKill(round: any, puuid: string): boolean {
+  // Check if player killed someone shortly after a teammate died
+  // This is a simplification - proper trade kill detection would need timestamps
+  const playerKills = round.playerStats.find((stat:any) => stat.puuid === puuid)?.kills || [];
+
+  if (playerKills.length === 0) return false;
+
+  // This is a very rough approximation without timestamps
+  // In a real implementation, you'd check if the kill happened within ~5 seconds of a teammate's death
+  return true;
+}
+
+function calculateAverageEnemyLoadout(match: MatchDetails, round: any, playerTeamId: string): number {
+  let totalEconomy = 0;
+  let playerCount = 0;
+
+  for (const playerStat of round.playerStats) {
+    const player = match.players.find(p => p.puuid === playerStat.puuid);
+    if (player && player.teamId !== playerTeamId) {
+      totalEconomy += playerStat.economy.loadoutValue || 0;
+      playerCount++;
+    }
+  }
+
+  return playerCount > 0 ? totalEconomy / playerCount : 0;
+}
+
+function determineSite(round: any, puuid: string): string {
+  // This is a simplification - in a real implementation, you'd use player position data
+  // and map data to determine which site they were playing
+  return "Unknown";
+}
+
+function determinePositionType(round: any, puuid: string): string {
+  // This is a simplification - in a real implementation, you'd analyze player positions
+  // and movement patterns to determine aggressive/passive/etc.
+  return "Balanced";
+}
+
+function wasFirstContact(round: any, puuid: string): boolean {
+  // Check if player was involved in the first kill of the round
+  const firstKill = getFirstKillInRound(round);
+  return firstKill ? (firstKill.killer === puuid || firstKill.victim === puuid) : false;
+}
+
+function calculateTimeToFirstContact(round: any, puuid: string): number {
+  // Find the earliest kill involving this player
+  let earliestTime = Infinity;
+
+  for (const playerStat of round.playerStats) {
+    for (const kill of playerStat.kills) {
+      if (playerStat.puuid === puuid || kill.victim === puuid) {
+        if (kill.timeSinceRoundStartMillis < earliestTime) {
+          earliestTime = kill.timeSinceRoundStartMillis;
+        }
+      }
+    }
+  }
+
+  return earliestTime === Infinity ? 0 : earliestTime;
+}
+
+function countAbilitiesUsed(playerStats: any): number {
+  // This is a simplification - in a real implementation, you'd count actual ability uses
+  return 0;
+}
+
+function calculateUtilityDamage(playerStats: any): number {
+  // This is a simplification - in a real implementation, you'd sum damage done by abilities
+  return 0;
+}
+
+function generateImprovementSuggestions(
+  combatStats: CombatStats,
+  economyStats: EconomyStats,
+  positioningStats: PositioningStats,
+  utilityStats: UtilityStats,
+  outcome: string
+): string[] {
+  const suggestions: string[] = [];
+
+  // This is a simplified approach - in a real implementation, you'd have more
+  // complex logic to generate meaningful suggestions based on the player's performance
+
+  // Combat suggestions
+  if (combatStats.kills === 0 && combatStats.deaths > 0) {
+    suggestions.push("Work on crosshair placement and positioning to secure kills");
+  }
+
+  if (combatStats.headshotPercentage < 15) {
+    suggestions.push("Practice aim to improve headshot accuracy");
+  }
+
+  // Economy suggestions
+  if (economyStats.loadoutValue < economyStats.enemyLoadoutValue * 0.7) {
+    suggestions.push("Improve economy management to match enemy loadout values");
+  }
+
+  // Positioning suggestions
+  if (positioningStats.firstContact && combatStats.deaths > 0) {
+    suggestions.push("Consider playing more passively when taking first contact");
+  }
+
+  // Utility suggestions
+  if (utilityStats.abilitiesUsed / utilityStats.totalAbilities < 0.5) {
+    suggestions.push("Use abilities more effectively to support your team");
+  }
+
+  return suggestions;
+}
+
+function calculateImpactScore(
+  combatStats: CombatStats,
+  economyStats: EconomyStats,
+  positioningStats: PositioningStats,
+  utilityStats: UtilityStats,
+  outcome: string,
+  roundWon: boolean
+): number {
+  // This is a simplified approach - in a real implementation, you'd have a more
+  // sophisticated algorithm to calculate player impact
+
+  let score = 0;
+
+  // Base score from KDA
+  score += combatStats.kills * 2;
+  score += combatStats.assists * 1;
+  score -= combatStats.deaths * 1.5;
+
+  // Bonus for efficient trading
+  if (combatStats.tradeKill) score += 1;
+  if (!combatStats.tradedKill && combatStats.deaths > 0) score -= 1;
+
+  // Bonus for headshots
+  score += (combatStats.headshotPercentage / 100) * 2;
+
+  // Economy impact
+  const economyEfficiency = combatStats.damageDealt / Math.max(1, economyStats.loadoutValue);
+  score += economyEfficiency * 0.01;
+
+  // Positioning impact
+  if (positioningStats.firstContact && !combatStats.deaths) score += 2;
+
+  // Utility impact
+  score += (utilityStats.utilityDamage / 100) * 0.5;
+  score += (utilityStats.abilitiesUsed / utilityStats.totalAbilities) * 2;
+
+  // Outcome bonus
+  if (roundWon) score *= 1.2;
+
+  return Math.max(0, Math.round(score));
+}
+
+
