@@ -51,9 +51,10 @@ const MatchInfoScreen = () => {
 const styles = StyleSheet.create({
   container: {
 
-    paddingBottom: 0,
+    paddingBottom: 300,
     flex: 1,
     backgroundColor: colors.white,
+
   },
   header: {
     padding: sizes['2xl'],

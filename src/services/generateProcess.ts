@@ -1035,6 +1035,9 @@ async function enrichStatsWithDetails(stats: {
 
     // Process match stats if provided
     if (stats.matchStats && stats.matchStats.length > 0) {
+      // Enrich match stats with weapon and armor details first
+      await enrichMatchStatsWithWeaponArmorDetails(stats.matchStats);
+
       for (const matchStat of stats.matchStats) {
         try {
           if (matchStat.stats && matchStat.stats.general) {
@@ -1592,6 +1595,9 @@ export const generateMatchStats = async (matchDetails: MatchDetails[], puuid: st
     }
   }
 
+  // Enrich match stats with weapon and armor details
+  await enrichMatchStatsWithWeaponArmorDetails(matchStats);
+
   return matchStats;
 };
 
@@ -1789,10 +1795,16 @@ function generateRoundPerformance(match: MatchDetails, player: any): RoundPerfor
       tradeKill: didPlayerTradeKill(round, player.puuid)
     };
 
+    // Store the weapon and armor IDs for later enrichment
+    const weaponId = playerStats.economy.weapon || "";
+    const armorId = playerStats.economy.armor || "";
+
     // Build economy stats
     const economyStats: EconomyStats = {
-      weaponType: playerStats.economy.weapon || "",
-      armorType: playerStats.economy.armor || "",
+      weaponId,  // Store ID for later enrichment
+      weaponType: weaponId, // Initially set to ID, will be enriched later
+      armorId,   // Store ID for later enrichment
+      armorType: armorId,  // Initially set to ID, will be enriched later
       creditSpent: playerStats.economy.spent || 0,
       loadoutValue: playerStats.economy.loadoutValue || 0,
       enemyLoadoutValue: calculateAverageEnemyLoadout(match, round, player.teamId)
@@ -1975,10 +1987,14 @@ function extractKillEvents(match: MatchDetails, puuid: string): KillEvent[] {
           const killerName = killerPlayer ? `${killerPlayer.gameName}#${killerPlayer.tagLine}` : playerStat.puuid;
           const victimName = victimPlayer ? `${victimPlayer.gameName}#${victimPlayer.tagLine}` : kill.victim;
 
+          // Store the weaponId for later enrichment
+          const weaponId = kill.finishingDamage.damageItem;
+
           killEvents.push({
             killer: killerName,
             victim: victimName,
-            weapon: kill.finishingDamage.damageItem,
+            weaponId, // Store the ID for later enrichment
+            weapon: weaponId, // Initially set to ID, will be enriched later
             headshot: kill.finishingDamage.damageType.toLowerCase().includes('head'),
             timestamp: new Date(match.matchInfo.gameStartMillis + kill.timeSinceRoundStartMillis).toISOString(),
             round: roundIndex + 1
@@ -2394,6 +2410,82 @@ function calculateImpactScore(
   if (roundWon) score *= 1.2;
 
   return Math.max(0, Math.round(score));
+}
+
+// Add a new function to enrich match stats with weapon and armor names
+async function enrichMatchStatsWithWeaponArmorDetails(matchStats: any[]): Promise<void> {
+  try {
+    // Fetch all weapons at once to minimize database calls
+    const { data: weaponsData, error: weaponsError } = await supabase
+      .from('weapons')
+      .select('id, name, type');
+
+    if (weaponsError) {
+      console.error('Error fetching weapons data:', weaponsError);
+      return;
+    }
+
+    // Create a map for quick weapon lookups
+    const weaponsMap = new Map();
+    if (weaponsData) {
+      weaponsData.forEach(weapon => {
+        weaponsMap.set(weapon.id, weapon);
+      });
+    }
+
+    // Fetch all armor types
+    const { data: armorData, error: armorError } = await supabase
+      .from('weapons')
+      .select('id, name, type');
+
+    if (armorError) {
+      console.error('Error fetching armor data:', armorError);
+      return;
+    }
+
+    // Create a map for quick armor lookups
+    const armorMap = new Map();
+    if (armorData) {
+      armorData.forEach(armor => {
+        armorMap.set(armor.id, armor);
+      });
+    }
+
+    // Process each match stat
+    for (const matchStat of matchStats) {
+      try {
+        // 1. Enrich kill events
+        if (matchStat.stats?.playerVsplayerStat?.killEvents) {
+          for (const killEvent of matchStat.stats.playerVsplayerStat.killEvents) {
+            if (killEvent.weaponId && weaponsMap.has(killEvent.weaponId)) {
+              killEvent.weapon = weaponsMap.get(killEvent.weaponId).name;
+            }
+          }
+        }
+
+        // 2. Enrich round performances
+        if (matchStat.stats?.roundPerformace) {
+          for (const round of matchStat.stats.roundPerformace) {
+            if (round.economy) {
+              // Enrich weapon name
+              if (round.economy.weaponId && weaponsMap.has(round.economy.weaponId)) {
+                round.economy.weaponType = weaponsMap.get(round.economy.weaponId).name;
+              }
+
+              // Enrich armor name
+              if (round.economy.armorId && armorMap.has(round.economy.armorId)) {
+                round.economy.armorType = armorMap.get(round.economy.armorId).name;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error(`Error enriching weapon/armor data for match ${matchStat.id}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error('Error in enrichMatchStatsWithWeaponArmorDetails:', error);
+  }
 }
 
 
