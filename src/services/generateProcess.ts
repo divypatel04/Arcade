@@ -56,10 +56,13 @@ interface MatchDetails {
       kills: {
         killer: string;
         victim: string;
-        location: {
-          x: number;
-          y: number;
-        }
+        playerLocations: {
+          puuid: string;
+          location: {
+            x: number;
+            y: number;
+          };
+        }[];
         timeSinceRoundStartMillis: number;
         victimLocation: {
           x: number;
@@ -1963,9 +1966,18 @@ function extractKillEvents(match: MatchDetails, puuid: string): KillEvent[] {
       for (const kill of playerStat.kills) {
         // Include kills where player is killer or victim
         if (playerStat.puuid === puuid || kill.victim === puuid) {
+          // Find killer player object to get name
+          const killerPlayer = match.players.find(p => p.puuid === playerStat.puuid);
+          // Find victim player object to get name
+          const victimPlayer = match.players.find(p => p.puuid === kill.victim);
+
+          // Create killer and victim names with tag format
+          const killerName = killerPlayer ? `${killerPlayer.gameName}#${killerPlayer.tagLine}` : playerStat.puuid;
+          const victimName = victimPlayer ? `${victimPlayer.gameName}#${victimPlayer.tagLine}` : kill.victim;
+
           killEvents.push({
-            killer: playerStat.puuid,
-            victim: kill.victim,
+            killer: killerName,
+            victim: victimName,
             weapon: kill.finishingDamage.damageItem,
             headshot: kill.finishingDamage.damageType.toLowerCase().includes('head'),
             timestamp: new Date(match.matchInfo.gameStartMillis + kill.timeSinceRoundStartMillis).toISOString(),
@@ -1982,120 +1994,154 @@ function extractKillEvents(match: MatchDetails, puuid: string): KillEvent[] {
 function extractClutchEvents(match: MatchDetails, puuid: string): ClutchEvent[] {
   const clutchEvents: ClutchEvent[] = [];
 
+  // Process each round
   for (let roundIndex = 0; roundIndex < match.roundResults.length; roundIndex++) {
     const round = match.roundResults[roundIndex];
 
-    // Get the player's team
-    const player = match.players.find(p => p.puuid === puuid);
-    if (!player) continue;
+    // First check if our player had a clutch situation
+    const playerClutch = detectClutchSituationForPlayer(match, round, puuid);
+    if (playerClutch) {
+      const player = match.players.find(p => p.puuid === puuid);
+      if (player) {
+        const playerName = `${player.gameName}#${player.tagLine}`;
+        clutchEvents.push({
+          player: playerName,
+          situation: playerClutch.situation,
+          round: roundIndex + 1,
+          won: playerClutch.won
+        });
+      }
+    }
 
-    const playerTeam = player.teamId;
-
-    // Check if player was in a clutch situation
-    const clutchSituation = detectClutchSituationForPlayer(match, round, puuid, playerTeam);
-
-    if (clutchSituation) {
-      const won = round.winningTeam === playerTeam;
-      clutchEvents.push({
-        player: puuid,
-        situation: clutchSituation,
-        round: roundIndex + 1,
-        won
-      });
+    // Then check if any enemy players had a clutch situation
+    const enemyPlayers = match.players.filter(p => p.puuid !== puuid);
+    for (const enemy of enemyPlayers) {
+      const enemyClutch = detectClutchSituationForPlayer(match, round, enemy.puuid);
+      if (enemyClutch) {
+        const enemyName = `${enemy.gameName}#${enemy.tagLine}`;
+        clutchEvents.push({
+          player: enemyName,
+          situation: enemyClutch.situation,
+          round: roundIndex + 1,
+          won: enemyClutch.won
+        });
+      }
     }
   }
 
   return clutchEvents;
 }
 
-function detectClutchSituationForPlayer(match: MatchDetails, round: any, puuid: string, teamId: string): string | null {
-  // This is a simplification. A real implementation would need detailed data
-  // about player deaths during the round
+function detectClutchSituationForPlayer(match: MatchDetails, round: any, puuid: string): { situation: string, won: boolean } | null {
+  // Find the player and their team
+  const player = match.players.find(p => p.puuid === puuid);
+  if (!player) return null;
 
-  // Check if player's team won the round
-  if (round.winningTeam !== teamId) return null;
+  const playerTeamId = player.teamId;
 
-  // Check if player is alive
-  const playerIsAlive = !round.playerStats.some((stat:any) =>
-    stat.kills.some((kill:any) => kill.victim === puuid)
+  // Get the teammates and enemies
+  const teammates = match.players.filter(p => p.teamId === playerTeamId && p.puuid !== puuid);
+  const enemies = match.players.filter(p => p.teamId !== playerTeamId);
+
+  // Skip if not enough data
+  if (teammates.length === 0 || enemies.length === 0) return null;
+
+  // Check if the player is alive at the end of the round
+  const playerDied = round.playerStats.some(stat =>
+    stat.kills.some(kill => kill.victim === puuid)
   );
 
-  if (!playerIsAlive) return null;
+  if (playerDied) return null; // Player died, no clutch possible
 
-  // Count alive teammates
-  const teamPlayers = match.players.filter(p => p.teamId === teamId);
-  const aliveTeamPlayers = new Set(teamPlayers.map(p => p.puuid));
+  // Check if all teammates are dead
+  const allTeammatesDead = teammates.every(teammate =>
+    round.playerStats.some(stat =>
+      stat.kills.some(kill => kill.victim === teammate.puuid)
+    )
+  );
 
-  // Remove dead teammates
-  for (const playerStat of round.playerStats) {
-    for (const kill of playerStat.kills) {
-      const victim = kill.victim;
-      if (teamPlayers.some(p => p.puuid === victim)) {
-        aliveTeamPlayers.delete(victim);
+  // A clutch situation exists if player is the only one alive on their team
+  if (allTeammatesDead) {
+    // Count how many enemies were alive when the clutch began
+    // We'll simplify by counting enemies still alive at the end of the round
+    const aliveEnemies = new Set(enemies.map(e => e.puuid));
+
+    // Remove enemies who died during the round
+    for (const playerStat of round.playerStats) {
+      for (const kill of playerStat.kills) {
+        aliveEnemies.delete(kill.victim);
       }
     }
-  }
 
-  // Only count if player is sole survivor
-  if (aliveTeamPlayers.size !== 1 || !aliveTeamPlayers.has(puuid)) return null;
+    // We have a clutch situation if there was at least one enemy alive
+    const enemyCount = aliveEnemies.size;
+    if (enemyCount >= 1) {
+      // Did the player win the clutch?
+      const won = round.winningTeam === playerTeamId;
 
-  // Count alive enemies
-  const enemyPlayers = match.players.filter(p => p.teamId !== teamId);
-  const aliveEnemyPlayers = new Set(enemyPlayers.map(p => p.puuid));
-
-  // Remove dead enemies
-  for (const playerStat of round.playerStats) {
-    for (const kill of playerStat.kills) {
-      const victim = kill.victim;
-      if (enemyPlayers.some(p => p.puuid === victim)) {
-        aliveEnemyPlayers.delete(victim);
-      }
+      // Return the situation (1v1, 1v2, etc.) and whether it was won
+      return {
+        situation: `1v${enemyCount}`,
+        won
+      };
     }
-  }
-
-  // Determine clutch situation based on number of enemies
-  const enemyCount = aliveEnemyPlayers.size;
-
-  if (enemyCount >= 1 && enemyCount <= 5) {
-    return `1v${enemyCount}`;
   }
 
   return null;
 }
 
 function generateMapData(match: MatchDetails, puuid: string): MapData {
-  const kills: { [playerId: string]: Coordinate[] } = {};
-  const deaths: { [playerId: string]: Coordinate[] } = {};
+  const kills: { [playerPuuid: string]: Coordinate[] } = {};
+  const deaths: { [playerPuuid: string]: Coordinate[] } = {};
 
-  // Initialize for the player
-  kills[puuid] = [];
-  deaths[puuid] = [];
+  // Initialize data structures for all players in the match with puuids as keys
+  for (const player of match.players) {
+    // Initialize empty arrays for each player using puuid
+    kills[player.puuid] = [];
+    deaths[player.puuid] = [];
+  }
 
   // Process each round
   for (const round of match.roundResults) {
-    // Process kills
+    // Process kills for all players
     for (const playerStat of round.playerStats) {
-      // When player gets kills
-      if (playerStat.puuid === puuid) {
-        for (const kill of playerStat.kills) {
-          if (kill.location) {
-            // Add kill location to player's kills
-            kills[puuid].push({
-              x: kill.location.x,
-              y: kill.location.y
-            });
-          }
-        }
-      }
+      const killerPuuid = playerStat.puuid;
 
-      // When player is killed
+      // Process each kill
       for (const kill of playerStat.kills) {
-        if (kill.victim === puuid && kill.location) {
-          // Add death location to player's deaths
-          deaths[puuid].push({
-            x: kill.location.x,
-            y: kill.location.y
+        const victimPuuid = kill.victim;
+
+        // Record the death location (where the victim was)
+        if (kill.victimLocation) {
+          deaths[victimPuuid].push({
+            x: kill.victimLocation.x,
+            y: kill.victimLocation.y
           });
+        }
+
+        // Find killer's location from playerLocations
+        if (kill.playerLocations) {
+          const killerLocationData = kill.playerLocations.find(loc => loc.puuid === killerPuuid);
+
+          if (killerLocationData && killerLocationData.location) {
+            // Record the killer's location (where they were when they got the kill)
+
+            kills[killerPuuid].push({
+              x: killerLocationData.location.x,
+              y: killerLocationData.location.y
+            });
+          } else {
+            // If killer location not found in playerLocations, try approximating from other data
+            // This is a fallback in case the expected data isn't available
+            const anyLocation = kill.playerLocations[0]?.location;
+            if (anyLocation) {
+              // Use an approximation - not ideal but better than nothing
+              kills[killerPuuid].push({
+                x: anyLocation.x,
+                y: anyLocation.y
+              });
+            }
+          }
         }
       }
     }
@@ -2113,10 +2159,10 @@ function updateFirstBloodsAndClutches(userPlayer: any, enemyPlayers: any[], kill
       roundFirstKills.set(kill.round, kill.killer);
 
       // Update first blood count for the player who got it
-      if (kill.killer === userPlayer.id) {
+      if (kill.killer === userPlayer.stats.name) { // Use name instead of ID
         userPlayer.stats.firstBloods++;
       } else {
-        const enemyPlayer = enemyPlayers.find(e => e.id === kill.killer);
+        const enemyPlayer = enemyPlayers.find(e => e.stats.name === kill.killer);
         if (enemyPlayer) {
           enemyPlayer.stats.firstBloods++;
         }
@@ -2124,15 +2170,17 @@ function updateFirstBloodsAndClutches(userPlayer: any, enemyPlayers: any[], kill
     }
   }
 
-  // Update clutch stats
+  // Update clutch stats - track both attempts and successful clutches
   for (const clutch of clutchEvents) {
-    if (clutch.player === userPlayer.id) {
+    // Check if this clutch is for the user
+    if (clutch.player === userPlayer.stats.name) {
       userPlayer.stats.clutchAttempts++;
       if (clutch.won) {
         userPlayer.stats.clutchesWon++;
       }
     } else {
-      const enemyPlayer = enemyPlayers.find(e => e.id === clutch.player);
+      // Check if this clutch is for an enemy player
+      const enemyPlayer = enemyPlayers.find(e => e.stats.name === clutch.player);
       if (enemyPlayer) {
         enemyPlayer.stats.clutchAttempts++;
         if (clutch.won) {

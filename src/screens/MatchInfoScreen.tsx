@@ -24,7 +24,7 @@ const MatchInfoScreen = () => {
     { label: t('tabs.overview'), content: <MatchOverviewTab matchStats={match}/> },
     { label: t('tabs.teamStats'), content: <TeamStatsTab teamStats={match.stats.teamStats} yourScore={match.stats.playerVsplayerStat.user.stats.roundsWon} enemyScore={match.stats.playerVsplayerStat.user.stats.roundsLost}/> },
     { label: t('tabs.roundTimeline'), content: <RoundPerfTab roundStats={match.stats.roundPerformace}/> },
-    { label: t('tabs.pvp'), content: <PlayerVsTab pvpStats={match.stats.playerVsplayerStat}/> },
+    { label: t('tabs.pvp'), content: <PlayerVsTab pvpStats={match.stats.playerVsplayerStat} map={match.stats.general.map}/> },
     // { label: 'Charts', content: <ChartsTab/> },
   ];
 

@@ -21,7 +21,7 @@ const MatchListScreen = () => {
 
   const {matchStats} = useDataContext();
 
-  console.log(JSON.stringify(matchStats[0]));
+  console.log(JSON.stringify(matchStats[4]));
 
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();

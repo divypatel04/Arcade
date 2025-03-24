@@ -8,12 +8,15 @@ import { ClutchEvent, KillEvent, PlayerVsPlayerStat } from '../../types/MatchSta
 
 interface PlayerVsTabProps {
   pvpStats: PlayerVsPlayerStat;
+  map: any
 }
 
-const PlayerVsTab = ({pvpStats}:PlayerVsTabProps) => {
+const PlayerVsTab = ({pvpStats, map}:PlayerVsTabProps) => {
   const [selectedView, setSelectedView] = useState<'killFeed' | 'stats' | 'heatmap'>('stats');
   const [heatmapMode, setHeatmapMode] = useState<'kills' | 'deaths'>('kills');
-  const [selectedOpponentId, setSelectedOpponentId] = useState<string>("enemy1");
+  const [selectedOpponentId, setSelectedOpponentId] = useState<string>(
+    pvpStats.enemies.length > 0 ? pvpStats.enemies[0].id : ""
+  );
 
 
   // Get current opponent data
@@ -303,8 +306,8 @@ const PlayerVsTab = ({pvpStats}:PlayerVsTabProps) => {
 
             <Map
               locations={heatmapMode === 'kills' ? killLocations : deathLocations}
-              mapImage="https://static.wikia.nocookie.net/valorant/images/2/23/Loading_Screen_Ascent.png"
-              mapCoordinate={pvpStats.mapCoordinates}
+              mapImage={map.image}
+              mapCoordinate={map.mapcoordinates}
               mode={heatmapMode === 'kills' ? 'Kills' : 'Deaths'}
             />
 
