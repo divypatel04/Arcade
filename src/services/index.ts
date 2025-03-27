@@ -456,3 +456,51 @@ async function updateMatchStats(matchStats: any[], puuid: string): Promise<void>
     throw error;
   }
 }
+
+/**
+ * Main service barrel file - exports all service functionality
+ */
+
+// Data fetching services
+export {
+  fetchAgentStats,
+  fetchMapStats,
+  fetchWeaponStats,
+  fetchSeasonStats,
+  fetchMatchStats,
+  fetchMatchHistory,
+  fetchMatchDetails,
+  fetchMatchesDetails
+} from './dataFetcher';
+
+// Data updating services
+export {
+  upsertAgentStats,
+  upsertMapStats,
+  upsertWeaponStats,
+  upsertSeasonStats,
+  upsertMatchStats,
+  upsertMatchDetails,
+  addToMatchHistory,
+  updateUserProcessedMatches,
+  updatePlayerStats
+} from './dataUpdater';
+
+// Stats generation service
+export { generateStats } from './generateProcess';
+
+// Data enrichment utility
+export {
+  enrichStatsWithDetails,
+  fetchAgentDetails,
+  fetchMapDetails,
+  fetchWeaponDetails,
+  fetchSeasonDetails
+} from './utils/dataEnrichment';
+
+// Re-export generator modules for advanced usage
+export { processAgentStats } from './generators/agentStatsGenerator';
+export { processMapStats } from './generators/mapStatsGenerator';
+export { processWeaponStats } from './generators/weaponStatsGenerator';
+export { processSeasonStats } from './generators/seasonStatsGenerator';
+export { generateMatchStats } from './generators/matchStatsGenerator';
