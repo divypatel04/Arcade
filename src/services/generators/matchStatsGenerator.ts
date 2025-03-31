@@ -16,6 +16,8 @@ export const generateMatchStats = async (matchDetails: any[], puuid: string): Pr
 
   const matchStats = [];
 
+  await enrichMapCalloutsData(matchDetails);
+
   for (const match of matchDetails) {
     try {
       // Skip invalid match data
@@ -44,6 +46,8 @@ export const generateMatchStats = async (matchDetails: any[], puuid: string): Pr
         console.warn(`Enemy team not found in match ${match.matchInfo.matchId}`);
         continue;
       }
+
+
 
       // Get opponent players (enemy team)
       const enemyPlayers = match.players.filter((p: any) => p.teamId !== player.teamId);
@@ -99,31 +103,34 @@ export const generateMatchStats = async (matchDetails: any[], puuid: string): Pr
     }
   }
 
+
+
+
+  // // Now that we have the enriched data, generate detailed stats
+  // for (const matchStat of matchStats) {
+  //   try {
+  //     const match = matchStat.matchDetails;
+  //     if (!match) continue;
+
+  //     const player = match.players.find((p: any) => p.puuid === puuid);
+  //     if (!player) continue;
+
+  //     const playerTeam = match.teams.find((t: any) => t.teamId === player.teamId);
+  //     const enemyTeam = match.teams.find((t: any) => t.teamId !== player.teamId);
+  //     const enemyPlayers = match.players.filter((p: any) => p.teamId !== player.teamId);
+
+  //     // Generate stats using enriched match object that now has mapCallouts
+  //     matchStat.stats.teamStats = generateTeamStats(match, player, playerTeam, enemyTeam);
+  //     matchStat.stats.playerVsplayerStat = generatePlayerVsPlayerStats(match, player, enemyPlayers, puuid);
+  //     matchStat.stats.roundPerformace = await generateRoundPerformance(match, player);
+  //   } catch (error) {
+  //     console.error(`Error generating detailed stats for match ${matchStat.id}:`, error);
+  //   }
+  // }
+
   // Enrich match stats with weapon and armor details
   // This will also populate the global mapsDataCache
   await enrichMatchStatsWithWeaponArmorDetails(matchStats);
-
-  // Now that we have the enriched data, generate detailed stats
-  for (const matchStat of matchStats) {
-    try {
-      const match = matchStat.matchDetails;
-      if (!match) continue;
-
-      const player = match.players.find((p: any) => p.puuid === puuid);
-      if (!player) continue;
-
-      const playerTeam = match.teams.find((t: any) => t.teamId === player.teamId);
-      const enemyTeam = match.teams.find((t: any) => t.teamId !== player.teamId);
-      const enemyPlayers = match.players.filter((p: any) => p.teamId !== player.teamId);
-
-      // Generate stats using enriched match object that now has mapCallouts
-      matchStat.stats.teamStats = generateTeamStats(match, player, playerTeam, enemyTeam);
-      matchStat.stats.playerVsplayerStat = generatePlayerVsPlayerStats(match, player, enemyPlayers, puuid);
-      matchStat.stats.roundPerformace = await generateRoundPerformance(match, player);
-    } catch (error) {
-      console.error(`Error generating detailed stats for match ${matchStat.id}:`, error);
-    }
-  }
 
   return matchStats;
 };
@@ -1118,107 +1125,102 @@ function calculateImpactScore(
   outcome: string,
   roundWon: boolean
 ): number {
-  // A more comprehensive impact score calculation with higher variance
+  // Define weight factors for each category (total = 100)
+  const weights = {
+    combat: 40,      // Combat has highest weight
+    economy: 20,     // Economy management
+    position: 25,    // Positioning and map control
+    utility: 15      // Utility usage
+  };
 
-  // Base score starts at 50 (neutral impact)
-  let score = 50;
+  // Calculate Combat Score (0-100)
+  let combatScore = 0;
+  // Base kills contribution (up to 50 points)
+  combatScore += Math.min(50, combatStats.kills * 25);
+  // Reduce score for deaths
+  combatScore -= Math.min(combatScore, combatStats.deaths * 15);
+  // Add assists contribution
+  combatScore += Math.min(20, combatStats.assists * 10);
+  // Add headshot bonus
+  combatScore += (combatStats.headshotPercentage / 100) * 20;
+  // Normalize combat score to 0-100
+  combatScore = Math.max(0, Math.min(100, combatScore));
 
-  // ===== COMBAT IMPACT (highest weight) =====
-  // Kills have major positive impact (10-15 points per kill)
-  score += combatStats.kills * 12;
+  // Calculate Economy Score (0-100)
+  let economyScore = 100;
+  // Penalize for having much lower loadout than enemies
+  const economyRatio = economyStats.loadoutValue / Math.max(1, economyStats.enemyLoadoutValue);
+  economyScore *= Math.min(1, economyRatio + 0.3); // Allow for some disadvantage
+  // Bonus for dealing damage relative to loadout value
+  const damagePerCredit = combatStats.damageDealt / Math.max(1, economyStats.loadoutValue);
+  economyScore += Math.min(30, damagePerCredit * 50);
+  // Normalize economy score to 0-100
+  economyScore = Math.max(0, Math.min(100, economyScore));
 
-  // Deaths have major negative impact (-10 points per death)
-  score -= combatStats.deaths * 10;
-
-  // Assists have moderate positive impact (5 points per assist)
-  score += combatStats.assists * 5;
-
-  // Damage dealt provides continuous scale impact (0.1 point per damage point)
-  score += combatStats.damageDealt * 0.1;
-
-  // Headshot percentage bonus (up to 15 points for perfect headshots)
-  score += (combatStats.headshotPercentage / 100) * 15;
-
-  // ===== TRADING IMPACT =====
-  // Getting traded kills (negative for team, but less negative than just dying)
-  if (combatStats.tradedKill && combatStats.deaths > 0) score += 3;
-
-  // Successfully trading a teammate's death (very positive)
-  if (combatStats.tradeKill) score += 8;
-
-  // ===== ECONOMIC IMPACT =====
-  // Economic efficiency (impact relative to loadout value)
-  // More damage per credit spent = higher impact
-  const economicEfficiency = combatStats.damageDealt / Math.max(1, economyStats.loadoutValue);
-  score += economicEfficiency * 5;
-
-  // Economic advantage/disadvantage factor
-  // Performing well with cheaper loadout than enemies = higher impact
-  const economicDisadvantage = Math.max(0, economyStats.enemyLoadoutValue - economyStats.loadoutValue);
-  if (economicDisadvantage > 1000 && combatStats.kills > 0) {
-    // Bonus for getting kills while at economic disadvantage
-    score += 10 * (economicDisadvantage / 1000) * Math.min(3, combatStats.kills);
-  }
-
-  // ===== POSITIONING IMPACT =====
-  // First contact bonus (taking initial duels)
+  // Calculate Position Score (0-100)
+  let positionScore = 50; // Start at neutral
+  // Reward or penalize first contact based on outcome
   if (positioningStats.firstContact) {
     if (combatStats.kills > 0 && combatStats.deaths === 0) {
-      // Getting a kill on first contact without dying is high impact
-      score += 15;
+      positionScore += 30;
     } else if (combatStats.deaths > 0) {
-      // Dying on first contact without a trade is slightly negative
-      score -= 5;
+      positionScore -= 20;
     }
   }
+  // Adjust based on position type and success
+  switch (positioningStats.positionType) {
+    case "Entry":
+      positionScore += combatStats.kills * 15;
+      positionScore -= combatStats.deaths * 10;
+      break;
+    case "Anchor":
+      positionScore += combatStats.kills * 20;
+      positionScore -= combatStats.deaths * 15;
+      break;
+    case "Lurk":
+      positionScore += combatStats.kills * 25;
+      positionScore -= combatStats.deaths * 10;
+      break;
+    default:
+      positionScore += combatStats.kills * 10;
+      positionScore -= combatStats.deaths * 10;
+  }
+  // Normalize position score to 0-100
+  positionScore = Math.max(0, Math.min(100, positionScore));
 
-  // ===== UTILITY IMPACT =====
-  // Effective utility usage (relative to available abilities)
+  // Calculate Utility Score (0-100)
+  let utilityScore = 0;
+  // Base score from utility usage ratio
   const utilityUsageRatio = utilityStats.abilitiesUsed / Math.max(1, utilityStats.totalAbilities);
-  score += utilityUsageRatio * 10;
+  utilityScore += utilityUsageRatio * 60;
+  // Add score for utility damage
+  utilityScore += Math.min(40, (utilityStats.utilityDamage / 300) * 40); // Assume 300 damage is excellent
+  // Normalize utility score to 0-100
+  utilityScore = Math.max(0, Math.min(100, utilityScore));
 
-  // Utility damage impact
-  score += utilityStats.utilityDamage * 0.2;
+  // Calculate weighted average
+  let finalScore = (
+    (combatScore * weights.combat) +
+    (economyScore * weights.economy) +
+    (positionScore * weights.position) +
+    (utilityScore * weights.utility)
+  ) / 100;
 
-  // ===== ROUND OUTCOME MULTIPLIERS =====
-  // Winning or losing the round affects overall impact
+  // Apply round outcome multiplier
   if (roundWon) {
-    // Bonus for winning the round
-    score *= 1.15;
-
-    // Clutch factor - if player did well in a winning round
-    if (combatStats.kills >= 2 && economyStats.loadoutValue < economyStats.enemyLoadoutValue) {
-      // Extra bonus for multiple kills while at an economic disadvantage in a winning round
-      score *= 1.2;
-    }
-  } else {
-    // Still reward good performance in losing rounds, but with less impact
-    if (combatStats.kills >= 3) {
-      // High kill count in losing round still has good impact
-      score *= 1.1;
-    } else if (combatStats.kills === 0 && combatStats.deaths > 0) {
-      // Poor performance in losing round has compounded negative impact
-      score *= 0.8;
-    }
+    finalScore *= 1.15; // 15% bonus for winning
+  } else if (combatStats.kills >= 2) {
+    finalScore *= 1.05; // 5% bonus for good performance in lost round
   }
 
-  // ===== SPECIAL CASE SCENARIOS =====
-  // Exceptional performances
-  if (combatStats.kills >= 4) {
-    // Near-ace or ace performance deserves significant bonus
-    score += 25;
+  // Handle special cases
+  if (combatStats.kills >= 3 && combatStats.deaths === 0) {
+    // Exceptional performance bonus (still keeping under 100)
+    finalScore = Math.min(100, finalScore * 1.2);
   }
 
-  // Perfect rounds (kills without dying)
-  if (combatStats.kills >= 2 && combatStats.deaths === 0) {
-    score += combatStats.kills * 5; // Bonus for flawless multi-kill
-  }
-
-  // Ensure score has reasonable bounds (0-100 scale with exceptional performances allowed to exceed 100)
-  score = Math.max(0, Math.round(score));
-
-  // For truly exceptional rounds, allow scores above 100 (but cap at 150)
-  return Math.min(150, score);
+  // Ensure final score is between 0 and 100
+  return Math.round(Math.max(0, Math.min(100, finalScore)));
 }
 
 /**
@@ -1261,29 +1263,37 @@ function calculateTimeToFirstContact(round: any, puuid: string): number {
  * Counts how many abilities the player used in the round
  */
 function countAbilitiesUsed(playerStats: any): number {
-  // In actual implementation, this would count ability uses from the data
-  // Since the data doesn't directly provide this, we can make an approximation
-
-  // Look for ability damage in kill events
+  // Get ability usage from player stats
+  const abilities = playerStats.ability;
   let abilitiesUsed = 0;
 
-  for (const kill of playerStats.kills) {
-    const damageType = kill.finishingDamage.damageType?.toLowerCase() || '';
-    const damageItem = kill.finishingDamage.damageItem?.toLowerCase() || '';
+  // Count each non-empty ability effect as a used ability
+  if (abilities) {
+    if (abilities.grenadeEffects) abilitiesUsed++;
+    if (abilities.ability1Effects) abilitiesUsed++;
+    if (abilities.ability2Effects) abilitiesUsed++;
+    if (abilities.ultimateEffects) abilitiesUsed++;
+  }
 
-    // Count ability kills as ability usage
-    if (
-      damageType.includes('ability') ||
-      damageType.includes('grenade') ||
-      damageType.includes('ultimate') ||
-      damageItem.includes('ability')
-    ) {
-      abilitiesUsed++;
+  // If no abilities were found in effects, try to count from damage events
+  if (abilitiesUsed === 0) {
+    // Fallback to counting ability damage as before
+    for (const kill of playerStats.kills) {
+      const damageType = kill.finishingDamage.damageType?.toLowerCase() || '';
+      const damageItem = kill.finishingDamage.damageItem?.toLowerCase() || '';
+
+      if (
+        damageType.includes('ability') ||
+        damageType.includes('grenade') ||
+        damageType.includes('ultimate') ||
+        damageItem.includes('ability')
+      ) {
+        abilitiesUsed++;
+      }
     }
   }
 
-  // Return a minimum of 1 if we detected any ability kills, otherwise default to 2
-  // (assuming players typically use at least 2 abilities per round)
+  // Return the count of abilities used, with a minimum of 1
   return Math.max(1, abilitiesUsed);
 }
 
@@ -1320,4 +1330,32 @@ function calculateUtilityDamage(playerStats: any): number {
   }
 
   return Math.round(utilityDamage);
+}
+
+
+async function enrichMapCalloutsData(match: any[]): Promise<void> {
+  // Collect all unique map IDs from the match stats
+  const mapIds = new Set<string>();
+  for (const m of match) {
+    if (m.matchInfo.mapId) {
+      mapIds.add(m.matchInfo.mapId);
+    }
+  }
+
+  // Fetch map data with callouts for all unique map IDs
+  if (mapIds.size > 0) {
+    const { data: fetchedMapsData, error: mapsError } = await supabase
+      .from('maps')
+      .select('id, callouts')
+      .in('id', Array.from(mapIds));
+
+    if (mapsError) {
+      console.error('Error fetching maps data:', mapsError);
+    } else if (fetchedMapsData) {
+      // Store fetched map data in the global cache
+      fetchedMapsData.forEach(map => {
+        mapsDataCache[map.id] = map;
+      });
+    }
+  }
 }

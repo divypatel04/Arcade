@@ -84,6 +84,12 @@ export interface MatchDetails {
         remaining: number;
         spent: number;
       };
+      ability: {
+        grenadeEffects: string;
+        ability1Effects: string;
+        ability2Effects: string;
+        ultimateEffects: string;
+      }
     }[];
   }[];
 }

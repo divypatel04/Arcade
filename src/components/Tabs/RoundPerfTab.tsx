@@ -73,7 +73,7 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
                     <Text
                       style={[
                         styles.outcomeText,
-                        { color: selectedRoundData.outcome === 'win' ? colors.win : colors.lose }
+                        { color: selectedRoundData.outcome === 'Won' ? colors.win : colors.lose }
                       ]}
                     >
                       {selectedRoundData.outcome.toUpperCase()}
