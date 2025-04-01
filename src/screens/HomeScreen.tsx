@@ -1,6 +1,6 @@
-import { StyleSheet, View, Text, ScrollView } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import React from 'react'
-import { colors, fonts, sizes } from '../theme';
+import { colors, sizes } from '../theme';
 import AgentBox from '../components/AgentBox';
 import MapBox from '../components/MapBox';
 import GunBox from '../components/GunBox';
@@ -12,7 +12,6 @@ import { WeaponStatType } from '../types/WeaponStatsType';
 import { getTopWeaponByKills } from '../utils/weaponUtils';
 import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from '../components/LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 
@@ -20,7 +19,7 @@ import { SeasonStatsType } from '../types/SeasonStatsType';
 const HomeScreen = () => {
   const { t } = useTranslation();
   const { isLoading } = useLanguage();
-  const {agentStats, mapStats, weaponStats, seasonStats, matchStats} = useDataContext();
+  const {agentStats, mapStats, weaponStats, seasonStats} = useDataContext();
 
   const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);

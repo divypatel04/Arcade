@@ -224,7 +224,7 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
                   </View>
                   <View style={styles.combatItem}>
                     <Text style={styles.combatLabel}>Time to First Contact</Text>
-                    <Text style={styles.combatValue}>{selectedRoundData.positioning.timeToFirstContact}s</Text>
+                    <Text style={styles.combatValue}>{((selectedRoundData.positioning.timeToFirstContact)/3600).toFixed(0)}s</Text>
                   </View>
                 </View>
               </View>

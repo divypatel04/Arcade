@@ -117,7 +117,7 @@ const PlayerVsTab = ({pvpStats, map}:PlayerVsTabProps) => {
             {item.victim}
           </Text>
 
-          <Text style={styles.killFeedTimestamp}>{item.timestamp}</Text>
+          {/* <Text style={styles.killFeedTimestamp}>{item.timestamp}</Text> */}
         </View>
       </View>
     );
@@ -243,7 +243,7 @@ const PlayerVsTab = ({pvpStats, map}:PlayerVsTabProps) => {
               {renderStatComparison("DEATHS", userStats.deaths, opponentStats.deaths, false)}
               {renderStatComparison("ASSISTS", userStats.assists, opponentStats.assists)}
               {renderStatComparison("FIRST BLOODS", userStats.firstBloods, opponentStats.firstBloods)}
-              {renderStatComparison("DAMAGE/ROUND", userStats.damagePerRound, opponentStats.damagePerRound)}
+              {renderStatComparison("DAMAGE/ROUND", (userStats.damagePerRound).toFixed(2), (opponentStats.damagePerRound).toFixed(2))}
               {renderStatComparison("CLUTCHES", `${userStats.clutchesWon}/${userStats.clutchAttempts}`, `${opponentStats.clutchesWon}/${opponentStats.clutchAttempts}`)}
             </View>
 
