@@ -3,14 +3,19 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions } from
 import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
 import { RoundPerformance } from '../../types/MatchStatType';
-
+import PremiumModal from '../PremiumModal';
+import { isPremiumUser } from '../../utils/userUtils';
+import { useDataContext } from '../../context/DataContext';
 
 interface RoundPerfTabProps {
   roundStats: RoundPerformance[];
 }
 
 const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
+  const {userData} = useDataContext();
   const [selectedRound, setSelectedRound] = useState<number | null>(null);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [attemptedRound, setAttemptedRound] = useState<number | null>(null);
   const screenWidth = Dimensions.get('window').width;
 
   // Helper function for impact score color
@@ -18,6 +23,31 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
     if (score >= 80) return colors.win;
     if (score >= 50) return "#FFA500"; // Orange
     return colors.lose;
+  };
+
+  const handleRoundSelection = (roundNumber: number) => {
+    if (roundNumber <= 5) {
+      setSelectedRound(roundNumber === selectedRound ? null : roundNumber);
+    } else if (isPremiumUser(userData)) {
+      setSelectedRound(roundNumber === selectedRound ? null : roundNumber);
+    } else {
+      setAttemptedRound(roundNumber); // Store the attempted round number
+      setShowPremiumModal(true);
+    }
+  };
+
+  const handleWatchAd = () => {
+    // TODO: Implement ad watching logic
+    setShowPremiumModal(false);
+    if (attemptedRound) {
+      setSelectedRound(attemptedRound);
+      setAttemptedRound(null); // Clear the attempted round
+    }
+  };
+
+  const handleBuyPremium = () => {
+    // TODO: Implement premium purchase logic
+    setShowPremiumModal(false);
   };
 
   // Get the selected round data
@@ -37,21 +67,35 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
               style={[
                 styles.timelineItem,
                 round.outcome === 'win' ? styles.timelineWin : styles.timelineLoss,
-                selectedRound === round.roundNumber && styles.timelineSelected
+                selectedRound === round.roundNumber && styles.timelineSelected,
+                round.roundNumber > 5 && styles.timelineLocked
               ]}
-              onPress={() => setSelectedRound(round.roundNumber === selectedRound ? null : round.roundNumber)}
+              onPress={() => handleRoundSelection(round.roundNumber)}
             >
-              <Text style={styles.timelineNumber}>{round.roundNumber}</Text>
+              <Text style={[
+                styles.timelineNumber,
+                round.roundNumber > 5 && styles.timelineLockedText
+              ]}>
+                {round.roundNumber > 5 ? `${round.roundNumber}🔒` : round.roundNumber}
+              </Text>
               <View
                 style={[
                   styles.impactIndicator,
-                  { backgroundColor: getImpactScoreColor(round.impactScore) }
+                  { backgroundColor: getImpactScoreColor(round.impactScore) },
+                  round.roundNumber > 5 && styles.timelineLockedIndicator
                 ]}
               />
             </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
+
+      <PremiumModal
+        visible={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        onWatchAd={handleWatchAd}
+        onBuyPremium={handleBuyPremium}
+      />
 
       {/* Round details - only show when a round is selected */}
       <ScrollView style={styles.detailsContainer} showsVerticalScrollIndicator={false}>
@@ -515,6 +559,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.proximaBold,
     fontSize: fonts.sizes.md,
     color: colors.black,
+  },
+  timelineLocked: {
+    opacity: 0.7,
+  },
+  timelineLockedText: {
+    fontSize: fonts.sizes.md,
+  },
+  timelineLockedIndicator: {
+    opacity: 0.8,
   },
 });
 

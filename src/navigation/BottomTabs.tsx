@@ -108,23 +108,23 @@ const createTabBarIcon =
 // Define the screens for bottom tabs with individual stack navigators
 const SCREENS = [
   {
-    name: 'Home',
-    component: HomeStackScreen,
+    name: 'HomeScreen',
+    component: HomeScreen,
     icons: ['home-fill', 'home-line'],
   },
   {
-    name: 'Career',
-    component: CareerStackScreen,
+    name: 'MatchListScreen',
+    component: MatchListScreen,
     icons: ['shopping-basket-2-fill', 'shopping-basket-2-line'],
   },
   {
-    name: 'Act',
-    component: ActStackScreen,
+    name: 'SeasonInfoScreen',
+    component: SeasonInfoScreen,
     icons: ['bar-chart-2-fill', 'bar-chart-2-line'],
   },
   {
-    name: 'Profile',
-    component: ProfileStackScreen,
+    name: 'ProfileScreen',
+    component: ProfileScreen,
     icons: ['user-fill', 'user-line'],
   },
 ];

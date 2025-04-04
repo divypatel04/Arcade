@@ -19,7 +19,7 @@ const SeasonBox = ({season}: SeasonBoxProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
-      style={styles.statscontainer} onPress={() => navigation.navigate('Act')}
+      style={styles.statscontainer} onPress={() => navigation.navigate('SeasonInfoScreen')}
     >
       <View style={styles.rankdetails}>
         <Image style={styles.rankimage} source={{ uri: 'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/18/largeicon.png' }} />

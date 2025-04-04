@@ -11,6 +11,13 @@ import LoadingScreen from '../screens/LoadingScreen';
 import BottomTabs from './BottomTabs';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import { colors, fonts } from '../theme';
+import AgentListScreen from '../screens/AgentListScreen';
+import MapListScreen from '../screens/MapListScreen';
+import WeaponListScreen from '../screens/WeaponListScreen';
+import AgentInfoScreen from '../screens/AgentInfoScreen';
+import MapInfoScreen from '../screens/MapInfoScreen';
+import WeaponInfoScreen from '../screens/WeaponInfoScreen';
+import MatchInfoScreen from '../screens/MatchInfoScreen';
 
 const Stack = createStackNavigator();
 
@@ -52,7 +59,7 @@ export default function Navigation() {
           background: '#fff',
         },
       }}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{headerShown: false,presentation: 'modal'}}>
         {isAuthenticated ? (
           <>
             <Stack.Screen name="Loading" component={LoadingScreen} />
@@ -60,6 +67,14 @@ export default function Navigation() {
               name="BottomTabs"
               component={BottomTabs}
             />
+            <Stack.Screen name="AgentListScreen" component={AgentListScreen} />
+            <Stack.Screen name="MapListScreen" component={MapListScreen} />
+            <Stack.Screen name="WeaponListScreen" component={WeaponListScreen} />
+            <Stack.Screen name="AgentInfoScreen" component={AgentInfoScreen} />
+            <Stack.Screen name="MapInfoScreen" component={MapInfoScreen} />
+            <Stack.Screen name="WeaponInfoScreen" component={WeaponInfoScreen} />
+            <Stack.Screen name="MatchInfoScreen" component={MatchInfoScreen} />
+
           </>
         ) : (
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />

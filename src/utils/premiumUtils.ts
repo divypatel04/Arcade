@@ -750,217 +750,164 @@ const calculateWeaponConsistencyBonus = (seasons: WeaponSeasonPerformance[]): nu
  */
 export const determinePremiumMatchStats = (matchStats: MatchStatType[]): void => {
   // Calculate premium score for each match
-  const matchStatsWithScores = matchStats.map(matchStat => {
-    const score = calculateMatchPremiumScore(matchStat);
-    return {
-      matchStat,
-      premiumScore: score
-    };
-  });
+  const matchesWithScores = matchStats.map(matchStat => ({
+    matchStat,
+    premiumScore: calculateMatchPremiumScore(matchStat)
+  }));
 
   // Sort by premium score (descending)
-  matchStatsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
-
-  // Mark top third (minimum 1) as premium
-  const premiumCount = Math.max(1, Math.ceil(matchStats.length / 3));
+  matchesWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
 
   // Reset all to false first
-  matchStats.forEach(match => {
-    match.isPremiumStats = false;
-  });
+  matchStats.forEach(match => match.isPremiumStats = false);
 
-  // Mark the top ones as premium
-  matchStatsWithScores.forEach((item, index) => {
-    if (index < premiumCount) {
+  // For ranked games: Mark matches with score > 75 as premium
+  // For unranked: Mark matches with score > 85 as premium
+  // Additionally, ensure at least top 20% of matches are premium
+  const minPremiumMatches = Math.max(1, Math.ceil(matchStats.length * 0.2));
+
+  matchesWithScores.forEach((item, index) => {
+    const isRanked = item.matchStat.stats.general.isRanked;
+    const threshold = isRanked ? 75 : 85;
+
+    if (item.premiumScore >= threshold || index < minPremiumMatches) {
       item.matchStat.isPremiumStats = true;
     }
   });
-};
+}
 
-/**
- * Calculates a premium score for a match based on various performance criteria.
- * Higher score means an exceptional match performance.
- */
 const calculateMatchPremiumScore = (matchStat: MatchStatType): number => {
   let score = 0;
-  const { general, playerVsplayerStat, teamStats, roundPerformace } = matchStat.stats;
+  const { general, playerVsplayerStat: pvp, roundPerformace } = matchStat.stats;
 
-  // Find user's team
-  const userTeamId = playerVsplayerStat.user.teamId;
-  const userTeam = teamStats.find(team => team.teamId === userTeamId);
-  const enemyTeam = teamStats.find(team => team.teamId !== userTeamId);
+  if (!pvp?.user?.stats) return 0;
 
-  if (!userTeam || !enemyTeam) {
-    return score; // Unable to calculate score without team data
+  // Base multiplier for match type
+  const matchMultiplier = general.isRanked ? 1.2 : 1.0;
+
+  // Core performance metrics (40 points max)
+  score += calculateCorePerformance(pvp.user.stats, general.roundsPlayed);
+
+  // Round impact metrics (30 points max)
+  if (roundPerformace) {
+    score += calculateRoundImpact(roundPerformace, general.roundsPlayed);
   }
 
-  const playerStats = playerVsplayerStat.user.stats;
-
-  // 1. Match Outcome (win is important)
-  const isWin = general.winningTeam === userTeamId;
-  if (isWin) {
-    score += 15;
+  // Clutch and momentum metrics (20 points max)
+  if (roundPerformace) {
+    score += calculateClutchImpact(pvp.user.stats, roundPerformace);
   }
 
-  // 2. Match Score Differential
-  const userTeamRounds = userTeam ? userTeam.team : '';
-  if (isWin) {
-    // Calculate the round differential (for example 13-5 is an 8-round differential)
-    const roundDifferential = general.roundsPlayed - 2 * (general.roundsPlayed - playerStats.roundsWon);
-    if (roundDifferential >= 6) {
-      score += 10; // Dominant victory
-    } else if (roundDifferential >= 3) {
-      score += 5;  // Solid victory
-    }
-  } else {
-    // Close loss can still be premium
-    const roundDifferential = general.roundsPlayed - 2 * playerStats.roundsWon;
-    if (roundDifferential <= 2) {
-      score += 3; // Very close loss
-    }
+  // Team contribution metrics (10 points max)
+  score += calculateTeamContribution(pvp);
+
+  // Apply match multiplier and ensure score is between 0-100
+  return Math.min(100, Math.max(0, score * matchMultiplier));
+};
+
+const calculateTeamContribution = (pvp: any): number => {
+  let score = 0;
+
+  // Safely handle potentially undefined data
+  if (!pvp?.user?.stats?.kills || !Array.isArray(pvp.teams)) {
+    return score;
   }
 
-  // 3. K/D Ratio - basic combat effectiveness
-  const kdRatio = playerStats.kdRatio;
-  if (kdRatio > 2.5) {
-    score += 25; // Exceptional K/D
-  } else if (kdRatio > 2.0) {
-    score += 20;
-  } else if (kdRatio > 1.5) {
-    score += 15;
-  } else if (kdRatio > 1.0) {
-    score += 10;
+  const userTeamId = pvp.user.teamId;
+  const userTeam = pvp.teams.find((t: any) => t.teamId === userTeamId);
+
+  if (!userTeam?.players) {
+    return score;
   }
 
-  // 4. Headshot Percentage - aiming skill
-  if (playerStats.headshotPercentage > 40) {
-    score += 15; // Exceptional aim
-  } else if (playerStats.headshotPercentage > 30) {
-    score += 10;
-  } else if (playerStats.headshotPercentage > 20) {
-    score += 5;
+  // Calculate team's total kills
+  const teamTotalKills = userTeam.players.reduce((sum: number, p: any) => {
+    return sum + (p.stats?.kills || 0);
+  }, 0);
+
+  if (teamTotalKills === 0) {
+    return score;
   }
 
-  // 5. Damage Per Round
-  if (playerStats.damagePerRound > 180) {
-    score += 15; // Exceptional damage
-  } else if (playerStats.damagePerRound > 150) {
-    score += 10;
-  } else if (playerStats.damagePerRound > 120) {
-    score += 5;
-  }
+  // Calculate kill share percentage
+  const killShare = (pvp.user.stats.kills / teamTotalKills) * 100;
 
-  // 6. First Bloods
-  const firstBloodPercentage = playerStats.firstBloods / general.roundsPlayed;
-  if (firstBloodPercentage > 0.25) {
-    score += 15; // Consistently getting first blood
-  } else if (firstBloodPercentage > 0.15) {
-    score += 10;
-  } else if (firstBloodPercentage > 0.1) {
-    score += 5;
-  }
+  // Team impact score (0-10 points)
+  if (killShare >= 30) score += 10;
+  else if (killShare >= 25) score += 7;
+  else if (killShare >= 20) score += 4;
 
-  // 7. Clutches
-  if (playerStats.clutchesWon > 0) {
-    const clutchWinRate = playerStats.clutchAttempts > 0 ?
-      playerStats.clutchesWon / playerStats.clutchAttempts : 0;
+  return score;
+};
 
-    // Base points for clutches
-    score += Math.min(20, playerStats.clutchesWon * 5);
+const calculateCorePerformance = (stats: any, totalRounds: number): number => {
+  let score = 0;
 
-    // Bonus for clutch efficiency
-    if (clutchWinRate > 0.6 && playerStats.clutchAttempts >= 3) {
-      score += 10; // Exceptional clutch performance with significant attempts
-    } else if (clutchWinRate > 0.5 && playerStats.clutchAttempts >= 2) {
-      score += 5;
-    }
-  }
+  // K/D Impact (0-15 points)
+  if (stats.kdRatio >= 3.0) score += 15;
+  else if (stats.kdRatio >= 2.0) score += 12;
+  else if (stats.kdRatio >= 1.5) score += 8;
+  else if (stats.kdRatio >= 1.0) score += 5;
 
-  // 8. Aces
-  score += Math.min(30, playerStats.aces * 15); // Aces are exceptional performances
+  // Headshot Precision (0-10 points)
+  const hsPercent = stats.headshotPercentage || 0;
+  if (hsPercent >= 40) score += 10;
+  else if (hsPercent >= 30) score += 7;
+  else if (hsPercent >= 20) score += 4;
 
-  // 9. Impact across rounds
+  // Combat Score per Round (0-15 points)
+  const acsThreshold = 300;
+  const acs = (stats.combatScore || 0) / Math.max(1, totalRounds);
+  score += Math.min(15, (acs / acsThreshold) * 15);
+
+  return score;
+};
+
+const calculateRoundImpact = (rounds: any[], totalRounds: number): number => {
+  if (!Array.isArray(rounds) || rounds.length === 0) return 0;
+
+  let score = 0;
   let highImpactRounds = 0;
   let consistentRounds = 0;
 
-  roundPerformace.forEach(round => {
-    if (round.impactScore > 300) {
-      highImpactRounds++;
-    }
-    if (round.combat.kills > 0 || round.combat.assists > 0 || round.combat.damageDealt > 100) {
-      consistentRounds++;
-    }
+  rounds.forEach(round => {
+    if (!round) return;
+
+    const impactScore = round.impactScore || 0;
+
+    // Count high impact rounds (500+ impact score)
+    if (impactScore >= 500) highImpactRounds++;
+    // Count consistently good rounds (300+ impact score)
+    if (impactScore >= 300) consistentRounds++;
   });
 
-  // Reward high impact in multiple rounds
-  score += Math.min(15, highImpactRounds * 3);
+  // High impact frequency (0-15 points)
+  score += Math.min(15, (highImpactRounds / totalRounds) * 30);
 
-  // Reward consistency across rounds
-  const consistencyPercentage = consistentRounds / general.roundsPlayed;
-  if (consistencyPercentage > 0.8) {
-    score += 10;
-  } else if (consistencyPercentage > 0.6) {
-    score += 5;
-  }
+  // Consistency (0-15 points)
+  score += Math.min(15, (consistentRounds / totalRounds) * 20);
 
-  // 10. Economy efficiency
-  let goodEconomyRounds = 0;
-  roundPerformace.forEach(round => {
-    // Positive impact with low loadout value compared to enemy
-    if (round.impactScore > 150 &&
-        round.economy.loadoutValue < round.economy.enemyLoadoutValue * 0.8) {
-      goodEconomyRounds++;
-    }
+  return score;
+};
+
+const calculateClutchImpact = (stats: any, rounds: any[]): number => {
+  if (!stats || !Array.isArray(rounds)) return 0;
+
+  let score = 0;
+
+  // Clutch wins (0-10 points)
+  const clutchScore = (stats.clutchesWon || 0) * 3;
+  score += Math.min(10, clutchScore);
+
+  // Multi-kills (0-10 points)
+  let multiKillScore = 0;
+  rounds.forEach(round => {
+    if (!round?.combat?.kills) return;
+
+    if (round.combat.kills >= 4) multiKillScore += 3;
+    else if (round.combat.kills >= 3) multiKillScore += 2;
   });
-
-  score += Math.min(10, goodEconomyRounds * 2); // Economy efficiency
-
-  // 11. Utility usage
-  let goodUtilityRounds = 0;
-  roundPerformace.forEach(round => {
-    if (round.utility.utilityDamage > 50 ||
-       (round.utility.abilitiesUsed > 0 && round.impactScore > 150)) {
-      goodUtilityRounds++;
-    }
-  });
-
-  score += Math.min(10, goodUtilityRounds); // Effective utility usage
-
-  // 12. Performance against high-impact enemies
-  const enemyKills = playerVsplayerStat.killEvents.filter(event =>
-    event.killer === playerVsplayerStat.user.id
-  ).length;
-
-  const topEnemies = playerVsplayerStat.enemies
-    .sort((a, b) => b.stats.kills - a.stats.kills)
-    .slice(0, 2); // Top 2 enemies by kills
-
-  const topEnemyKills = playerVsplayerStat.killEvents.filter(event =>
-    event.killer === playerVsplayerStat.user.id &&
-    topEnemies.some(enemy => enemy.id === event.victim)
-  ).length;
-
-  // Reward for killing the top performers on the enemy team
-  if (topEnemyKills > 5) {
-    score += 15; // Significantly impacted top enemies
-  } else if (topEnemyKills > 3) {
-    score += 10;
-  } else if (topEnemyKills > 1) {
-    score += 5;
-  }
-
-  // 13. Ranked match bonus
-  if (general.isRanked) {
-    score *= 1.15; // 15% bonus for ranked matches
-  }
-
-  // 14. Match recency bonus (assuming gameStartMillis is a timestamp)
-  const now = Date.now();
-  const matchAgeInDays = (now - general.gameStartMillis) / (1000 * 60 * 60 * 24);
-
-  if (matchAgeInDays < 7) {
-    score *= 1.1; // 10% bonus for recent matches (within a week)
-  }
+  score += Math.min(10, multiKillScore);
 
   return score;
 };

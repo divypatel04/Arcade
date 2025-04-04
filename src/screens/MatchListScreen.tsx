@@ -21,8 +21,6 @@ const MatchListScreen = () => {
 
   const {matchStats} = useDataContext();
 
-  console.log(JSON.stringify(matchStats[4]));
-
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -78,7 +76,7 @@ const MatchListScreen = () => {
         )}
         renderItem={({item}) => (
           <MatchBox
-            isPremium={true}
+            isPremium={item.isPremiumStats ?? false}
             match={item}
             onPress={() => {
               navigation.navigate('MatchInfoScreen', { match: item });
