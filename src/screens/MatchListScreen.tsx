@@ -10,7 +10,8 @@ import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useTranslation } from 'react-i18next'
 import { useDataContext } from '../context/DataContext'
-
+import PremiumModal from '../components/PremiumModal'
+import { isPremiumUser } from '../utils'
 
 interface resultArray {
   data: MatchStatType[];
@@ -18,9 +19,7 @@ interface resultArray {
 }
 
 const MatchListScreen = () => {
-
-  const {matchStats} = useDataContext();
-
+  const {matchStats, userData} = useDataContext();
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -28,6 +27,8 @@ const MatchListScreen = () => {
   const [selectedGameType, setSelectedGameType] = React.useState(gameType[0]);
 
   const [finalMatchArray, setFinalMatchArray] = React.useState<resultArray[]>([]);
+  const [premiumModalVisible, setPremiumModalVisible] = React.useState(false);
+  const [selectedPremiumMatch, setSelectedPremiumMatch] = React.useState<MatchStatType | null>(null);
 
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
@@ -45,6 +46,27 @@ const MatchListScreen = () => {
     setFinalMatchArray(transformMatchStats(filterArray));
   }
   }, [selectedGameType]);
+
+  const handleMatchPress = (match: MatchStatType) => {
+    if (match.isPremiumStats && !isPremiumUser(userData)) {
+      setSelectedPremiumMatch(match);
+      setPremiumModalVisible(true);
+    } else {
+      navigation.navigate('MatchInfoScreen', { match: match });
+    }
+  };
+
+  const handleWatchAd = () => {
+    setPremiumModalVisible(false);
+    if (selectedPremiumMatch) {
+      navigation.navigate('MatchInfoScreen', { match: selectedPremiumMatch });
+    }
+  };
+
+  const handleBuyPremium = () => {
+    setPremiumModalVisible(false);
+    navigation.navigate('PremiumSubscription');
+  };
 
   return (
     <View style={styles.container}>
@@ -78,11 +100,16 @@ const MatchListScreen = () => {
           <MatchBox
             isPremium={item.isPremiumStats ?? false}
             match={item}
-            onPress={() => {
-              navigation.navigate('MatchInfoScreen', { match: item });
-            }}
+            onPress={() => handleMatchPress(item)}
           />
         )}
+      />
+
+      <PremiumModal
+        visible={premiumModalVisible}
+        onClose={() => setPremiumModalVisible(false)}
+        onWatchAd={handleWatchAd}
+        onBuyPremium={handleBuyPremium}
       />
       </View>
     </View>
