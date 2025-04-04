@@ -24,7 +24,7 @@ const MapInfoScreen = () => {
   const map: MapStatsType = routeParams.map;
   const selectedSeasonName = routeParams.seasonName;
 
-  const seasonNames = getAllMapSeasonNames(mapStats);
+  const seasonNames = getAllMapSeasonNames([map]);
   const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
   const [selectedSeason, setSelectedSeason] = useState(selectedSeasonName);
 
@@ -45,7 +45,7 @@ const MapInfoScreen = () => {
   const firstStatBox = [
       { name: t('common.matches'), value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
       { name: t('common.hours'), value: convertMillisToReadableTime(seasonStat?.stats.playtimeMillis ?? 0) },
-      { name: t('common.winRate'), value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
+      { name: t('common.winRate'), value: String(((seasonStat?.stats.matchesWon ?? 0)  / ((seasonStat?.stats.matchesWon ?? 0)+ (seasonStat?.stats.matchesLost ?? 0)) * 100).toFixed(1)) + '%' },
     ];
 
     const secondStatBox = [
@@ -62,7 +62,7 @@ const MapInfoScreen = () => {
       { name: t('common.firstBlood'), value: String(seasonStat?.stats.firstKills) },
       { name: t('common.defuses'), value: String(seasonStat?.stats.defuses) },
     ];
-
+  // Move tabs array here so it updates when seasonStat changes
   const tabs = [
     { label: t('tabs.overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
     { label: t('tabs.attackDefence'), content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },

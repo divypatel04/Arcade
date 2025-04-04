@@ -56,7 +56,7 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
     }else{
       setSiteStat(defenceStats);
     }
-  }, [selectedSite]);
+  }, [selectedSite, attackStats, defenceStats]);
 
   return (
     <View
