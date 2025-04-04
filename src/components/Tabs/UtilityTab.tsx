@@ -45,6 +45,7 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
     setCurrentAbility(abilities.find((ability) => ability.name === selectedAbilityType) || abilities[0]);
   }, [selectedAbilityType]);
 
+  console.log('currentAbility', currentAbility);
   const Stats = [
     { name: 'Usage/R', value: String(((currentAbility?.data.count ?? 0) / totalRounds).toFixed(2)) },
     { name: 'Damage/R', value: String(((currentAbility?.data.damage ?? 0) / totalRounds).toFixed(2)) },

@@ -34,6 +34,16 @@ export const generateStats = async (matchDetails: MatchDetails[], puuid: string)
   // Process each match
   for (const match of matchDetails) {
     try {
+
+      // Validate match data
+      // if (JSON.stringify(match).includes("39099FB5-4293-DEF4-1E09-2E9080CE7456")) {
+      //   console.log(JSON.stringify(match));
+      // }
+
+      // if (JSON.stringify(match).includes("856D9A7E-4B06-DC37-15DC-9D809C37CB90")) {
+      //   console.log(JSON.stringify(match));
+      // }
+
       // Skip invalid match data
       if (!match?.matchInfo || !Array.isArray(match.players) || !Array.isArray(match.teams)) {
         console.warn('Skipping invalid match data:', match);

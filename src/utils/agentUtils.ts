@@ -1,4 +1,4 @@
-import { AgentStatType } from "../types/AgentStatsType";
+import { Ability, AgentStatType, MapStat } from "../types/AgentStatsType";
 
 export const getTopAgentByKills = (agentStats: AgentStatType[]): AgentStatType => {
   const agentHighestKills: {agent: AgentStatType; kills: number}[] = [];
@@ -148,7 +148,7 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
       aces: 0,
       firstKills: 0
     },
-    mapStats: [],
+    mapStats: [] as MapStat[],
     attackStats: {
       deaths: 0,
       kills: 0,
@@ -173,35 +173,7 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
         "1v4Wins": 0
       }
     },
-    abilityAndUltimateImpact: {
-      abilityCasts: {
-        grenadeCasts: {
-          count: 0,
-          kills: 0,
-          damage: 0
-        },
-        ability1Casts: {
-          count: 0,
-          kills: 0,
-          damage: 0
-        },
-        ability2Casts: {
-          count: 0,
-          kills: 0,
-          damage: 0
-        },
-        ultimateCasts: {
-          count: 0,
-          kills: 0,
-          damage: 0
-        }
-      },
-      ultimateImpact: {
-        killsUsingUltimate: 0,
-        roundsWonUsingUltimate: 0,
-        damageUsingUltimate: 0
-      }
-    }
+    abilityAndUltimateImpact: [] as Ability[]
   };
 
   const aggregatedStats = agentStat.performanceBySeason.reduce((acc: any, curr) => {
@@ -219,18 +191,20 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
     acc.stats.firstKills += curr.stats.firstKills;
 
     curr.mapStats.forEach((map) => {
-      if (!acc.mapStats[map.id]) {
-        acc.mapStats[map.id] = {
+      const existingMap = acc.mapStats.find((m: MapStat) => m.id === map.id);
+      if (existingMap) {
+        existingMap.wins += map.wins;
+        existingMap.losses += map.losses;
+      } else {
+        acc.mapStats.push({
           id: map.id,
           image: map.image,
           name: map.name,
-          losses: map.losses,
           location: map.location,
           wins: map.wins,
-        };
+          losses: map.losses
+        });
       }
-      acc.mapStats[map.id].wins += map.wins;
-      acc.mapStats[map.id].losses += map.losses;
     });
 
     acc.attackStats.deaths += curr.attackStats.deaths;
@@ -241,6 +215,7 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
     acc.attackStats.clutchStats["1v2Wins"] += curr.attackStats.clutchStats["1v2Wins"];
     acc.attackStats.clutchStats["1v3Wins"] += curr.attackStats.clutchStats["1v3Wins"];
     acc.attackStats.clutchStats["1v4Wins"] += curr.attackStats.clutchStats["1v4Wins"];
+    acc.attackStats.clutchStats["1v5Wins"] += curr.attackStats.clutchStats["1v5Wins"];
 
     acc.defenseStats.deaths += curr.defenseStats.deaths;
     acc.defenseStats.kills += curr.defenseStats.kills;
@@ -250,26 +225,32 @@ export const aggregateAgentStatsForAllActs = (agentStat: AgentStatType) => {
     acc.defenseStats.clutchStats["1v2Wins"] += curr.defenseStats.clutchStats["1v2Wins"];
     acc.defenseStats.clutchStats["1v3Wins"] += curr.defenseStats.clutchStats["1v3Wins"];
     acc.defenseStats.clutchStats["1v4Wins"] += curr.defenseStats.clutchStats["1v4Wins"];
+    acc.defenseStats.clutchStats["1v5Wins"] += curr.defenseStats.clutchStats["1v5Wins"];
 
     curr.abilityAndUltimateImpact.forEach((abilityImpact) => {
-      const existingAbility = acc.abilityAndUltimateImpact.abilityCasts[abilityImpact.type];
+      const existingAbility = acc.abilityAndUltimateImpact.find(
+        (ability: Ability) => ability.id === abilityImpact.id
+      );
+
       if (existingAbility) {
-      existingAbility.count += abilityImpact.count;
-      existingAbility.kills += abilityImpact.kills;
-      existingAbility.damage += abilityImpact.damage;
+        existingAbility.count += abilityImpact.count;
+        existingAbility.kills += abilityImpact.kills;
+        existingAbility.damage += abilityImpact.damage;
       } else {
-      acc.abilityAndUltimateImpact.abilityCasts[abilityImpact.type] = {
-        count: abilityImpact.count,
-        kills: abilityImpact.kills,
-        damage: abilityImpact.damage
-      };
+        acc.abilityAndUltimateImpact.push({
+          type: abilityImpact.type,
+          id: abilityImpact.id,
+          count: abilityImpact.count,
+          kills: abilityImpact.kills,
+          damage: abilityImpact.damage
+        });
       }
     });
 
     return acc;
   }, seasonStat);
 
-  return aggregatedStats
+  return aggregatedStats;
 }
 
 export const convertMillisToReadableTime = (ms: number) => {

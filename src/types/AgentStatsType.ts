@@ -15,7 +15,7 @@ type Agent = {
   abilities: Ability[];
 };
 
-type Ability = {
+export type Ability = {
   id: string;
   name: string;
   image: string;
@@ -53,7 +53,7 @@ type Stats = {
   firstKills: number;
 };
 
-type MapStat = {
+export type MapStat = {
   id: string;
   image: string;
   name: string;

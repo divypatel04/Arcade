@@ -29,6 +29,8 @@ const AgentInfoScreen = () => {
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
 
 
+  console.log('agent', JSON.stringify(agent));
+
   useEffect(() => {
     const selectedSeasonData = agent.performanceBySeason.find(
       (season) => season.season.name === selectedSeason,

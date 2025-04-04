@@ -36,6 +36,16 @@ export async function enrichStatsWithDetails(stats: {
               ...seasonDetails
             };
           }
+
+          // Enrich map stats within season performance
+          if (performance.mapStats) {
+            for (const mapStat of performance.mapStats) {
+              if (!mapStat.name || !mapStat.location) {
+                const mapDetails = await fetchMapDetails(mapStat.id);
+                Object.assign(mapStat, mapDetails);
+              }
+            }
+          }
         }
       } catch (error) {
         console.error(`Error enriching agent stats for agent ${agentStat.agent.id}:`, error);

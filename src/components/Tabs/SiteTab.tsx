@@ -33,7 +33,7 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
   const [selectedSite, setSelectedSite] = useState(siteNames[0]);
 
   const Stats = [
-    { name: 'Round Win%', value: String((((siteStat?.roundsWon ?? 0) + (siteStat?.roundsLost ?? 0)) / (siteStat?.roundsWon ?? 0) * 100).toFixed(1)) + '%' },
+    { name: 'Round Win%', value: String(((siteStat?.roundsWon ?? 0)  / ((siteStat?.roundsWon ?? 0) + (siteStat?.roundsLost ?? 0)) * 100).toFixed(1)) + '%' },
     { name: 'Atk. Kills', value: String(siteStat?.kills ?? 0) },
     { name: 'Atk. K/D', value: String(((siteStat?.kills ?? 0) / (siteStat?.deaths ?? 1)).toFixed(1)) },
   ];

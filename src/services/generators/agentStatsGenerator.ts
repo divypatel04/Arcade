@@ -209,34 +209,27 @@ function processAbilityCasts(
 
         let isAbilityKill = false;
 
+
         // Grenade (C) ability
         if (ability.id === 'grenade' && (
-            damageType.includes('grenade') ||
-            damageType.includes('ability_c') ||
-            damageItem.includes('grenade') ||
-            damageItem.includes('ability_c'))) {
+            damageItem.includes('grenade'))) {
           isAbilityKill = true;
         }
         // Basic (Q) ability
         else if (ability.id === 'ability1' && (
-            damageType.includes('ability_q') ||
-            damageItem.includes('ability_q') ||
-            damageType.includes('ability1'))) {
+          damageItem.includes('ability1')))
+            {
           isAbilityKill = true;
         }
         // Signature (E) ability
         else if (ability.id === 'ability2' && (
-            damageType.includes('ability_e') ||
-            damageItem.includes('ability_e') ||
-            damageType.includes('ability2'))) {
+          damageItem.includes('ability2')))
+        {
           isAbilityKill = true;
         }
         // Ultimate (X) ability
         else if (ability.id === 'ultimate' && (
-            damageType.includes('ultimate') ||
-            damageType.includes('ability_x') ||
-            damageItem.includes('ultimate') ||
-            damageItem.includes('ability_x'))) {
+          damageItem.includes('ultimate'))) {
           isAbilityKill = true;
         }
 
