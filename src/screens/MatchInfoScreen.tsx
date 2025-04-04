@@ -11,6 +11,7 @@ import RoundPerfTab from '../components/Tabs/RoundPerfTab';
 import PlayerVsTab from '../components/Tabs/PlayerVsTab';
 import { MatchStatType } from '../types/MatchStatType';
 import { useTranslation } from 'react-i18next';
+import { ScrollView } from 'react-native';
 
 
 const MatchInfoScreen = () => {
@@ -29,7 +30,7 @@ const MatchInfoScreen = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <FontAwesome
@@ -44,14 +45,13 @@ const MatchInfoScreen = () => {
       <View>
         <TabBar tabs={tabs}/>
       </View>
-    </View>
+    </ScrollView>
   )
 };
 
 const styles = StyleSheet.create({
   container: {
 
-    paddingBottom: 300,
     flex: 1,
     backgroundColor: colors.white,
 

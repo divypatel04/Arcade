@@ -153,7 +153,7 @@ const StatRow: React.FC<StatRowProps> = ({
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: sizes['3xl'],
+    paddingTop: sizes['5xl'],
     flex: 1,
   },
   scoreContainer: {

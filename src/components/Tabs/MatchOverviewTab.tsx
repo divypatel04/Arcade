@@ -28,13 +28,13 @@ const MatchOverviewTab = ({matchStats}:MatchOverviewTabProps) => {
   const statBoxTwoData = [
     {
       name: 'Avg.Damage',
-      value: String(matchStats.stats.playerVsplayerStat.user.stats.damagePerRound),
+      value: String((matchStats.stats.playerVsplayerStat.user.stats.damagePerRound).toFixed(2)),
     },
     {name: 'Aces', value: String(matchStats.stats.playerVsplayerStat.user.stats.aces)},
     {name: 'PlayTime', value: convertMillisToReadableTime(matchStats.stats.playerVsplayerStat.user.stats.playtimeMillis)},
     {name: 'First Blood', value: String(matchStats.stats.playerVsplayerStat.user.stats.firstBloods)},
     {name: 'Assists', value: String(matchStats.stats.playerVsplayerStat.user.stats.assists)},
-    {name: 'HS%', value: String(matchStats.stats.playerVsplayerStat.user.stats.headshotPercentage) + '%'},
+    {name: 'HS%', value: String((matchStats.stats.playerVsplayerStat.user.stats.headshotPercentage).toFixed(2)) + '%'},
   ];
 
 
@@ -81,7 +81,7 @@ const MatchOverviewTab = ({matchStats}:MatchOverviewTabProps) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: sizes['3xl'],
+    paddingTop: sizes['5xl'],
     flex:1,
   },
   scoreContainer: {

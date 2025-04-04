@@ -162,20 +162,20 @@ const PlayerVsTab = ({pvpStats, map}:PlayerVsTabProps) => {
 
         <View style={styles.headshotComparisonContainer}>
           <View style={styles.headshotPlayerContainer}>
-            <Text style={styles.headshotPercentage}>{userStats.headshotPercentage}%</Text>
+            <Text style={styles.headshotPercentage}>{(userStats.headshotPercentage).toFixed(2)}%</Text>
             <Text style={styles.headshotPlayerName}>{userStats.name}</Text>
             <View style={styles.headshotBarContainer}>
               <View
                 style={[
                   styles.headshotBar,
-                  { width: `${userStats.headshotPercentage}%`, backgroundColor: colors.win }
+                  { width: `${(userStats.headshotPercentage)}%`, backgroundColor: colors.win }
                 ]}
               />
             </View>
           </View>
 
           <View style={styles.headshotPlayerContainer}>
-            <Text style={styles.headshotPercentage}>{opponentStats.headshotPercentage}%</Text>
+            <Text style={styles.headshotPercentage}>{(opponentStats.headshotPercentage).toFixed(2)}%</Text>
             <Text style={styles.headshotPlayerName}>{opponentStats.name}</Text>
             <View style={styles.headshotBarContainer}>
               <View
@@ -249,10 +249,13 @@ const PlayerVsTab = ({pvpStats, map}:PlayerVsTabProps) => {
 
             {renderHeadshotComparison()}
 
+            {clutchEvents.length > 0 && (
             <View style={styles.clutchListContainer}>
               <Text style={styles.sectionTitle}>CLUTCH MOMENTS</Text>
               {clutchEvents.map((event, index) => renderClutchItem(event, index))}
             </View>
+            )}
+
           </>
         )}
 
@@ -323,9 +326,9 @@ const PlayerVsTab = ({pvpStats, map}:PlayerVsTabProps) => {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    paddingTop: sizes['3xl'],
+    paddingTop: sizes['5xl'],
     flex: 1,
-    paddingBottom: 400
+    marginBottom:10,
   },
   viewSelector: {
     flexDirection: 'row',

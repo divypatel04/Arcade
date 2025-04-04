@@ -169,7 +169,7 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
 
                 <View style={styles.statItem}>
                   <Text style={styles.statLabel}>HS%</Text>
-                  <Text style={styles.statValue}>{selectedRoundData.combat.headshotPercentage}%</Text>
+                  <Text style={styles.statValue}>{(selectedRoundData.combat.headshotPercentage).toFixed(2)}%</Text>
                 </View>
 
                 <View style={styles.statItem}>
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingTop: sizes.xl,
+    paddingTop: sizes['5xl'],
   },
   timelineContainer: {
     marginBottom: sizes.md,
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     marginTop: sizes.md,
     padding: sizes.lg,
     backgroundColor: colors.primary,
-
+    marginBottom:20
   },
   noSelectionContainer: {
     alignItems: 'center',
