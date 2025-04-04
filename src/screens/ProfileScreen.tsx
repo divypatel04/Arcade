@@ -13,8 +13,6 @@ const ProfileScreen = () => {
   const {userData} = useDataContext();
   const { logout }  = useAuth();
 
-  console.log('userData', userData);
-
   const handleLogout = () => {
     console.log('Logout function called');
     logout();

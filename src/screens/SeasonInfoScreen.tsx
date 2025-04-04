@@ -12,6 +12,178 @@ import { useDataContext } from '../context/DataContext';
 
 const SeasonInfoScreen = () => {
 
+  const ranks = [
+    {
+      id: 0,
+      name: 'UNRANKED',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/0/largeicon.png',
+    },
+    {
+      id: 1,
+      name: 'Unused1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/0/largeicon.png',
+    },
+    {
+      id: 2,
+      name: 'Unused2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/0/largeicon.png',
+    },
+    {
+      id: 3,
+      name: 'Iron 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/3/largeicon.png',
+    },
+    {
+      id: 4,
+      name: 'Iron 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/4/largeicon.png',
+    },
+    {
+      id: 5,
+      name: 'Iron 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/5/largeicon.png',
+    },
+    {
+      id: 6,
+      name: 'Bronze 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/6/largeicon.png',
+    },
+    {
+      id: 7,
+      name: 'Bronze 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/7/largeicon.png',
+    },
+    {
+      id: 8,
+      name: 'Bronze 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/8/largeicon.png',
+    },
+    {
+      id: 9,
+      name: 'Silver 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/9/largeicon.png',
+    },
+    {
+      id: 10,
+      name: 'Silver 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/10/largeicon.png',
+    },
+    {
+      id: 11,
+      name: 'Silver 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/11/largeicon.png',
+    },
+    {
+      id: 12,
+      name: 'Gold 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/12/largeicon.png',
+    },
+    {
+      id: 13,
+      name: 'Gold 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/13/largeicon.png',
+    },
+    {
+      id: 14,
+      name: 'Gold 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/14/largeicon.png',
+    },
+    {
+      id: 15,
+      name: 'Platinum 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/15/largeicon.png',
+    },
+    {
+      id: 16,
+      name: 'Platinum 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/16/largeicon.png',
+    },
+    {
+      id: 17,
+      name: 'Platinum 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/17/largeicon.png',
+    },
+    {
+      id: 18,
+      name: 'Diamond 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/18/largeicon.png',
+    },
+
+    {
+      id: 19,
+      name: 'Diamond 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/19/largeicon.png',
+    },
+    {
+      id: 20,
+      name: 'Diamond 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/20/largeicon.png',
+    },
+    {
+      id: 21,
+      name: 'Ascendant 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/21/largeicon.png',
+    },
+    {
+      id: 22,
+      name: 'Ascendant 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/22/largeicon.png',
+    },
+    {
+      id: 23,
+      name: 'Ascendant 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/23/largeicon.png',
+    },
+    {
+      id: 24,
+      name: 'Immortal 1',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/24/largeicon.png',
+    },
+    {
+      id: 25,
+      name: 'Immortal 2',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/25/largeicon.png',
+    },
+    {
+      id: 26,
+      name: 'Immortal 3',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/26/largeicon.png',
+    },
+    {
+      id: 27,
+      name: 'Radiant',
+      largeicon:
+        'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/27/largeicon.png',
+    },
+  ];
+
   const {t} = useTranslation();
 
   const {seasonStats} = useDataContext();
@@ -94,11 +266,13 @@ const SeasonInfoScreen = () => {
           <View style={styles.rankdetails}>
             <Image
               style={styles.rankimage}
-              source={{uri: 'https://i.imgur.com/1zvz1Zb.png'}}
+              source={{uri: ranks.find(rank => rank.id === mainSeasonStats?.stats.highestRank)?.largeicon || ranks[0].largeicon}}
             />
             <View style={styles.rankmeta}>
               <Text style={styles.rankepisode}>{t('infoScreen.highestRank')}</Text>
-              <Text style={styles.ranktitle}>Radiant</Text>
+              <Text style={styles.ranktitle}>
+                {ranks.find(rank => rank.id === mainSeasonStats?.stats.highestRank)?.name || ranks[0].name}
+              </Text>
             </View>
           </View>
 
