@@ -51,7 +51,7 @@ const WeaponInfoScreen = () => {
     const secondStatBox = [
       { name: t('common.damageR'), value: String(((seasonStat?.stats.damage ?? 0) / (seasonStat?.stats?.roundsPlayed ?? 0)).toFixed(2)) },
       { name: t('common.aces'), value: String(seasonStat?.stats.aces ?? 0) },
-      { name: t('common.mLose'), value: String(seasonStat?.stats.firstKills ?? 0) },
+      { name: t('common.firstBlood'), value: String(seasonStat?.stats.firstKills ?? 0) },
     ];
 
   const tabs = [
