@@ -5,11 +5,21 @@ import { colors, fonts, sizes } from '../theme'
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
 import { useDataContext } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
 
   const {userData} = useDataContext();
+  const { logout }  = useAuth();
+
+  console.log('userData', userData);
+
+  const handleLogout = () => {
+    console.log('Logout function called');
+    logout();
+  }
+
 
   return (
     <ScrollView style={styles.container} overScrollMode="never">
@@ -28,7 +38,7 @@ const ProfileScreen = () => {
         <View style={{ paddingLeft: 10 }}>
           <Text style={styles.profilesubtext}>Unstoppable Title</Text>
           <Text style={styles.profilename}>
-            {userData?.name}#{userData?.tagline}
+            {(userData?.name)?.trimEnd() + ` #` + userData?.tagline}
           </Text>
         </View>
       </View>
@@ -48,18 +58,19 @@ const ProfileScreen = () => {
       <View>
         <Text style={styles.sectiontitle}>{t('infoScreen.settings')}</Text>
         {[
-          { name: t('infoScreen.followUs'), icon: 'twitter-line' },
+          { name: t('infoScreen.followUs'), icon: 'twitter-line', fun: handleLogout  },
           {
             name: t('infoScreen.privacyPolicy'),
-            icon: 'shield-line',
+            icon: 'shield-line', fun: handleLogout
           },
-          { name: t('infoScreen.contactUs'), icon: 'mail-line', },
-          { name: t('infoScreen.logout'), icon: 'logout-box-r-line', },
+          { name: t('infoScreen.contactUs'), icon: 'mail-line', fun: handleLogout },
+          { name: t('infoScreen.logout'), icon: 'logout-box-r-line', fun: handleLogout  },
         ].map((item, index) => (
           <TouchableOpacity
             key={index}
             activeOpacity={0.6}
             style={styles.menucontainer}
+            onPress={item.fun}
           >
             <View style={styles.menutextcontainer}>
               <View style={styles.menuicon}>

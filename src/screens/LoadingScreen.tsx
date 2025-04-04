@@ -28,30 +28,35 @@ export default function LoadingScreen() {
     userData
   } = useDataContext();
 
-  const {userPuuid} = useAuth();
+  const {userPuuid, authStatusChecked} = useAuth();
 
   // Fetch data only once
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      if (dataFetchInitiated.current) return;
+      if (!authStatusChecked || !userPuuid) {
+        return;
+      }
+
+      if (dataFetchInitiated.current) {
+        return;
+      }
 
       dataFetchInitiated.current = true;
-      console.log('[LOG] LoadingScreen: Initiating data fetch (once)');
+      console.log('[LOG] LoadingScreen: Initiating data fetch for PUUID:', userPuuid);
       setLoadingStarted(true);
-
 
       try {
         await fetchUserData(userPuuid);
         processUserData(userPuuid);
-
         console.log('[LOG] LoadingScreen: fetchUserData call completed');
       } catch (err) {
         console.error('[ERROR] LoadingScreen: Error in fetchCurrentUser:', err);
+        dataFetchInitiated.current = false;
       }
     };
 
     fetchCurrentUser();
-  }, [fetchUserData]);
+  }, [fetchUserData, authStatusChecked, userPuuid]);
 
   // Navigate to BottomTabs when data is ready
   useEffect(() => {

@@ -15,6 +15,8 @@ import { colors, fonts } from '../theme';
 import { Icon } from '../components/lcon';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
@@ -40,6 +42,8 @@ const Slide = ({item}: any) => {
 
 const OnboardingScreen = () => {
 
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   const {t} = useTranslation();
 
   const slides = [
@@ -63,14 +67,20 @@ const OnboardingScreen = () => {
     },
   ];
 
-  const {setIsAuthenticated, login} = useAuth();
+  const {login} = useAuth();
 
 
-  const onLogin = () => {
+  const onLogin = async () => {
     console.log('Login with Riot ID');
+    const puuid = '-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA';
 
-    login('-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA');
-    setIsAuthenticated(true);
+    const success = await login(puuid);
+    if (success) {
+      navigation.navigate('Loading');
+    } else {
+      // Handle login failure
+      console.error('Failed to login');
+    }
   }
 
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);

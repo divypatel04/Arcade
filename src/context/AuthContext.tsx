@@ -2,7 +2,15 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen';
 
-const AuthContext = createContext({} as any);
+interface AuthContextType {
+  isAuthenticated: boolean;
+  authStatusChecked: boolean;
+  userPuuid: string | null;
+  login: (puuid: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({children}: any) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -10,26 +18,28 @@ export const AuthProvider = ({children}: any) => {
   const [userPuuid, setUserPuuid] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkAuthentication = async () => {
-      try {
-        // await AsyncStorage.removeItem('UserID');
-        const userId = await AsyncStorage.getItem('UserID');
-        if (userId) {
-          setUserPuuid(userId);
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (e: any) {
-        console.log(e);
-      } finally {
-        setAuthStatusChecked(true);
-        SplashScreen.hide();
-      }
-    };
-
     checkAuthentication();
   }, []);
+
+  const checkAuthentication = async () => {
+    try {
+      const storedPuuid = await AsyncStorage.getItem('UserID');
+      if (storedPuuid) {
+        setUserPuuid(storedPuuid);
+        setIsAuthenticated(true);
+      } else {
+        setUserPuuid(null);
+        setIsAuthenticated(false);
+      }
+    } catch (e: any) {
+      console.error('Auth check error:', e);
+      setUserPuuid(null);
+      setIsAuthenticated(false);
+    } finally {
+      setAuthStatusChecked(true);
+      SplashScreen.hide();
+    }
+  };
 
   const login = async (puuid: string) => {
     try {
@@ -38,7 +48,7 @@ export const AuthProvider = ({children}: any) => {
       setIsAuthenticated(true);
       return true;
     } catch (e: any) {
-      console.log(e);
+      console.error('Login error:', e);
       return false;
     }
   };
@@ -49,7 +59,7 @@ export const AuthProvider = ({children}: any) => {
       setUserPuuid(null);
       setIsAuthenticated(false);
     } catch (e: any) {
-      console.log(e);
+      console.error('Logout error:', e);
     }
   };
 
@@ -57,11 +67,10 @@ export const AuthProvider = ({children}: any) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        setIsAuthenticated,
         authStatusChecked,
+        userPuuid,
         login,
         logout,
-        userPuuid,
       }}>
       {children}
     </AuthContext.Provider>
@@ -69,5 +78,9 @@ export const AuthProvider = ({children}: any) => {
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
 };
