@@ -1,22 +1,28 @@
-import {MapStatsType, SeasonPerformance} from '../types/MapStatsType';
+import { MapStatsType, SeasonPerformance } from '../types/MapStatsType';
 
+/**
+ * Identifies the map with the highest win rate based on active season or best historical performance.
+ * First looks for maps with active seasons, then falls back to historical data if no active season exists.
+ *
+ * @param mapStats - Array of map statistics
+ * @returns The map with the highest win rate
+ * @throws Error if no suitable map is found
+ */
 export const getTopMapByWinRate = (mapStats: MapStatsType[]): MapStatsType => {
   let bestMap: MapStatsType | undefined;
-  let highestWinRate: number = 0;
+  let highestWinRate = 0;
 
+  // First try to find maps with active seasons
   for (const map of mapStats) {
     const activeSeasonStats = map.performanceBySeason.find(
-      season => season.season.isActive === true,
+      season => season.season.isActive
     );
 
     if (activeSeasonStats) {
-      const totalGames =
-        activeSeasonStats.stats.matchesWon +
-        activeSeasonStats.stats.matchesLost;
+      const totalGames = activeSeasonStats.stats.matchesWon + activeSeasonStats.stats.matchesLost;
       if (totalGames === 0) continue;
 
       const winRate = activeSeasonStats.stats.matchesWon / totalGames;
-
       if (winRate > highestWinRate) {
         highestWinRate = winRate;
         bestMap = map;
@@ -24,35 +30,64 @@ export const getTopMapByWinRate = (mapStats: MapStatsType[]): MapStatsType => {
     }
   }
 
-  // If no active season was found, try to find the season with the highest win rate
-  if (!bestMap) {
+  // If no map with active season is found, use historical data
+  if (!bestMap && mapStats.length > 0) {
     for (const map of mapStats) {
-      const seasonWithHighestWinRate = map.performanceBySeason.reduce(
-        (prev, current) =>
-          prev.stats.matchesWon /
-            (prev.stats.matchesWon + prev.stats.matchesLost) >
-          current.stats.matchesWon /
-            (current.stats.matchesWon + current.stats.matchesLost)
-            ? prev
-            : current,
-      );
-      bestMap = map;
+      // Skip maps with no performance data
+      if (map.performanceBySeason.length === 0) continue;
+
+      // Find season with highest win rate
+      const bestSeason = map.performanceBySeason.reduce((prev, current) => {
+        const prevTotal = prev.stats.matchesWon + prev.stats.matchesLost;
+        const currentTotal = current.stats.matchesWon + current.stats.matchesLost;
+
+        // Skip seasons with no matches
+        if (currentTotal === 0) return prev;
+        if (prevTotal === 0) return current;
+
+        const prevWinRate = prev.stats.matchesWon / prevTotal;
+        const currentWinRate = current.stats.matchesWon / currentTotal;
+
+        return prevWinRate > currentWinRate ? prev : current;
+      });
+
+      const totalGames = bestSeason.stats.matchesWon + bestSeason.stats.matchesLost;
+      if (totalGames === 0) continue;
+
+      const winRate = bestSeason.stats.matchesWon / totalGames;
+      if (winRate > highestWinRate) {
+        highestWinRate = winRate;
+        bestMap = map;
+      }
     }
   }
 
   if (!bestMap) {
-    throw new Error('No best map found');
+    throw new Error('No map with sufficient data found');
   }
+
   return bestMap;
 };
 
-export const getAllMapSeasonNames = (mapStats: MapStatsType[]) => {
-  const seasonSet: any = {};
+/**
+ * Extracts all unique season names from map statistics.
+ * Returns a sorted list with "All Act" always at the beginning.
+ *
+ * @param mapStats - Array of map statistics
+ * @returns Array of season names sorted chronologically (newest first) with "All Act" at index 0
+ */
+export const getAllMapSeasonNames = (mapStats: MapStatsType[]): string[] => {
+  const seasonMap: Record<string, {
+    seasonId: string;
+    seasonName: string;
+    seasonActive: boolean;
+  }> = {};
 
+  // Collect unique seasons
   for (const map of mapStats) {
     for (const season of map.performanceBySeason) {
-      if (!seasonSet[season.season.id]) {
-        seasonSet[season.season.id] = {
+      if (!seasonMap[season.season.id]) {
+        seasonMap[season.season.id] = {
           seasonId: season.season.id,
           seasonName: season.season.name,
           seasonActive: season.season.isActive,
@@ -61,80 +96,71 @@ export const getAllMapSeasonNames = (mapStats: MapStatsType[]) => {
     }
   }
 
-  const seasonList = Object.values(seasonSet);
-
-  const final = seasonList
-    .map((season: any) => season.seasonName)
+  // Sort seasons by name (descending order - newest first)
+  const sortedSeasons = Object.values(seasonMap)
+    .map(season => season.seasonName)
     .sort((a, b) => b.localeCompare(a));
 
-  final.unshift('All Act');
+  // Add "All Act" at the beginning
+  sortedSeasons.unshift('All Act');
 
-  return final;
+  return sortedSeasons;
 };
 
-interface MapListProps {
+/**
+ * Interface for map statistics with match counts for a specific season
+ */
+interface MapWithMatchCount {
   mapStat: MapStatsType;
   seasonName: string;
   numberOfMatches: number;
 }
 
-export function sortMapsByMatches(
+/**
+ * Sorts maps by the number of matches played in a specific season or across all seasons.
+ * Only includes maps with at least one match played.
+ *
+ * @param mapStats - Array of map statistics
+ * @param seasonName - Season to filter by, or "All Act" for aggregated data
+ * @returns Array of maps sorted by number of matches in descending order
+ */
+export const sortMapsByMatches = (
   mapStats: MapStatsType[],
   seasonName: string,
-) {
-  let allSortedStats = [];
+): MapWithMatchCount[] => {
+  // Calculate number of matches for each map
+  const mapsWithMatchCounts = mapStats.map(mapStat => {
+    // Filter seasons based on the selected season name
+    const relevantSeasons = seasonName === 'All Act'
+      ? mapStat.performanceBySeason
+      : mapStat.performanceBySeason.filter(stat => stat.season.name === seasonName);
 
-  if (seasonName === 'All Act') {
-    // Handle the "All Act" case
-    allSortedStats = mapStats.map(mapStat => {
-      const numberOfMatches = mapStat.performanceBySeason.map(
-        stat => stat.stats.matchesWon + stat.stats.matchesLost,
-      );
+    // Calculate total matches across relevant seasons
+    const totalMatches = relevantSeasons.reduce(
+      (total, season) => total + season.stats.matchesWon + season.stats.matchesLost,
+      0
+    );
 
-      return {
-        mapStat: mapStat,
-        seasonName: seasonName,
-        numberOfMatches:
-          numberOfMatches.length > 0
-            ? numberOfMatches.reduce((a, b) => a + b)
-            : 0,
-      };
-    });
-  } else {
-    // Handle individual seasons
-    allSortedStats = mapStats.map(mapStat => {
-      const filteredStats = mapStat.performanceBySeason.filter(
-        stat => stat.season.name === seasonName,
-      );
+    return {
+      mapStat,
+      seasonName,
+      numberOfMatches: totalMatches
+    };
+  });
 
-      const numberOfMatches = filteredStats.map(
-        stat => stat.stats.matchesWon + stat.stats.matchesLost,
-      );
+  // Only include maps with at least one match
+  return mapsWithMatchCounts
+    .filter(map => map.numberOfMatches > 0)
+    .sort((a, b) => b.numberOfMatches - a.numberOfMatches);
+};
 
-      return {
-        mapStat: mapStat,
-        seasonName: seasonName,
-        numberOfMatches:
-          numberOfMatches.length > 0
-            ? numberOfMatches.reduce((a, b) => a + b)
-            : 0,
-      };
-    });
-  }
-
-  // Filter out agents with numberOfMatches equal to 0
-  const filteredSortedStats: MapListProps[] = allSortedStats.filter(
-    stat => stat.numberOfMatches > 0,
-  );
-
-  // Sort all remaining agents by the number of matches in descending order
-  const finalSortedStats: MapListProps[] = filteredSortedStats.sort(
-    (a, b) => b.numberOfMatches - a.numberOfMatches,
-  );
-
-  return finalSortedStats;
-}
-
+/**
+ * Aggregates statistics for a map across all seasons into a single "All Act" season.
+ * Combines match data, round data, and location-based stats from all seasons.
+ *
+ * @param mapStat - The map's statistics
+ * @returns Aggregated statistics for all acts
+ */
 export const aggregateMapStatsForAllActs = (mapStat: MapStatsType) => {
   const seasonStat: SeasonPerformance = {
     season: {

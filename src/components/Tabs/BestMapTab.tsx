@@ -11,6 +11,7 @@ import { colors, fonts, sizes } from '../../theme';
 import { useTranslation } from 'react-i18next';
 import { getSupabaseImageUrl } from '../../utils';
 
+// Define the structure of a single map item
 interface mapListType {
   id: string;
   image: string;
@@ -20,21 +21,38 @@ interface mapListType {
   losses: number;
 }
 
+// Define the props for the BestMapTab component
 interface BestMapType {
-  mapList: mapListType[] | undefined
+  mapList: mapListType[] | undefined;
 }
 
-const BestMapTab = ({mapList}:BestMapType) => {
-  const {t} = useTranslation();
-  const calculateWinRate = (item: mapListType) => {
+const BestMapTab = ({ mapList }: BestMapType) => {
+  const { t } = useTranslation();
+
+  /**
+   * Calculate the win rate for a given map item.
+   * @param item - A single map item.
+   * @returns A formatted string showing the win rate.
+   */
+  const calculateWinRate = (item: mapListType): string => {
     const winRate = ((item.wins / (item.wins + item.losses)) * 100).toFixed(2);
-    return `${t('common.winRate')}- ${winRate}%`;
+    return `${t('common.winRate')}: ${winRate}%`;
   };
 
+  /**
+   * Render a single map box with its details.
+   * @param item - A single map item.
+   * @returns A React element representing the map box.
+   */
   const renderMapBox = (item: mapListType) => (
     <View key={item.id}>
       <TouchableOpacity activeOpacity={0.5} style={styles.mapBox}>
-        <Image style={styles.mapImage} source={{uri: getSupabaseImageUrl(item.image)}} />
+        {/* Map image */}
+        <Image
+          style={styles.mapImage}
+          source={{ uri: getSupabaseImageUrl(item.image) }}
+        />
+        {/* Map metadata */}
         <View style={styles.metaContainer}>
           <View style={styles.mapMeta}>
             <Text style={styles.metaTitle}>{item.name}</Text>
@@ -50,25 +68,33 @@ const BestMapTab = ({mapList}:BestMapType) => {
     </View>
   );
 
-  const sortedMapData = mapList ? [...mapList].sort((a, b) => {
-    const winRateA = a.wins / (a.wins + a.losses);
-    const winRateB = b.wins / (b.wins + b.losses);
-    return winRateB - winRateA;
-  }) : [];
+  /**
+   * Sort the map list by win rate in descending order.
+   * If no map list is provided, return an empty array.
+   */
+  const sortedMapData = mapList
+    ? [...mapList].sort((a, b) => {
+        const winRateA = a.wins / (a.wins + a.losses);
+        const winRateB = b.wins / (b.wins + b.losses);
+        return winRateB - winRateA;
+      })
+    : [];
 
   return (
     <View style={styles.tabContainer}>
+      {/* Scrollable list of maps */}
       <ScrollView style={styles.mapLists} showsVerticalScrollIndicator={false}>
-        {sortedMapData.map(item => renderMapBox(item))}
+        {sortedMapData.map((item) => renderMapBox(item))}
       </ScrollView>
     </View>
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   tabContainer: {
     paddingTop: sizes['3xl'],
-    flex:1,
+    flex: 1,
   },
   mapLists: {
     paddingTop: sizes['4xl'],

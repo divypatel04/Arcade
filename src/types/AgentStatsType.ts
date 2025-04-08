@@ -80,7 +80,7 @@ type ClutchStats = {
 
 type AbilityAndUltimateImpact = AbilityCastDetails[];
 
-type AbilityCastDetails = {
+export type AbilityCastDetails = {
   type: string;
   id: string;
   count: number;
