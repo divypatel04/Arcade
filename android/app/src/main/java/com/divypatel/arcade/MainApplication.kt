@@ -1,4 +1,4 @@
-package com.arcade
+package com.divypatel.arcade
 
 import android.app.Application
 import com.facebook.react.PackageList

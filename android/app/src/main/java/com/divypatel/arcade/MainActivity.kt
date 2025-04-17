@@ -1,4 +1,4 @@
-package com.arcade
+package com.divypatel.arcade
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
