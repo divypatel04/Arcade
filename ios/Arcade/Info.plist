@@ -26,7 +26,6 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-	  <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
@@ -48,5 +47,31 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Novecentosansnarrow-Bold.ttf</string>
+		<string>Novecentosansnarrow-Book.ttf</string>
+		<string>Novecentosansnarrow-DemiBold.ttf</string>
+		<string>Novecentosansnarrow-Light.ttf</string>
+		<string>Novecentosansnarrow-Medium.ttf</string>
+		<string>Novecentosansnarrow-Normal.ttf</string>
+		<string>Novecentosansnarrow-UltraBold.ttf</string>
+		<string>Novecentosansnarrow-UltrLt.ttf</string>
+		<string>ProximaNova-Black.ttf</string>
+		<string>ProximaNova-BlackIt.ttf</string>
+		<string>ProximaNova-Bold.ttf</string>
+		<string>ProximaNova-BoldIt.ttf</string>
+		<string>ProximaNova-Extrabld.ttf</string>
+		<string>ProximaNova-ExtrabldIt.ttf</string>
+		<string>ProximaNova-Light.ttf</string>
+		<string>ProximaNova-LightIt.ttf</string>
+		<string>ProximaNova-Regular.ttf</string>
+		<string>ProximaNova-RegularIt.ttf</string>
+		<string>ProximaNova-Semibold.ttf</string>
+		<string>ProximaNova-SemiboldIt.ttf</string>
+		<string>ProximaNova-ThinIt.ttf</string>
+		<string>ProximaNovaT-Thin.ttf</string>
+		<string>remixicon.ttf</string>
+	</array>
 </dict>
 </plist>

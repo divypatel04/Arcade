@@ -1,32 +1,12 @@
 /**
- * Checks if a user is a premium subscriber based on their user data
- * @param userData User data object from context
- * @returns boolean indicating if the user has premium status
+ * Checks if a user has made any payments (premium user)
+ *
+ * @param userData - The user data object from DataContext
+ * @returns boolean - True if user has made at least one payment, false otherwise
  */
-export const isPremiumUser = (userData: any): boolean => {
+export function isPremiumUser(userData: any): boolean {
   if (!userData) return false;
 
-  // Check if user has any payment records
-  if (!userData.payments || !Array.isArray(userData.payments) || userData.payments.length === 0) {
-    return false;
-  }
-
-  // Find active premium subscription
-  const activeSubscription = userData.payments.find(
-    (payment: any) => payment.active && payment.premium
-  );
-
-  if (!activeSubscription) return false;
-
-  // If there's an expiry date, check if it's still valid
-  if (activeSubscription.expiry_date) {
-    const expiryDate = new Date(activeSubscription.expiry_date);
-    const now = new Date();
-
-    if (expiryDate < now) {
-      return false;
-    }
-  }
-
-  return true;
-};
+  // Check if payments array exists and has at least one entry
+  return Boolean(userData.payments && userData.payments.length > 0);
+}
