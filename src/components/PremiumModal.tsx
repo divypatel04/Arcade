@@ -1,8 +1,9 @@
-import React from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { colors, fonts, sizes } from '../theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useTranslation } from 'react-i18next';
+import { useRewardedAd } from '../hooks/useRewardedAd';
 
 interface PremiumModalProps {
   visible: boolean;
@@ -13,6 +14,33 @@ interface PremiumModalProps {
 
 const PremiumModal = ({ visible, onClose, onWatchAd, onBuyPremium }: PremiumModalProps) => {
   const { t } = useTranslation();
+  const { showRewardedAd, isRewardedAdReady } = useRewardedAd();
+  const [isLoadingAd, setIsLoadingAd] = useState(false);
+
+  const handleWatchAd = () => {
+    setIsLoadingAd(true);
+
+    if (isRewardedAdReady) {
+      showRewardedAd(
+        // Called when user earns a reward
+        (reward: any) => {
+          console.log('User earned reward of', reward);
+          setIsLoadingAd(false);
+          onClose();
+          onWatchAd(); // This will navigate to the premium content
+        },
+        // Called when ad is dismissed without reward
+        () => {
+          console.log('Ad closed without reward');
+          setIsLoadingAd(false);
+        }
+      );
+    } else {
+      console.log('Rewarded ad not ready yet');
+      setIsLoadingAd(false);
+      // Optionally show a message to the user
+    }
+  };
 
   return (
     <Modal
@@ -50,9 +78,19 @@ const PremiumModal = ({ visible, onClose, onWatchAd, onBuyPremium }: PremiumModa
           </View>
 
           <View style={styles.optionsContainer}>
-            <TouchableOpacity style={styles.adButton} onPress={onWatchAd}>
-              <FontAwesome name="play" size={14} color={colors.black} style={styles.buttonIcon} />
-              <Text style={styles.adButtonText}>{t('premium.watchAd')}</Text>
+            <TouchableOpacity
+              style={styles.adButton}
+              onPress={handleWatchAd}
+              disabled={isLoadingAd || !isRewardedAdReady}
+            >
+              {isLoadingAd ? (
+                <ActivityIndicator size="small" color={colors.black} />
+              ) : (
+                <>
+                  <FontAwesome name="play" size={14} color={colors.black} style={styles.buttonIcon} />
+                  <Text style={styles.adButtonText}>{t('premium.watchAd')}</Text>
+                </>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.premiumButton} onPress={onBuyPremium}>

@@ -5,5 +5,9 @@
     "eas": {
       "projectId": "73c51238-8b20-48f4-9ba5-4abe27508619"
     }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-8137963668346387~8707998135",
+    "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
   }
 }

@@ -14,6 +14,7 @@ import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../context/LanguageContext';
 import { SeasonStatsType } from '../types/SeasonStatsType';
+import BannerAdContainer from '../components/BannerAdContainer';
 
 
 const HomeScreen = () => {
@@ -42,6 +43,7 @@ const HomeScreen = () => {
          <GunBox bestWeapon={bestWeaponStats}/>
        </View>
        <SeasonBox season={currentSeason}/>
+       <BannerAdContainer containerStyle={{ marginHorizontal: sizes.xl }} />
     </View>
   )
 }
