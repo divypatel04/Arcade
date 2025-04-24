@@ -1,6 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {
-  SafeAreaView,
   Image,
   StyleSheet,
   FlatList,
@@ -171,7 +170,7 @@ const OnboardingScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <View style={{flex: 1, backgroundColor: colors.white}}>
       <StatusBar backgroundColor={colors.white} />
       <FlatList
         // ref={ref}
@@ -184,7 +183,7 @@ const OnboardingScreen = () => {
         renderItem={({item}) => <Slide item={item} />}
       />
       <Footer />
-    </SafeAreaView>
+    </View>
   );
 };
 
