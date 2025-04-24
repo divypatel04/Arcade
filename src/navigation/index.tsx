@@ -18,6 +18,7 @@ import AgentInfoScreen from '../screens/AgentInfoScreen';
 import MapInfoScreen from '../screens/MapInfoScreen';
 import WeaponInfoScreen from '../screens/WeaponInfoScreen';
 import MatchInfoScreen from '../screens/MatchInfoScreen';
+import PremiumSubscriptionScreen from '../screens/PremiumSubscriptionScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ export default function Navigation() {
   const {isAuthenticated, authStatusChecked} = useAuth();
   const navigationRef =
     useNavigationContainerRef<ReactNavigation.RootParamList>();
-  const routeNameRef = useRef<any>();
+  const routeNameRef = useRef<any>("");
 
   if (!authStatusChecked) {
     return (
@@ -74,7 +75,7 @@ export default function Navigation() {
             <Stack.Screen name="MapInfoScreen" component={MapInfoScreen} />
             <Stack.Screen name="WeaponInfoScreen" component={WeaponInfoScreen} />
             <Stack.Screen name="MatchInfoScreen" component={MatchInfoScreen} />
-
+            <Stack.Screen name="PremiumSubscriptionScreen" component={PremiumSubscriptionScreen} />
           </>
         ) : (
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />

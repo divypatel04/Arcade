@@ -6,12 +6,15 @@ import { RoundPerformance } from '../../types/MatchStatType';
 import PremiumModal from '../PremiumModal';
 import { isPremiumUser } from '../../utils/userUtils';
 import { useDataContext } from '../../context/DataContext';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface RoundPerfTabProps {
   roundStats: RoundPerformance[];
 }
 
 const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const {userData} = useDataContext();
   const [selectedRound, setSelectedRound] = useState<number | null>(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
@@ -48,6 +51,7 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
   const handleBuyPremium = () => {
     // TODO: Implement premium purchase logic
     setShowPremiumModal(false);
+    navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
   };
 
   // Get the selected round data

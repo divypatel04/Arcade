@@ -56,7 +56,7 @@ const WeaponListScreen = () => {
   const handleBuyPremium = () => {
     // TODO: Navigate to premium purchase screen
     setPremiumModalVisible(false);
-    navigation.navigate('PremiumSubscription'); // Assuming this screen exists
+    navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
   };
 
   return (

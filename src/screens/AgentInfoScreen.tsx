@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   tabs: {
-    zIndex: -1,
+    zIndex: 1,
     flex: 1,
     backgroundColor: colors.white,
   }

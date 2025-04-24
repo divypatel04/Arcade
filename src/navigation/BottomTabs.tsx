@@ -132,7 +132,7 @@ const SCREENS = [
 export default function BottomTabs() {
   return (
     <BottomTab.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeScreen"
       screenOptions={SCREEN_OPTIONS as any}>
       {SCREENS.map(({ name, component, icons }) => (
         <BottomTab.Screen

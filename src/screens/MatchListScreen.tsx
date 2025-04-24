@@ -65,7 +65,7 @@ const MatchListScreen = () => {
 
   const handleBuyPremium = () => {
     setPremiumModalVisible(false);
-    navigation.navigate('PremiumSubscription');
+    navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
   };
 
   return (
