@@ -10,12 +10,15 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { colors, fonts } from '../theme';
+import { colors, fonts, sizes } from '../theme';
 import { useDataContext } from '../context/DataContext';
 import { processUserData } from '../services';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function LoadingScreen() {
+
+  const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [loadingStarted, setLoadingStarted] = useState<boolean>(false);
   const dataFetchInitiated = useRef<boolean>(false);
@@ -31,7 +34,6 @@ export default function LoadingScreen() {
 
   const {userPuuid, authStatusChecked} = useAuth();
 
-  // Fetch data only once
   useEffect(() => {
     const fetchCurrentUser = async () => {
       if (!authStatusChecked || !userPuuid) {
@@ -45,7 +47,7 @@ export default function LoadingScreen() {
       dataFetchInitiated.current = true;
       console.log('[LOG] LoadingScreen: Initiating data fetch for PUUID:', userPuuid);
       setLoadingStarted(true);
-      setStatusMessage('Fetching your latest game data...');
+      setStatusMessage(t('common.fetchingData'));
 
       try {
         await fetchUserData(userPuuid);
@@ -60,19 +62,16 @@ export default function LoadingScreen() {
     fetchCurrentUser();
   }, [fetchUserData, authStatusChecked, userPuuid]);
 
-  // Update status message when data is ready
   useEffect(() => {
     if (isDataReady) {
-      setStatusMessage('Data ready! Redirecting...');
+      setStatusMessage(t('common.dataReady'));
       console.log('[LOG] LoadingScreen: Data ready, navigating to BottomTabs');
 
-      // Show welcome message after a short delay, before navigation
       setTimeout(() => {
         if (userData && userData.name) {
-          setStatusMessage(`Welcome, ${userData.name.trim()}#${userData.tagline || ''}`);
+          setStatusMessage(`${t('common.welcome')}, ${userData.name.trim()}#${userData.tagline || ''}`);
         }
 
-        // Navigate after showing the welcome message
         setTimeout(() => {
           navigation.navigate('BottomTabs');
         }, 200);
@@ -80,7 +79,6 @@ export default function LoadingScreen() {
     }
   }, [isDataReady, navigation, userData]);
 
-  // Handle errors
   useEffect(() => {
     if (contextError) {
       console.error('[ERROR] Error from context:', contextError);
@@ -92,7 +90,6 @@ export default function LoadingScreen() {
           {
             text: 'Retry',
             onPress: () => {
-              // Reset our flag to allow a retry
               dataFetchInitiated.current = false;
               navigation.reset({
                 index: 0,
@@ -113,7 +110,7 @@ export default function LoadingScreen() {
         source={require('../assets/images/logo_black.png')}
       />
       <ActivityIndicator size="small" color={'#000'} />
-      <Text style={styles.text}>Loading...</Text>
+      <Text style={styles.text}>{t('common.loading')}...</Text>
       <Text style={styles.statusText}>{statusMessage}</Text>
     </View>
   );
@@ -134,14 +131,14 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: fonts.family.novecentoUltraBold,
     color: colors.black,
-    fontSize: 20,
+    fontSize: fonts.sizes['3xl'],
     textTransform:'lowercase',
-    paddingTop: 8,
+    paddingTop: sizes.lg,
   },
   statusText: {
     fontFamily: fonts.family.proximaSemiBold,
     color: colors.darkGray,
-    fontSize: 14,
-    paddingTop: 8,
+    fontSize: fonts.sizes.lg,
+    paddingTop: sizes.lg,
   },
 });
