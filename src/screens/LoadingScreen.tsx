@@ -19,6 +19,7 @@ export default function LoadingScreen() {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [loadingStarted, setLoadingStarted] = useState<boolean>(false);
   const dataFetchInitiated = useRef<boolean>(false);
+  const [statusMessage, setStatusMessage] = useState<string>('Loading...');
 
   const {
     fetchUserData,
@@ -44,6 +45,7 @@ export default function LoadingScreen() {
       dataFetchInitiated.current = true;
       console.log('[LOG] LoadingScreen: Initiating data fetch for PUUID:', userPuuid);
       setLoadingStarted(true);
+      setStatusMessage('Fetching your latest game data...');
 
       try {
         await fetchUserData(userPuuid);
@@ -58,15 +60,25 @@ export default function LoadingScreen() {
     fetchCurrentUser();
   }, [fetchUserData, authStatusChecked, userPuuid]);
 
-  // Navigate to BottomTabs when data is ready
+  // Update status message when data is ready
   useEffect(() => {
     if (isDataReady) {
+      setStatusMessage('Data ready! Redirecting...');
       console.log('[LOG] LoadingScreen: Data ready, navigating to BottomTabs');
+
+      // Show welcome message after a short delay, before navigation
       setTimeout(() => {
-        navigation.navigate('BottomTabs');
+        if (userData && userData.name) {
+          setStatusMessage(`Welcome, ${userData.name.trim()}#${userData.tagline || ''}`);
+        }
+
+        // Navigate after showing the welcome message
+        setTimeout(() => {
+          navigation.navigate('BottomTabs');
+        }, 200);
       }, 300);
     }
-  }, [isDataReady, navigation]);
+  }, [isDataReady, navigation, userData]);
 
   // Handle errors
   useEffect(() => {
@@ -102,17 +114,7 @@ export default function LoadingScreen() {
       />
       <ActivityIndicator size="small" color={'#000'} />
       <Text style={styles.text}>Loading...</Text>
-      {(loadingStarted || isLoading) && (
-        <Text style={styles.subText}>Fetching your latest game data...</Text>
-      )}
-      {userData && (
-        <Text style={styles.userText}>
-          Welcome, {userData.name}#{userData.tagline || ''}
-        </Text>
-      )}
-      {isDataReady && (
-        <Text style={styles.readyText}>Data ready! Redirecting...</Text>
-      )}
+      <Text style={styles.statusText}>{statusMessage}</Text>
     </View>
   );
 }
@@ -136,22 +138,10 @@ const styles = StyleSheet.create({
     textTransform:'lowercase',
     paddingTop: 8,
   },
-  subText: {
+  statusText: {
     fontFamily: fonts.family.proximaSemiBold,
     color: colors.darkGray,
     fontSize: 14,
     paddingTop: 8,
   },
-  readyText: {
-    fontFamily: fonts.family.proximaSemiBold,
-    color: colors.black,
-    fontSize: 14,
-    paddingTop: 8,
-  },
-  userText: {
-    fontFamily: fonts.family.proximaSemiBold,
-    color: colors.primary || '#4630EB',
-    fontSize: 14,
-    paddingTop: 8,
-  }
 });
