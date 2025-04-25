@@ -48,9 +48,9 @@ const AgentListScreen = () => {
   };
 
   const handleWatchAd = () => {
-    // TODO: Implement ad watching functionality
-    setPremiumModalVisible(false);
+    setPremiumModalVisible(false); // First close the modal
     if (selectedPremiumAgent) {
+      // Then navigate to the agent info with the selected agent
       navigation.navigate('AgentInfoScreen', { agent: selectedPremiumAgent, seasonName: selectedSeason });
     }
   };

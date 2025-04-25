@@ -46,9 +46,9 @@ const MapListScreen = () => {
   };
 
   const handleWatchAd = () => {
-    // TODO: Implement ad watching functionality
-    setPremiumModalVisible(false);
+    setPremiumModalVisible(false); // First close the modal
     if (selectedPremiumMap) {
+      // Then navigate to the map info with the selected map
       navigation.navigate('MapInfoScreen', { map: selectedPremiumMap, seasonName: selectedSeason });
     }
   };

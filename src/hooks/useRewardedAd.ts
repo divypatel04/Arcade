@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { RewardedAd, RewardedAdEventType, RewardedAdReward } from 'react-native-google-mobile-ads';
 import { loadRewardedAd } from '../utils/adUtils';
 
@@ -9,34 +9,47 @@ export const useRewardedAd = () => {
   const [loaded, setLoaded] = useState(false);
   const [rewarded, setRewarded] = useState<RewardedAd | null>(null);
 
-  // Load the rewarded ad
-  useEffect(() => {
-    const rewardedAd = loadRewardedAd();
-    setRewarded(rewardedAd);
+  // Use a ref to track if we need to load a new ad
+  const needsNewAd = useRef(true);
 
-    const unsubscribeLoaded = rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-      setLoaded(true);
-    });
+  // Function to load a new ad
+  const loadNewAd = useCallback(() => {
+    console.log('Loading new rewarded ad');
+    // Reset state
+    setLoaded(false);
 
-    const unsubscribeFailed = rewardedAd.addAdEventListener(
-      RewardedAdEventType.ERROR,
-      (error) => {
-        console.error('Rewarded ad failed to load:', error);
-        setLoaded(false);
+    // Create and load a new ad
+    const newRewardedAd = loadRewardedAd();
+    setRewarded(newRewardedAd);
+
+    // Set up the loaded event listener
+    const unsubscribeLoaded = newRewardedAd.addAdEventListener(
+      RewardedAdEventType.LOADED,
+      () => {
+        console.log('New ad loaded successfully');
+        setLoaded(true);
+        needsNewAd.current = false;
       }
     );
 
-    // Start loading the rewarded ad
-    rewardedAd.load();
+    // Load the ad
+    newRewardedAd.load();
 
-    // Clean up event listeners
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeFailed();
-    };
+    return unsubscribeLoaded;
   }, []);
 
-  // Function to show the rewarded ad and handle the reward callback
+  // Initial load and reload when needed
+  useEffect(() => {
+    // Only load a new ad when needed
+    if (needsNewAd.current) {
+      const unsubscribe = loadNewAd();
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [loadNewAd, needsNewAd.current]);
+
+  // Function to show the rewarded ad
   const showRewardedAd = useCallback((onRewarded?: RewardCallback, onAdDismissed?: DismissCallback) => {
     if (!rewarded || !loaded) {
       console.log('Rewarded ad not ready yet');
@@ -44,41 +57,43 @@ export const useRewardedAd = () => {
       return;
     }
 
-    // Set up event listeners for rewarded and closed events
+    console.log('Showing rewarded ad');
+
+    // Set up reward event listener
     const unsubscribeEarned = rewarded.addAdEventListener(
       RewardedAdEventType.EARNED_REWARD,
       (reward) => {
         console.log('User earned reward:', reward);
-        if (onRewarded) onRewarded(reward);
+        if (onRewarded) {
+          onRewarded(reward);
+        }
       }
     );
 
-    const unsubscribeClosed = rewarded.addAdEventListener(
-      RewardedAdEventType.CLOSED,
-      () => {
-        console.log('Rewarded ad closed');
-        setLoaded(false);
-        if (onAdDismissed) onAdDismissed();
-
-        // Reload the ad for next time
-        const newRewarded = loadRewardedAd();
-        setRewarded(newRewarded);
-        newRewarded.load();
-      }
-    );
-
-    // Show the rewarded ad
-    rewarded.show().catch(error => {
+    // Show the ad
+    rewarded.show().then(() => {
+      console.log('Ad displayed successfully');
+    }).catch(error => {
       console.error('Error showing rewarded ad:', error);
+    }).finally(() => {
+      // Clean up
+      console.log('Ad display finished, cleaning up');
+      unsubscribeEarned();
+
+      // Set flag to load a new ad
+      needsNewAd.current = true;
+      setLoaded(false);
+
+      // After a short delay, load a new ad
+      setTimeout(() => {
+        loadNewAd();
+      }, 100);
+
+      // Call dismiss callback
       if (onAdDismissed) onAdDismissed();
     });
 
-    // Return a cleanup function
-    return () => {
-      unsubscribeEarned();
-      unsubscribeClosed();
-    };
-  }, [rewarded, loaded]);
+  }, [rewarded, loaded, loadNewAd]);
 
   return { showRewardedAd, isRewardedAdReady: loaded };
 };

@@ -25,14 +25,14 @@ const PremiumModal = ({ visible, onClose, onWatchAd, onBuyPremium }: PremiumModa
         // Called when user earns a reward
         (reward: any) => {
           console.log('User earned reward of', reward);
-          setIsLoadingAd(false);
-          onClose();
-          onWatchAd(); // This will navigate to the premium content
+          // This callback is executed when reward is earned
         },
-        // Called when ad is dismissed without reward
+        // Called when ad is completed or dismissed
         () => {
-          console.log('Ad closed without reward');
+          console.log('Ad closed, calling navigation callback');
           setIsLoadingAd(false);
+          onClose(); // First close the modal
+          onWatchAd(); // Then navigate to the premium content
         }
       );
     } else {

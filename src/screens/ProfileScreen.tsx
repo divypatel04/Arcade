@@ -6,9 +6,12 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
 import { useDataContext } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const {userData} = useDataContext();
   const { logout }  = useAuth();
@@ -47,8 +50,8 @@ const ProfileScreen = () => {
           <Text style={styles.subprimarytext}>{t('infoScreen.none')}</Text>
         </View>
         <View style={styles.subbutton}>
-          <TouchableOpacity activeOpacity={0.8}>
-            <Text style={styles.subbuttontext}>Coming Soon</Text>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => { navigation.navigate('PremiumSubscriptionScreen') }}>
+            <Text style={styles.subbuttontext}>Buy Premium</Text>
           </TouchableOpacity>
         </View>
       </View>
