@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { colors, fonts, sizes } from '../theme';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import DropDown from '../components/DropDown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import MapCard from '../components/MapCard';
-import PremiumModal from '../components/PremiumModal';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MapStatsType } from '../types/MapStatsType';
+import { MapStatsType } from '../types';
 import { getAllMapSeasonNames, isPremiumUser, sortMapsByMatches } from '../utils';
 import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
+import { DropDown, PremiumModal, MapCard } from '../components';
 
 interface MapListProps {
   mapStat: MapStatsType,
@@ -36,27 +34,21 @@ const MapListScreen = () => {
 
   const handleMapPress = (map: MapStatsType) => {
     if (map.isPremiumStats && !isPremiumUser(userData)) {
-      // Only show modal if user is not premium and trying to access premium content
       setSelectedPremiumMap(map);
       setPremiumModalVisible(true);
     } else {
-      // Either not premium content or user is a premium user, navigate directly
       navigation.navigate('MapInfoScreen', { map: map, seasonName: selectedSeason });
     }
   };
-
   const handleWatchAd = () => {
-    setPremiumModalVisible(false); // First close the modal
+    setPremiumModalVisible(false);
     if (selectedPremiumMap) {
-      // Then navigate to the map info with the selected map
       navigation.navigate('MapInfoScreen', { map: selectedPremiumMap, seasonName: selectedSeason });
     }
   };
-
   const handleBuyPremium = () => {
-    // TODO: Navigate to premium purchase screen
     setPremiumModalVisible(false);
-    navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
+    navigation.navigate('PremiumSubscriptionScreen');
   };
 
   return (
@@ -90,7 +82,7 @@ const MapListScreen = () => {
             onPress={() => handleMapPress(item.mapStat)}
           />
         )}
-        // keyExtractor={item => item}
+        keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
       />
 
