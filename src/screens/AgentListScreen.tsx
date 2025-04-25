@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
-import DropDown from '../components/DropDown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import AgentCard from '../components/AgentCard';
-import PremiumModal from '../components/PremiumModal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { AgentStatType } from '../types/AgentStatsType';
+import { AgentStatType } from '../types';
 import { getAllAgentSeasonNames, isPremiumUser, sortAgentsByMatches } from '../utils';
 import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
+import { AgentCard, DropDown, PremiumModal } from '../components';
 
 interface AgentListProps {
   agentStat: AgentStatType,
@@ -38,25 +36,21 @@ const AgentListScreen = () => {
 
   const handleAgentPress = (agent: AgentStatType) => {
     if (agent.isPremiumStats && !isPremiumUser(userData)) {
-      // Only show modal if user is not premium and trying to access premium content
       setSelectedPremiumAgent(agent);
       setPremiumModalVisible(true);
     } else {
-      // Either not premium content or user is a premium user, navigate directly
       navigation.navigate('AgentInfoScreen', { agent: agent, seasonName: selectedSeason });
     }
   };
 
   const handleWatchAd = () => {
-    setPremiumModalVisible(false); // First close the modal
+    setPremiumModalVisible(false);
     if (selectedPremiumAgent) {
-      // Then navigate to the agent info with the selected agent
       navigation.navigate('AgentInfoScreen', { agent: selectedPremiumAgent, seasonName: selectedSeason });
     }
   };
 
   const handleBuyPremium = () => {
-    // TODO: Navigate to premium purchase screen
     setPremiumModalVisible(false);
     navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
   };
