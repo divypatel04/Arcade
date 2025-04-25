@@ -1,4 +1,4 @@
-import { MatchStatType } from "../types/MatchStatType";
+import { MatchStatType } from "../types/MatchStatsType";
 
 const matchStats: MatchStatType[] = [
   {

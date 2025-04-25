@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { dataUpdateTracker } from '../services';
 import { AgentStatType } from '../types/AgentStatsType';
 import { MapStatsType } from '../types/MapStatsType';
-import { MatchStatType } from '../types/MatchStatType';
+import { MatchStatType } from '../types/MatchStatsType';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 import { WeaponStatType } from '../types/WeaponStatsType';
 import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '../utils/premiumUtils';

@@ -1,6 +1,6 @@
 import { supabase } from "../../lib/supabase";
 import { MatchDetails } from "../../types/MatchDetails";
-import { ClutchEvent, CombatStats, Coordinate, EconomyStats, KillEvent, MapData, PositioningStats, RoundPerformance, TeamStat, UtilityStats } from "../../types/MatchStatType";
+import { ClutchEvent, CombatStats, Coordinate, EconomyStats, KillEvent, MapData, PositioningStats, RoundPerformance, TeamStat, UtilityStats } from "../../types/MatchStatsType";
 
 // Global cache for map callouts to avoid repeated database calls
 const mapsDataCache: { [mapId: string]: any } = {};

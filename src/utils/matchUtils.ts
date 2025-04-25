@@ -1,4 +1,4 @@
-import { MatchStatType } from "../types/MatchStatType";
+import { MatchStatType } from "../types/MatchStatsType";
 
 
 export const extractUniqueMatchType = (matchStats: MatchStatType[]) => {

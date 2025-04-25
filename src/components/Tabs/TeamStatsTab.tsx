@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
 import { useRoute } from '@react-navigation/native';
-import { TeamStat } from '../../types/MatchStatType';
+import { TeamStat } from '../../types/MatchStatsType';
 
 
 interface TeamStatsProps {

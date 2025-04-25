@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
 import { Icon } from './lcon';
-import { MatchStatType } from '../types/MatchStatType';
+import { MatchStatType } from '../types/MatchStatsType';
 import { getSupabaseImageUrl } from '../utils';
 
 interface MatchBoxProps {

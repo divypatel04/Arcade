@@ -181,7 +181,7 @@ interface RoundPerformance {
 }
 
 // Main match stats interface
-interface MatchStatType {
+interface MatchStatsType {
   id: string
   puuid: string;
   stats: {
@@ -197,7 +197,7 @@ export type {
   PlayerVsPlayerStat,
   TeamStat,
   RoundPerformance,
-  MatchStatType,
+  MatchStatsType,
   KillEvent,
   ClutchEvent,
   CombatStats,

@@ -3,7 +3,7 @@ import { MapStatsType, SeasonPerformance as MapSeasonPerformance } from "../type
 import { SeasonStatsType } from "../types/SeasonStatsType";
 import { WeaponStatType, SeasonPerformance as WeaponSeasonPerformance } from "../types/WeaponStatsType";
 import { supabase } from "../lib/supabase";
-import { ClutchEvent, CombatStats, Coordinate, EconomyStats, KillEvent, MapData, PlayerVsPlayerStat, PositioningStats, RoundPerformance, TeamStat, UtilityStats } from "../types/MatchStatType";
+import { ClutchEvent, CombatStats, Coordinate, EconomyStats, KillEvent, MapData, PlayerVsPlayerStat, PositioningStats, RoundPerformance, TeamStat, UtilityStats } from "../types/MatchStatsType";
 import { processAgentStats } from "./generators/agentStatsGenerator";
 import { generateMatchStats } from "./generators/matchStatsGenerator";
 import { processMapStats } from "./generators/mapStatsGenerator";

@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
 import DropDown from '../DropDown';
 import Map from '../Map';
-import { ClutchEvent, KillEvent, PlayerVsPlayerStat } from '../../types/MatchStatType';
+import { ClutchEvent, KillEvent, PlayerVsPlayerStat } from '../../types/MatchStatsType';
 
 interface PlayerVsTabProps {
   pvpStats: PlayerVsPlayerStat;

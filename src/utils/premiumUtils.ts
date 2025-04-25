@@ -1,6 +1,6 @@
 import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
 import { MapStatsType, SeasonPerformance as MapSeasonPerformance } from '../types/MapStatsType';
-import { MatchStatType } from '../types/MatchStatType';
+import { MatchStatType } from '../types/MatchStatsType';
 import { SeasonStatsType } from '../types/SeasonStatsType';
 import { WeaponStatType, SeasonPerformance as WeaponSeasonPerformance } from '../types/WeaponStatsType';
 

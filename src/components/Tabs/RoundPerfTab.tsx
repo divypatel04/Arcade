@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
-import { RoundPerformance } from '../../types/MatchStatType';
+import { RoundPerformance } from '../../types/MatchStatsType';
 import PremiumModal from '../PremiumModal';
 import { isPremiumUser } from '../../utils/userUtils';
 import { useDataContext } from '../../context/DataContext';

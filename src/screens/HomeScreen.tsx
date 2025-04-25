@@ -1,20 +1,12 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { colors, sizes } from '../theme';
-import AgentBox from '../components/AgentBox';
-import MapBox from '../components/MapBox';
-import GunBox from '../components/GunBox';
-import SeasonBox from '../components/SeasonBox';
-import { AgentStatType } from '../types/AgentStatsType';
-import { MapStatsType } from '../types/MapStatsType';
-import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate } from '../utils';
-import { WeaponStatType } from '../types/WeaponStatsType';
-import { getTopWeaponByKills } from '../utils/weaponUtils';
+import { AgentBox, GunBox, MapBox, SeasonBox, BannerAdContainer } from '../components';
+import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate, getTopWeaponByKills } from '../utils';
 import { useDataContext } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../context/LanguageContext';
-import { SeasonStatsType } from '../types/SeasonStatsType';
-import BannerAdContainer from '../components/BannerAdContainer';
+import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatType } from '../types';
 
 
 const HomeScreen = () => {
@@ -29,9 +21,7 @@ const HomeScreen = () => {
 
   if (isLoading) {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text>Loading...</Text>
-      </View>
+      <></>
     );
   }
 

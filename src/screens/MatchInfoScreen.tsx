@@ -9,7 +9,7 @@ import MatchOverviewTab from '../components/Tabs/MatchOverviewTab'
 import TeamStatsTab from '../components/Tabs/TeamStatsTab';
 import RoundPerfTab from '../components/Tabs/RoundPerfTab';
 import PlayerVsTab from '../components/Tabs/PlayerVsTab';
-import { MatchStatType } from '../types/MatchStatType';
+import { MatchStatType } from '../types/MatchStatsType';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
