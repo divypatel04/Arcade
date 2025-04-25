@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import DropDown from '../components/DropDown'
 import { colors, fonts, sizes } from '../theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import AgentBox from '../components/AgentBox';
-import TabBar from '../components/TabBar';
-import OverviewTab from '../components/Tabs/OverviewTab';
-import SiteTab from '../components/Tabs/SiteTab';
-import BestMapTab from '../components/Tabs/BestMapTab';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
-import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, getSupabaseImageUrl, mergeUtilitiesAndAbilities } from '../utils';
-import UtilityTab from '../components/Tabs/UtilityTab';
+import { AgentStatType, AgentSeasonPerformance } from '../types';
+import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, getSupabaseImageUrl } from '../utils';
 import { useTranslation } from 'react-i18next';
+import { BestMapTab, DropDown, OverviewTab, SiteTab, TabBar, UtilityTab } from '../components';
 
 const AgentInfoScreen = () => {
   const { t } = useTranslation();
@@ -22,20 +16,14 @@ const AgentInfoScreen = () => {
 
   const agent: AgentStatType = routeParams.agent;
   const selectedSeasonName = routeParams.seasonName;
-
-  const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
-
+  const [seasonStat, setSeasonStat] = useState<AgentSeasonPerformance>();
   const seasonNames = getAllAgentSeasonNames([agent]);
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
-
-
-  console.log('agent', JSON.stringify(agent));
 
   useEffect(() => {
     const selectedSeasonData = agent.performanceBySeason.find(
       (season) => season.season.name === selectedSeason,
     );
-
     if (selectedSeasonData) {
       setSeasonStat(selectedSeasonData);
     } else {
@@ -43,19 +31,16 @@ const AgentInfoScreen = () => {
     }
   }, [selectedSeason]);
 
-
   const firstStatBox = [
     { name: t('common.matches'), value: String((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) },
     { name: t('common.hours'), value: convertMillisToReadableTime(seasonStat?.stats.playtimeMillis ?? 0) },
     { name: t('common.winRate'), value: String((((seasonStat?.stats.matchesWon ?? 0) + (seasonStat?.stats.matchesLost ?? 0)) / (seasonStat?.stats.matchesWon ?? 0) * 100).toFixed(1)) + '%' },
   ];
-
   const secondStatBox = [
     { name: t('common.kills'), value: String(seasonStat?.stats.kills ?? 0) },
     { name: t('common.mWins'), value: String(seasonStat?.stats.matchesWon ?? 0) },
     { name: t('common.mLose'), value: String(seasonStat?.stats.matchesLost ?? 0) },
   ];
-
   const thridStatBox = [
     { name: t('common.kd'), value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.deaths ?? 1)).toFixed(1)) },
     { name: t('common.damageR'), value: String(seasonStat?.stats.deaths) },
@@ -64,7 +49,6 @@ const AgentInfoScreen = () => {
     { name: t('common.firstBlood'), value: String(seasonStat?.stats.firstKills) },
     { name: t('common.defuses'), value: String(seasonStat?.stats.defuses) },
   ];
-
   const tabs = [
     { label: t('tabs.overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={thridStatBox} /> },
     { label: t('tabs.attackDefence'), content: <SiteTab attackStats={seasonStat?.attackStats} defenceStats={seasonStat?.defenseStats} /> },

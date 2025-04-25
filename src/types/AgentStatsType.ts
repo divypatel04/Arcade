@@ -2,7 +2,7 @@ export type AgentStatType = {
   id: string;
   puuid: string;
   agent: Agent;
-  performanceBySeason: SeasonPerformance[];
+  performanceBySeason: AgentSeasonPerformance[];
   isPremiumStats?: boolean;
 };
 
@@ -23,7 +23,7 @@ export type Ability = {
   cost: number;
 };
 
-export type SeasonPerformance = {
+export type AgentSeasonPerformance = {
   season: Season;
   stats: Stats;
   mapStats: MapStat[];
