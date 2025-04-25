@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     marginBottom: sizes['6xl'],
   },
   agentimage: {
-    width: '45%',
-    height: 210,
+    width: '60%',
+    height: 250,
     resizeMode: 'contain',
     position: 'absolute',
     bottom: 0,
