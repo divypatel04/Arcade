@@ -1,5 +1,5 @@
-import React from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from '../components/lcon'
 import { colors, fonts, sizes } from '../theme'
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { useDataContext } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Purchases from 'react-native-purchases';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
@@ -15,12 +16,46 @@ const ProfileScreen = () => {
 
   const {userData} = useDataContext();
   const { logout }  = useAuth();
+  const [isPremium, setIsPremium] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(true);
+
+  useEffect(() => {
+    checkPremiumStatus();
+  }, [userData]);
+
+  const checkPremiumStatus = async () => {
+    setCheckingStatus(true);
+    try {
+      if (userData?.puuid) {
+        const customerInfo = await Purchases.getCustomerInfo();
+        setIsPremium(customerInfo?.entitlements.active['premium'] !== undefined);
+      }
+    } catch (error) {
+      console.error("Failed to check premium status:", error);
+    } finally {
+      setCheckingStatus(false);
+    }
+  };
 
   const handleLogout = () => {
     console.log('Logout function called');
     logout();
   }
 
+  const handleSubscriptionAction = () => {
+    if (isPremium) {
+      // Open manage subscription
+      if (Platform.OS === 'ios') {
+        Purchases.showManageSubscriptions();
+      } else {
+        // For Android
+        Purchases.showManageSubscriptions();
+      }
+    } else {
+      // Subscribe
+      navigation.navigate('PremiumSubscriptionScreen');
+    }
+  }
 
   return (
     <ScrollView style={styles.container} overScrollMode="never">
@@ -47,11 +82,25 @@ const ProfileScreen = () => {
       <View style={styles.subcontainer}>
         <View>
           <Text style={styles.subtext}>{t('infoScreen.accountType')}: </Text>
-          <Text style={styles.subprimarytext}>{t('infoScreen.none')}</Text>
+          <Text style={[
+            styles.subprimarytext,
+            isPremium && styles.premiumText
+          ]}>
+            {isPremium ? 'Premium' : t('infoScreen.none')}
+          </Text>
         </View>
         <View style={styles.subbutton}>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => { navigation.navigate('PremiumSubscriptionScreen') }}>
-            <Text style={styles.subbuttontext}>Buy Premium</Text>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={handleSubscriptionAction}
+            style={isPremium ? styles.managePremiumButton : {}}
+          >
+            <Text style={[
+              styles.subbuttontext,
+              isPremium && styles.managePremiumText
+            ]}>
+              {isPremium ? 'Manage Premium' : 'Buy Premium'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -95,6 +144,16 @@ const ProfileScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  premiumText: {
+    color: colors.win,
+    fontWeight: 'bold',
+  },
+  managePremiumButton: {
+    backgroundColor: colors.win,
+  },
+  managePremiumText: {
+    backgroundColor: colors.win,
+  },
   container: {
     padding: sizes['2xl'],
     paddingBottom: 0,
@@ -212,7 +271,6 @@ const styles = StyleSheet.create({
     fontSize: fonts.sizes.md,
     textTransform: 'uppercase',
     color: colors.black,
-    // paddingBottom: sizes.xl,
     paddingTop: sizes['7xl'],
   },
 });
