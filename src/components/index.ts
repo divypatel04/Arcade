@@ -11,6 +11,7 @@ import OverviewTab from './Tabs/OverviewTab';
 import SiteTab from './Tabs/SiteTab';
 import BestMapTab from './Tabs/BestMapTab';
 import UtilityTab from './Tabs/UtilityTab';
+import MapHeatmap from './Tabs/MapHeatmap';
 
 export {
   AgentBox,
@@ -26,4 +27,5 @@ export {
   SiteTab,
   BestMapTab,
   UtilityTab,
+  MapHeatmap
 };

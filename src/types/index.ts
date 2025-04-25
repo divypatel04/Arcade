@@ -1,5 +1,5 @@
 import { AgentStatType, AgentSeasonPerformance } from "./AgentStatsType";
-import { MapStatsType } from "./MapStatsType";
+import { MapStatsType, MapSeasonPerformance } from "./MapStatsType";
 import { WeaponStatType } from "./WeaponStatsType";
 import { SeasonStatsType } from "./SeasonStatsType";
 import { MatchStatsType } from "./MatchStatsType";
@@ -10,6 +10,7 @@ export type {
   AgentStatType,
   AgentSeasonPerformance,
   MapStatsType,
+  MapSeasonPerformance,
   WeaponStatType,
   SeasonStatsType,
   MatchStatsType,

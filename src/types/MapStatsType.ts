@@ -29,7 +29,7 @@ type AttackDefenseStats = {
   };
 };
 
-export type SeasonPerformance = {
+export type MapSeasonPerformance = {
   season: {
     id: string;
     name: string;
@@ -57,6 +57,6 @@ export type MapStatsType = {
   id: string
   puuid: string;
   map: MapDetails;
-  performanceBySeason: SeasonPerformance[];
+  performanceBySeason: MapSeasonPerformance[];
   isPremiumStats?: boolean;
 };
