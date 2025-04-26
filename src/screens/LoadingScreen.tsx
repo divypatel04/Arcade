@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { colors, fonts, sizes } from '../theme';
-import { useDataContext } from '../context/DataContext';
-import { processUserData } from '../services';
-import { useAuth } from '../context/AuthContext';
+import { colors, fonts, sizes } from '@theme';
+import { useDataContext } from '@context';
+import { processUserData } from '@services';
+import { useAuth } from '@context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 export default function LoadingScreen() {

@@ -4,11 +4,11 @@ import { colors, fonts, sizes } from '../theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { AgentStatType } from '../types';
-import { getAllAgentSeasonNames, isPremiumUser, sortAgentsByMatches } from '../utils';
-import { useDataContext } from '../context/DataContext';
+import { AgentStatType } from '@types';
+import { getAllAgentSeasonNames, isPremiumUser, sortAgentsByMatches } from '@utils';
+import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
-import { AgentCard, DropDown, PremiumModal } from '../components';
+import { AgentCard, DropDown, PremiumModal } from '@components';
 
 interface AgentListProps {
   agentStat: AgentStatType,
@@ -49,7 +49,6 @@ const AgentListScreen = () => {
       navigation.navigate('AgentInfoScreen', { agent: selectedPremiumAgent, seasonName: selectedSeason });
     }
   };
-
   const handleBuyPremium = () => {
     setPremiumModalVisible(false);
     navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists

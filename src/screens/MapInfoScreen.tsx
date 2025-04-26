@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '../theme'
+import { colors, fonts, sizes } from '@theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { MapStatsType, MapSeasonPerformance } from '../types';
-import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames, getSupabaseImageUrl } from '../utils';
+import { MapStatsType, MapSeasonPerformance } from '@types';
+import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames, getSupabaseImageUrl } from '@utils';
 import { useTranslation } from 'react-i18next';
-import { DropDown, MapHeatmap, OverviewTab, SiteTab, TabBar } from '../components';
+import { DropDown, MapHeatmap, OverviewTab, SiteTab, TabBar } from '@components';
 
 const MapInfoScreen = () => {
 

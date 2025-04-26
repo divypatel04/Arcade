@@ -13,6 +13,10 @@ import BestMapTab from './Tabs/BestMapTab';
 import UtilityTab from './Tabs/UtilityTab';
 import MapHeatmap from './Tabs/MapHeatmap';
 import MapCard from './MapCard';
+import MatchOverviewTab from './Tabs/MatchOverviewTab';
+import TeamStatsTab from './Tabs/TeamStatsTab';
+import RoundPerfTab from './Tabs/RoundPerfTab';
+import PlayerVsTab from './Tabs/PlayerVsTab';
 
 export {
   AgentBox,
@@ -29,5 +33,9 @@ export {
   BestMapTab,
   UtilityTab,
   MapHeatmap,
-  MapCard
+  MapCard,
+  MatchOverviewTab,
+  TeamStatsTab,
+  RoundPerfTab,
+  PlayerVsTab
 };

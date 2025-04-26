@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '../theme'
+import { colors, fonts, sizes } from '@theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { AgentStatType, AgentSeasonPerformance } from '../types';
-import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, getSupabaseImageUrl } from '../utils';
+import { AgentStatType, AgentSeasonPerformance } from '@types';
+import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, getSupabaseImageUrl } from '@utils';
 import { useTranslation } from 'react-i18next';
-import { BestMapTab, DropDown, OverviewTab, SiteTab, TabBar, UtilityTab } from '../components';
+import { BestMapTab, DropDown, OverviewTab, SiteTab, TabBar, UtilityTab } from '@components';
 
 const AgentInfoScreen = () => {
   const { t } = useTranslation();

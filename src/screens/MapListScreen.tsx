@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { colors, fonts, sizes } from '../theme';
+import { colors, fonts, sizes } from '@theme';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MapStatsType } from '../types';
-import { getAllMapSeasonNames, isPremiumUser, sortMapsByMatches } from '../utils';
-import { useDataContext } from '../context/DataContext';
+import { MapStatsType } from '@types';
+import { getAllMapSeasonNames, isPremiumUser, sortMapsByMatches } from '@utils';
+import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
-import { DropDown, PremiumModal, MapCard } from '../components';
+import { DropDown, PremiumModal, MapCard } from '@components';
 
 interface MapListProps {
   mapStat: MapStatsType,
