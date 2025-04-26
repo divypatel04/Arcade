@@ -20,6 +20,8 @@ import PlayerVsTab from './Tabs/PlayerVsTab';
 import MatchBox from './MatchBox';
 import { Icon } from './lcon';
 import LanguageSelector from './LanguageSelector';
+import StatsSummary from './StatsSummary';
+import DetailedStats from './DetailedStats';
 
 export {
   AgentBox,
@@ -43,5 +45,7 @@ export {
   PlayerVsTab,
   MatchBox,
   Icon,
-  LanguageSelector
+  LanguageSelector,
+  StatsSummary,
+  DetailedStats,
 };

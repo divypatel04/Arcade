@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import DropDown from '../components/DropDown';
-import { colors, fonts, sizes } from '../theme';
-import StatsSummary from '../components/StatsSummary';
-import DetailedStats from '../components/DetailedStats';
-import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '../utils';
-import { SeasonStatsType } from '../types/SeasonStatsType';
+import { colors, fonts, sizes } from '@theme';
+import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '@utils';
+import { SeasonStatsType } from '@types';
 import { useTranslation } from 'react-i18next';
-import { useDataContext } from '../context/DataContext';
+import { useDataContext } from '@context';
+import { DetailedStats, DropDown, StatsSummary } from '@components';
 
 
 const SeasonInfoScreen = () => {
@@ -185,9 +183,7 @@ const SeasonInfoScreen = () => {
   ];
 
   const {t} = useTranslation();
-
   const {seasonStats} = useDataContext();
-
   const seasonName = getSeasonNames(seasonStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonName[1]);
   const [mainSeasonStats, setMainSeasonStats] = useState<SeasonStatsType>();
