@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from '../components/lcon'
-import { colors, fonts, sizes } from '../theme'
+import { colors, fonts, sizes } from '@theme'
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from '../components/LanguageSelector';
-import { useDataContext } from '../context/DataContext';
-import { useAuth } from '../context/AuthContext';
+import { useDataContext, useAuth } from '@context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Purchases from 'react-native-purchases';
+import { Icon, LanguageSelector } from '@components';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
-
-  const {userData} = useDataContext();
-  const { logout }  = useAuth();
+  const { userData } = useDataContext();
+  const { logout } = useAuth();
   const [isPremium, setIsPremium] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
 
@@ -38,7 +35,6 @@ const ProfileScreen = () => {
   };
 
   const handleLogout = () => {
-    console.log('Logout function called');
     logout();
   }
 
@@ -86,7 +82,7 @@ const ProfileScreen = () => {
             styles.subprimarytext,
             isPremium && styles.premiumText
           ]}>
-            {isPremium ? 'Premium' : t('infoScreen.none')}
+            {isPremium ? t('user.premium') : t('infoScreen.none')}
           </Text>
         </View>
         <View style={styles.subbutton}>
@@ -99,7 +95,7 @@ const ProfileScreen = () => {
               styles.subbuttontext,
               isPremium && styles.managePremiumText
             ]}>
-              {isPremium ? 'Manage Premium' : 'Buy Premium'}
+              {isPremium ? t('user.managePremium') : t('user.buyPremium')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -108,13 +104,13 @@ const ProfileScreen = () => {
       <View>
         <Text style={styles.sectiontitle}>{t('infoScreen.settings')}</Text>
         {[
-          { name: t('infoScreen.followUs'), icon: 'twitter-line', fun: handleLogout  },
+          { name: t('infoScreen.followUs'), icon: 'twitter-line', fun: handleLogout },
           {
             name: t('infoScreen.privacyPolicy'),
             icon: 'shield-line', fun: handleLogout
           },
           { name: t('infoScreen.contactUs'), icon: 'mail-line', fun: handleLogout },
-          { name: t('infoScreen.logout'), icon: 'logout-box-r-line', fun: handleLogout  },
+          { name: t('infoScreen.logout'), icon: 'logout-box-r-line', fun: handleLogout },
         ].map((item, index) => (
           <TouchableOpacity
             key={index}
