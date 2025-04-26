@@ -23,6 +23,7 @@ import LanguageSelector from './LanguageSelector';
 import StatsSummary from './StatsSummary';
 import DetailedStats from './DetailedStats';
 import HitsTab from './Tabs/HitsTab';
+import GunCard from './GunCard';
 
 export {
   AgentBox,
@@ -49,5 +50,6 @@ export {
   LanguageSelector,
   StatsSummary,
   DetailedStats,
-  HitsTab
+  HitsTab,
+  GunCard,
 };

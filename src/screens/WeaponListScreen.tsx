@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '../theme';
-import DropDown from '../components/DropDown';
+import { colors, fonts, sizes } from '@theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import GunCard from '../components/GunCard';
-import PremiumModal from '../components/PremiumModal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { getAllWeaponSeasonNames, isPremiumUser, sortWeaponsByMatches } from '../utils';
-import { WeaponStatType } from '../types/WeaponStatsType';
-import { useDataContext } from '../context/DataContext';
+import { getAllWeaponSeasonNames, isPremiumUser, sortWeaponsByMatches } from '@utils';
+import { WeaponStatsType } from '@types';
+import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
+import { DropDown, GunCard, PremiumModal } from '@components';
 
 type WeaponListProps = {
-  weapon: WeaponStatType,
+  weapon: WeaponStatsType,
   seasonName: string,
   numberOfKills: number
 }
@@ -27,34 +25,29 @@ const WeaponListScreen = () => {
   const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
   const [weaponList,setWeaponList] = useState<WeaponListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
-  const [selectedPremiumWeapon, setSelectedPremiumWeapon] = useState<WeaponStatType | null>(null);
+  const [selectedPremiumWeapon, setSelectedPremiumWeapon] = useState<WeaponStatsType | null>(null);
 
   useEffect(() => {
     const weaponlist = sortWeaponsByMatches(weaponStats, selectedSeason);
     setWeaponList(weaponlist);
   }, [selectedSeason]);
 
-  const handleWeaponPress = (weapon: WeaponStatType) => {
+  const handleWeaponPress = (weapon: WeaponStatsType) => {
     if (weapon.isPremiumStats && !isPremiumUser(userData)) {
-      // Only show modal if user is not premium and trying to access premium content
       setSelectedPremiumWeapon(weapon);
       setPremiumModalVisible(true);
     } else {
-      // Either not premium content or user is a premium user, navigate directly
       navigation.navigate('WeaponInfoScreen', { weapon: weapon, seasonName: selectedSeason });
     }
   };
 
   const handleWatchAd = () => {
-    // TODO: Implement ad watching functionality
     setPremiumModalVisible(false);
     if (selectedPremiumWeapon) {
       navigation.navigate('WeaponInfoScreen', { weapon: selectedPremiumWeapon, seasonName: selectedSeason });
     }
   };
-
   const handleBuyPremium = () => {
-    // TODO: Navigate to premium purchase screen
     setPremiumModalVisible(false);
     navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
   };
@@ -90,7 +83,7 @@ const WeaponListScreen = () => {
             onPress={() => handleWeaponPress(item.weapon)}
           />
         )}
-        // keyExtractor={item => item}
+        keyExtractor={(item) => item.weapon.id}
         showsVerticalScrollIndicator={false}
       />
 
