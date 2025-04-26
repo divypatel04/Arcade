@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import DropDown from '../components/DropDown'
-import { colors, fonts, sizes } from '../theme'
+import { colors, fonts, sizes } from '@theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SeasonPerformance, WeaponStatType } from '../types/WeaponStatsType';
-import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames, getSupabaseImageUrl } from '../utils';
-import OverviewTab from '../components/Tabs/OverviewTab';
-import TabBar from '../components/TabBar';
-import HitsTab from '../components/Tabs/HitsTab';
+import { WeaponSeasonPerformance, WeaponStatsType } from '@types';
+import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames, getSupabaseImageUrl } from '@utils';
 import { useTranslation } from 'react-i18next';
+import {DropDown, HitsTab, OverviewTab, TabBar} from '@components';
 
 const WeaponInfoScreen = () => {
 
@@ -18,11 +15,9 @@ const WeaponInfoScreen = () => {
 
   const routeParams: any = useRoute().params;
   const navigation = useNavigation<StackNavigationProp<any>>();
-
-  const weapon: WeaponStatType = routeParams.weapon;
+  const weapon: WeaponStatsType = routeParams.weapon;
   const selectedSeasonName = routeParams.seasonName;
-
-  const [seasonStat, setSeasonStat] = useState<SeasonPerformance>();
+  const [seasonStat, setSeasonStat] = useState<WeaponSeasonPerformance>();
   const seasonNames = getAllWeaponSeasonNames([weapon]);
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
 
@@ -39,25 +34,22 @@ const WeaponInfoScreen = () => {
   }, [selectedSeason]);
 
   const firstStatBox = [
-      { name: t('common.kills'), value: String((seasonStat?.stats.kills ?? 0))},
-      { name: t('common.killsR'), value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.roundsPlayed ?? 1)).toFixed(2)) },
-      { name: t('common.headshots%'), value: String((
-        ((seasonStat?.stats.headshots ?? 0) /
-          ((seasonStat?.stats.headshots ?? 0) + (seasonStat?.stats?.bodyshots ?? 0) + (seasonStat?.stats?.legshots ?? 0))) *
-        100
-      ).toFixed(2)) + '%' },
-    ];
-
-    const secondStatBox = [
-      { name: t('common.damageR'), value: String(((seasonStat?.stats.damage ?? 0) / (seasonStat?.stats?.roundsPlayed ?? 0)).toFixed(2)) },
-      { name: t('common.aces'), value: String(seasonStat?.stats.aces ?? 0) },
-      { name: t('common.firstBlood'), value: String(seasonStat?.stats.firstKills ?? 0) },
-    ];
-
+    { name: t('common.kills'), value: String((seasonStat?.stats.kills ?? 0))},
+    { name: t('common.killsR'), value: String(((seasonStat?.stats.kills ?? 0) / (seasonStat?.stats.roundsPlayed ?? 1)).toFixed(2)) },
+    { name: t('common.headshots%'), value: String((
+      ((seasonStat?.stats.headshots ?? 0) /
+        ((seasonStat?.stats.headshots ?? 0) + (seasonStat?.stats?.bodyshots ?? 0) + (seasonStat?.stats?.legshots ?? 0))) *
+      100
+    ).toFixed(2)) + '%' },
+  ];
+  const secondStatBox = [
+    { name: t('common.damageR'), value: String(((seasonStat?.stats.damage ?? 0) / (seasonStat?.stats?.roundsPlayed ?? 0)).toFixed(2)) },
+    { name: t('common.aces'), value: String(seasonStat?.stats.aces ?? 0) },
+    { name: t('common.firstBlood'), value: String(seasonStat?.stats.firstKills ?? 0) },
+  ];
   const tabs = [
     { label: t('tabs.overview'), content: <OverviewTab stats1={firstStatBox} stats2={secondStatBox} stats3={null} /> },
     { label: t('tabs.accuracy'), content: <HitsTab stats={seasonStat} /> },
-
   ];
 
   return (

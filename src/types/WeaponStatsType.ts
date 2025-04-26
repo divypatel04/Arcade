@@ -1,4 +1,4 @@
-export type WeaponStatType = {
+export type WeaponStatsType = {
   id: string;
   puuid: string;
   weapon: {
@@ -7,11 +7,11 @@ export type WeaponStatType = {
     image: string;
     type: string;
   };
-  performanceBySeason: SeasonPerformance[];
+  performanceBySeason: WeaponSeasonPerformance[];
   isPremiumStats?: boolean;
 };
 
-export type SeasonPerformance = {
+export type WeaponSeasonPerformance = {
   season: {
     id: string;
     name: string;

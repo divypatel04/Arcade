@@ -22,6 +22,7 @@ import { Icon } from './lcon';
 import LanguageSelector from './LanguageSelector';
 import StatsSummary from './StatsSummary';
 import DetailedStats from './DetailedStats';
+import HitsTab from './Tabs/HitsTab';
 
 export {
   AgentBox,
@@ -48,4 +49,5 @@ export {
   LanguageSelector,
   StatsSummary,
   DetailedStats,
+  HitsTab
 };
