@@ -17,6 +17,7 @@ import MatchOverviewTab from './Tabs/MatchOverviewTab';
 import TeamStatsTab from './Tabs/TeamStatsTab';
 import RoundPerfTab from './Tabs/RoundPerfTab';
 import PlayerVsTab from './Tabs/PlayerVsTab';
+import MatchBox from './MatchBox';
 
 export {
   AgentBox,
@@ -37,5 +38,6 @@ export {
   MatchOverviewTab,
   TeamStatsTab,
   RoundPerfTab,
-  PlayerVsTab
+  PlayerVsTab,
+  MatchBox
 };

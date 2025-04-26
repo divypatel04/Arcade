@@ -1,20 +1,16 @@
 import React, { useEffect } from 'react'
-import { Image, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from '../components/lcon'
-import { colors, fonts, sizes } from '../theme'
-import DropDown from '../components/DropDown'
-import { extractUniqueMatchType, formatDateString, transformMatchStats } from '../utils'
-import MatchBox from '../components/MatchBox'
-import { MatchStatType } from '../types/MatchStatsType'
+import { RefreshControl, SectionList, StyleSheet, Text, View } from 'react-native'
+import { colors, fonts, sizes } from '@theme'
+import { extractUniqueMatchType, formatDateString, transformMatchStats, isPremiumUser } from '@utils'
+import { MatchStatsType } from '@types'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useTranslation } from 'react-i18next'
-import { useDataContext } from '../context/DataContext'
-import PremiumModal from '../components/PremiumModal'
-import { isPremiumUser } from '../utils'
+import { useDataContext } from '@context'
+import { DropDown, PremiumModal, MatchBox } from '@components'
 
 interface resultArray {
-  data: MatchStatType[];
+  data: MatchStatsType[];
   title: string;
 }
 
@@ -22,13 +18,11 @@ const MatchListScreen = () => {
   const {matchStats, userData} = useDataContext();
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
-
   const gameType = extractUniqueMatchType(matchStats);
   const [selectedGameType, setSelectedGameType] = React.useState(gameType[0]);
-
   const [finalMatchArray, setFinalMatchArray] = React.useState<resultArray[]>([]);
   const [premiumModalVisible, setPremiumModalVisible] = React.useState(false);
-  const [selectedPremiumMatch, setSelectedPremiumMatch] = React.useState<MatchStatType | null>(null);
+  const [selectedPremiumMatch, setSelectedPremiumMatch] = React.useState<MatchStatsType | null>(null);
 
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
@@ -47,7 +41,7 @@ const MatchListScreen = () => {
   }
   }, [selectedGameType]);
 
-  const handleMatchPress = (match: MatchStatType) => {
+  const handleMatchPress = (match: MatchStatsType) => {
     if (match.isPremiumStats && !isPremiumUser(userData)) {
       setSelectedPremiumMatch(match);
       setPremiumModalVisible(true);
@@ -55,17 +49,15 @@ const MatchListScreen = () => {
       navigation.navigate('MatchInfoScreen', { match: match });
     }
   };
-
   const handleWatchAd = () => {
     setPremiumModalVisible(false);
     if (selectedPremiumMatch) {
       navigation.navigate('MatchInfoScreen', { match: selectedPremiumMatch });
     }
   };
-
   const handleBuyPremium = () => {
     setPremiumModalVisible(false);
-    navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
+    navigation.navigate('PremiumSubscriptionScreen');
   };
 
   return (
@@ -80,7 +72,6 @@ const MatchListScreen = () => {
             onSelect={item => setSelectedGameType(item)}
           />
         </View>
-
         <SectionList
         sections={finalMatchArray}
         refreshControl={
@@ -104,7 +95,6 @@ const MatchListScreen = () => {
           />
         )}
       />
-
       <PremiumModal
         visible={premiumModalVisible}
         onClose={() => setPremiumModalVisible(false)}
@@ -141,11 +131,11 @@ const styles = StyleSheet.create({
   },
   SectionTitle: {
     fontFamily: fonts.family.novecentoUltraBold,
-    fontSize: 18,
+    fontSize: fonts.sizes['2xl'],
     textTransform: 'uppercase',
     color: colors.black,
-    paddingBottom: 10,
-    paddingTop: 12,
+    paddingBottom: sizes.xl,
+    paddingTop: sizes['2xl'],
   },
 });
 
