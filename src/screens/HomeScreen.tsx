@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { colors, sizes } from '../theme';
-import { AgentBox, GunBox, MapBox, SeasonBox, BannerAdContainer } from '../components';
-import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate, getTopWeaponByKills } from '../utils';
-import { useDataContext } from '../context/DataContext';
+import { colors, sizes } from '@theme';
+import { AgentBox, GunBox, MapBox, SeasonBox, BannerAdContainer } from '@components';
+import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate, getTopWeaponByKills } from '@utils';
+import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
-import { useLanguage } from '../context/LanguageContext';
-import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatType } from '../types';
+import { useLanguage } from '@context';
+import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatType } from '@types';
 
 
 const HomeScreen = () => {
