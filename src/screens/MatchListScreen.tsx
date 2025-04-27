@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { RefreshControl, SectionList, StyleSheet, Text, View } from 'react-native'
 import { colors, fonts, sizes } from '@theme'
-import { extractUniqueMatchType, formatDateString, transformMatchStats, isPremiumUser } from '@utils'
+import { getMatchQueueTypes, formatDateString, sortAndGroupMatchHistory, isPremiumUser } from '@utils'
 import { MatchStatsType } from '@types'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -18,7 +18,7 @@ const MatchListScreen = () => {
   const {matchStats, userData} = useDataContext();
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const gameType = extractUniqueMatchType(matchStats);
+  const gameType = getMatchQueueTypes(matchStats);
   const [selectedGameType, setSelectedGameType] = React.useState(gameType[0]);
   const [finalMatchArray, setFinalMatchArray] = React.useState<resultArray[]>([]);
   const [premiumModalVisible, setPremiumModalVisible] = React.useState(false);
@@ -34,10 +34,10 @@ const MatchListScreen = () => {
 
   useEffect(() => {
   if (selectedGameType == 'All') {
-    setFinalMatchArray(transformMatchStats(matchStats));
+    setFinalMatchArray(sortAndGroupMatchHistory(matchStats));
   } else {
     let filterArray = matchStats.filter((m) => m.stats.general.queueId == selectedGameType);
-    setFinalMatchArray(transformMatchStats(filterArray));
+    setFinalMatchArray(sortAndGroupMatchHistory(filterArray));
   }
   }, [selectedGameType]);
 

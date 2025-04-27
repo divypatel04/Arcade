@@ -1,9 +1,4 @@
-import { AgentStatType, SeasonPerformance } from '../types/AgentStatsType';
-import { MapStatsType, SeasonPerformance as MapSeasonPerformance } from '../types/MapStatsType';
-import { MatchStatType } from '../types/MatchStatsType';
-import { SeasonStatsType } from '../types/SeasonStatsType';
-import { WeaponStatType, SeasonPerformance as WeaponSeasonPerformance } from '../types/WeaponStatsType';
-
+import { AgentStatType, MapStatsType, MatchStatsType, AgentSeasonPerformance, MapSeasonPerformance, SeasonStatsType, WeaponStatsType, WeaponSeasonPerformance } from "@types";
 /**
  * Determines which agent stats should be marked as premium based on performance metrics.
  * Takes the top third of agents based on a scoring system.
@@ -39,6 +34,154 @@ export const determinePremiumAgentStats = (agentStats: AgentStatType[]): void =>
   });
 };
 
+
+/**
+ * Determines which map stats should be marked as premium based on performance metrics.
+ * Takes the top third of maps based on a scoring system.
+ * Modifies the input array directly by adding isPremiumStats property.
+ * @param mapStats Array of map stats to evaluate and modify
+ */
+export const determinePremiumMapStats = (mapStats: MapStatsType[]): void => {
+  // Calculate premium score for each map
+  const mapsWithScores = mapStats.map(mapStat => {
+    const score = calculateMapPremiumScore(mapStat);
+    return {
+      mapStat,
+      premiumScore: score
+    };
+  });
+
+  // Sort by premium score (descending)
+  mapsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
+
+  // Mark top third (minimum 1) as premium
+  const premiumCount = Math.max(1, Math.ceil(mapStats.length / 3));
+
+  // Reset all to false first
+  mapStats.forEach(map => {
+    map.isPremiumStats = false;
+  });
+
+  // Mark the top ones as premium
+  mapsWithScores.forEach((item, index) => {
+    if (index < premiumCount) {
+      item.mapStat.isPremiumStats = true;
+    }
+  });
+};
+
+
+/**
+ * Determines which season stats should be marked as premium based on performance metrics.
+ * Takes the top performers based on a scoring system.
+ * Modifies the input array directly by adding isPremiumStats property.
+ * @param seasonStats Array of season stats to evaluate and modify
+ */
+export const determinePremiumSeasonStats = (seasonStats: SeasonStatsType[]): void => {
+  // Calculate premium score for each season stat
+  const seasonStatsWithScores = seasonStats.map(seasonStat => {
+    const score = calculateSeasonPremiumScore(seasonStat);
+    return {
+      seasonStat,
+      premiumScore: score
+    };
+  });
+
+  // Sort by premium score (descending)
+  seasonStatsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
+
+  // Mark top third (minimum 1) as premium
+  const premiumCount = Math.max(1, Math.ceil(seasonStats.length / 3));
+
+  // Reset all to false first
+  seasonStats.forEach(stat => {
+    stat.isPremiumStats = false;
+  });
+
+  // Mark the top ones as premium
+  seasonStatsWithScores.forEach((item, index) => {
+    if (index < premiumCount) {
+      item.seasonStat.isPremiumStats = true;
+    }
+  });
+};
+
+
+/**
+ * Determines which match stats should be marked as premium based on performance metrics.
+ * Evaluates individual match performances and marks the top ones as premium.
+ * Modifies the input array directly by adding isPremiumStats property.
+ * @param matchStats Array of match stats to evaluate and modify
+ */
+export const determinePremiumMatchStats = (matchStats: MatchStatsType[]): void => {
+  // Calculate premium score for each match
+  const matchesWithScores = matchStats.map(matchStat => ({
+    matchStat,
+    premiumScore: calculateMatchPremiumScore(matchStat)
+  }));
+
+  // Sort by premium score (descending)
+  matchesWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
+
+  // Reset all to false first
+  matchStats.forEach(match => match.isPremiumStats = false);
+
+  // For ranked games: Mark matches with score > 75 as premium
+  // For unranked: Mark matches with score > 85 as premium
+  // Additionally, ensure at least top 20% of matches are premium
+  const minPremiumMatches = Math.max(1, Math.ceil(matchStats.length * 0.2));
+
+  matchesWithScores.forEach((item, index) => {
+    const isRanked = item.matchStat.stats.general.isRanked;
+    const threshold = isRanked ? 75 : 85;
+
+    if (item.premiumScore >= threshold || index < minPremiumMatches) {
+      item.matchStat.isPremiumStats = true;
+    }
+  });
+}
+
+/**
+ * Determines which weapon stats should be marked as premium based on performance metrics.
+ * Takes the top performers based on a scoring system.
+ * Modifies the input array directly by adding isPremiumStats property.
+ * @param weaponStats Array of weapon stats to evaluate and modify
+ */
+export const determinePremiumWeaponStats = (weaponStats: WeaponStatsType[]): void => {
+  // Calculate premium score for each weapon stat
+  const weaponStatsWithScores = weaponStats.map(weaponStat => {
+    const score = calculateWeaponPremiumScore(weaponStat);
+    return {
+      weaponStat,
+      premiumScore: score
+    };
+  });
+
+  // Sort by premium score (descending)
+  weaponStatsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
+
+  // Mark top third (minimum 1) as premium
+  const premiumCount = Math.max(1, Math.ceil(weaponStats.length / 3));
+
+  // Reset all to false first
+  weaponStats.forEach(weapon => {
+    weapon.isPremiumStats = false;
+  });
+
+  // Mark the top ones as premium
+  weaponStatsWithScores.forEach((item, index) => {
+    if (index < premiumCount) {
+      item.weaponStat.isPremiumStats = true;
+    }
+  });
+};
+
+/**
+ * Helpers for determining premium stats
+ * These functions are used to calculate scores for agents, maps, seasons, and weapons.
+ * They evaluate various performance metrics and assign scores based on thresholds.
+ */
+
 /**
  * Calculates a premium score for an agent based on various performance criteria.
  * Higher score means better performance.
@@ -62,7 +205,7 @@ const calculatePremiumScore = (agentStat: AgentStatType): number => {
 /**
  * Evaluates a single season's performance metrics
  */
-const evaluateSeasonPerformance = (season: SeasonPerformance): number => {
+const evaluateSeasonPerformance = (season: AgentSeasonPerformance): number => {
   let seasonScore = 0;
 
   // 1. K/D Ratio
@@ -139,7 +282,7 @@ const evaluateSeasonPerformance = (season: SeasonPerformance): number => {
 /**
  * Calculates a consistency bonus for performance across multiple seasons
  */
-const calculateConsistencyBonus = (seasons: SeasonPerformance[]): number => {
+const calculateConsistencyBonus = (seasons: AgentSeasonPerformance[]): number => {
   // Check how many seasons have good KD ratios
   const seasonsWithGoodKD = seasons.filter(season =>
     season.stats.kills / Math.max(1, season.stats.deaths) > 1.2
@@ -173,40 +316,7 @@ const calculateConsistencyBonus = (seasons: SeasonPerformance[]): number => {
   return consistencyBonus;
 };
 
-/**
- * Determines which map stats should be marked as premium based on performance metrics.
- * Takes the top third of maps based on a scoring system.
- * Modifies the input array directly by adding isPremiumStats property.
- * @param mapStats Array of map stats to evaluate and modify
- */
-export const determinePremiumMapStats = (mapStats: MapStatsType[]): void => {
-  // Calculate premium score for each map
-  const mapsWithScores = mapStats.map(mapStat => {
-    const score = calculateMapPremiumScore(mapStat);
-    return {
-      mapStat,
-      premiumScore: score
-    };
-  });
 
-  // Sort by premium score (descending)
-  mapsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
-
-  // Mark top third (minimum 1) as premium
-  const premiumCount = Math.max(1, Math.ceil(mapStats.length / 3));
-
-  // Reset all to false first
-  mapStats.forEach(map => {
-    map.isPremiumStats = false;
-  });
-
-  // Mark the top ones as premium
-  mapsWithScores.forEach((item, index) => {
-    if (index < premiumCount) {
-      item.mapStat.isPremiumStats = true;
-    }
-  });
-};
 
 /**
  * Calculates a premium score for a map based on various performance criteria.
@@ -355,40 +465,7 @@ const calculateMapConsistencyBonus = (seasons: MapSeasonPerformance[]): number =
   return consistencyBonus;
 };
 
-/**
- * Determines which season stats should be marked as premium based on performance metrics.
- * Takes the top performers based on a scoring system.
- * Modifies the input array directly by adding isPremiumStats property.
- * @param seasonStats Array of season stats to evaluate and modify
- */
-export const determinePremiumSeasonStats = (seasonStats: SeasonStatsType[]): void => {
-  // Calculate premium score for each season stat
-  const seasonStatsWithScores = seasonStats.map(seasonStat => {
-    const score = calculateSeasonPremiumScore(seasonStat);
-    return {
-      seasonStat,
-      premiumScore: score
-    };
-  });
 
-  // Sort by premium score (descending)
-  seasonStatsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
-
-  // Mark top third (minimum 1) as premium
-  const premiumCount = Math.max(1, Math.ceil(seasonStats.length / 3));
-
-  // Reset all to false first
-  seasonStats.forEach(stat => {
-    stat.isPremiumStats = false;
-  });
-
-  // Mark the top ones as premium
-  seasonStatsWithScores.forEach((item, index) => {
-    if (index < premiumCount) {
-      item.seasonStat.isPremiumStats = true;
-    }
-  });
-};
 
 /**
  * Calculates a premium score for a season's stats based on various performance criteria.
@@ -511,46 +588,13 @@ const calculateSeasonPremiumScore = (seasonStat: SeasonStatsType): number => {
   return score;
 };
 
-/**
- * Determines which weapon stats should be marked as premium based on performance metrics.
- * Takes the top performers based on a scoring system.
- * Modifies the input array directly by adding isPremiumStats property.
- * @param weaponStats Array of weapon stats to evaluate and modify
- */
-export const determinePremiumWeaponStats = (weaponStats: WeaponStatType[]): void => {
-  // Calculate premium score for each weapon stat
-  const weaponStatsWithScores = weaponStats.map(weaponStat => {
-    const score = calculateWeaponPremiumScore(weaponStat);
-    return {
-      weaponStat,
-      premiumScore: score
-    };
-  });
 
-  // Sort by premium score (descending)
-  weaponStatsWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
-
-  // Mark top third (minimum 1) as premium
-  const premiumCount = Math.max(1, Math.ceil(weaponStats.length / 3));
-
-  // Reset all to false first
-  weaponStats.forEach(weapon => {
-    weapon.isPremiumStats = false;
-  });
-
-  // Mark the top ones as premium
-  weaponStatsWithScores.forEach((item, index) => {
-    if (index < premiumCount) {
-      item.weaponStat.isPremiumStats = true;
-    }
-  });
-};
 
 /**
  * Calculates a premium score for weapon stats based on various performance criteria.
  * Higher score means better performance with the weapon.
  */
-const calculateWeaponPremiumScore = (weaponStat: WeaponStatType): number => {
+const calculateWeaponPremiumScore = (weaponStat: WeaponStatsType): number => {
   let totalScore = 0;
 
   // Analyze each season's performance with this weapon
@@ -742,41 +786,9 @@ const calculateWeaponConsistencyBonus = (seasons: WeaponSeasonPerformance[]): nu
   return consistencyBonus;
 };
 
-/**
- * Determines which match stats should be marked as premium based on performance metrics.
- * Evaluates individual match performances and marks the top ones as premium.
- * Modifies the input array directly by adding isPremiumStats property.
- * @param matchStats Array of match stats to evaluate and modify
- */
-export const determinePremiumMatchStats = (matchStats: MatchStatType[]): void => {
-  // Calculate premium score for each match
-  const matchesWithScores = matchStats.map(matchStat => ({
-    matchStat,
-    premiumScore: calculateMatchPremiumScore(matchStat)
-  }));
 
-  // Sort by premium score (descending)
-  matchesWithScores.sort((a, b) => b.premiumScore - a.premiumScore);
 
-  // Reset all to false first
-  matchStats.forEach(match => match.isPremiumStats = false);
-
-  // For ranked games: Mark matches with score > 75 as premium
-  // For unranked: Mark matches with score > 85 as premium
-  // Additionally, ensure at least top 20% of matches are premium
-  const minPremiumMatches = Math.max(1, Math.ceil(matchStats.length * 0.2));
-
-  matchesWithScores.forEach((item, index) => {
-    const isRanked = item.matchStat.stats.general.isRanked;
-    const threshold = isRanked ? 75 : 85;
-
-    if (item.premiumScore >= threshold || index < minPremiumMatches) {
-      item.matchStat.isPremiumStats = true;
-    }
-  });
-}
-
-const calculateMatchPremiumScore = (matchStat: MatchStatType): number => {
+const calculateMatchPremiumScore = (matchStat: MatchStatsType): number => {
   let score = 0;
   const { general, playerVsplayerStat: pvp, roundPerformace } = matchStat.stats;
 

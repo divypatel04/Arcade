@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import { colors, fonts, sizes } from '@theme';
-import { aggregateSeasonStatsForAllActs, convertMillisToReadableTime, getSeasonNames } from '@utils';
+import { mergeActSeasonalStats, convertMillisToReadableTime, getSortedSeasonNames } from '@utils';
 import { SeasonStatsType } from '@types';
 import { useTranslation } from 'react-i18next';
 import { useDataContext } from '@context';
@@ -184,7 +184,7 @@ const SeasonInfoScreen = () => {
 
   const {t} = useTranslation();
   const {seasonStats} = useDataContext();
-  const seasonName = getSeasonNames(seasonStats);
+  const seasonName = getSortedSeasonNames(seasonStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonName[1]);
   const [mainSeasonStats, setMainSeasonStats] = useState<SeasonStatsType>();
 
@@ -195,7 +195,7 @@ const SeasonInfoScreen = () => {
     if (selectedseason) {
       setMainSeasonStats(selectedseason);
     } else {
-      setMainSeasonStats(aggregateSeasonStatsForAllActs(seasonStats));
+      setMainSeasonStats(mergeActSeasonalStats(seasonStats));
     }
 
   }, [selectedSeason]);

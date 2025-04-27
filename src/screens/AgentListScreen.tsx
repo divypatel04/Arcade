@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { AgentStatType } from '@types';
-import { getAllAgentSeasonNames, isPremiumUser, sortAgentsByMatches } from '@utils';
+import { getAllSeasonNames, isPremiumUser, sortAgentsByMatches } from '@utils';
 import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
 import { AgentCard, DropDown, PremiumModal } from '@components';
@@ -23,7 +23,7 @@ const AgentListScreen = () => {
   const {agentStats, userData} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getAllAgentSeasonNames(agentStats);
+  const seasonNames = getAllSeasonNames(agentStats);
   const [selectedSeason, setselectedSeason] = useState(seasonNames[1]);
   const [agentList,setAgentList] = useState<AgentListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);

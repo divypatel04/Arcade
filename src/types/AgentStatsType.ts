@@ -12,10 +12,10 @@ type Agent = {
   role: string;
   image: string;
   icon: string;
-  abilities: Ability[];
+  abilities: AgentAbility[];
 };
 
-export type Ability = {
+export type AgentAbility = {
   id: string;
   name: string;
   image: string;
@@ -26,7 +26,7 @@ export type Ability = {
 export type AgentSeasonPerformance = {
   season: Season;
   stats: Stats;
-  mapStats: MapStat[];
+  mapStats: AgentMapStat[];
   attackStats: SideStats;
   defenseStats: SideStats;
   abilityAndUltimateImpact: AbilityAndUltimateImpact;
@@ -53,7 +53,7 @@ type Stats = {
   firstKills: number;
 };
 
-export type MapStat = {
+export type AgentMapStat = {
   id: string;
   image: string;
   name: string;
@@ -78,9 +78,9 @@ type ClutchStats = {
   "1v5Wins": number;
 };
 
-type AbilityAndUltimateImpact = AbilityCastDetails[];
+type AbilityAndUltimateImpact = AgentAbilityCastDetails[];
 
-type AbilityCastDetails = {
+export type AgentAbilityCastDetails = {
   type: string;
   id: string;
   count: number;

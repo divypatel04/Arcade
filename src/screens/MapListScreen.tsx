@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStatsType } from '@types';
-import { getAllMapSeasonNames, isPremiumUser, sortMapsByMatches } from '@utils';
+import { getAllSeasonNames, isPremiumUser, sortMapsByMatches } from '@utils';
 import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
 import { DropDown, PremiumModal, MapCard } from '@components';
@@ -21,7 +21,7 @@ const MapListScreen = () => {
   const {mapStats, userData} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getAllMapSeasonNames(mapStats);
+  const seasonNames = getAllSeasonNames(mapStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
   const [mapList,setMapList] = useState<MapListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);

@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '@theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { getAllWeaponSeasonNames, isPremiumUser, sortWeaponsByMatches } from '@utils';
+import { getAllSeasonNames, isPremiumUser, sortWeaponsByMatches } from '@utils';
 import { WeaponStatsType } from '@types';
 import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,7 @@ const WeaponListScreen = () => {
   const {userData, weaponStats} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getAllWeaponSeasonNames(weaponStats);
+  const seasonNames = getAllSeasonNames(weaponStats);
   const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
   const [weaponList,setWeaponList] = useState<WeaponListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);

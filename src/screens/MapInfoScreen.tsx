@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MapStatsType, MapSeasonPerformance } from '@types';
-import { aggregateMapStatsForAllActs, convertMillisToReadableTime, getAllMapSeasonNames, getSupabaseImageUrl } from '@utils';
+import { mergeMapSeasonalStats, convertMillisToReadableTime, getAllSeasonNames, getSupabaseImageUrl } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { DropDown, MapHeatmap, OverviewTab, SiteTab, TabBar } from '@components';
 
@@ -16,7 +16,7 @@ const MapInfoScreen = () => {
   const routeParams: any = useRoute().params;
   const map: MapStatsType = routeParams.map;
   const selectedSeasonName = routeParams.seasonName;
-  const seasonNames = getAllMapSeasonNames([map]);
+  const seasonNames = getAllSeasonNames([map]);
   const [seasonStat, setSeasonStat] = useState<MapSeasonPerformance>();
   const [selectedSeason, setSelectedSeason] = useState(selectedSeasonName);
 
@@ -27,7 +27,7 @@ const MapInfoScreen = () => {
       if (selectedSeasonData) {
         setSeasonStat(selectedSeasonData);
       } else {
-        setSeasonStat(aggregateMapStatsForAllActs(map));
+        setSeasonStat(mergeMapSeasonalStats(map));
 
       }
     }, [selectedSeason]);

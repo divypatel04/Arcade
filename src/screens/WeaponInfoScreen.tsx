@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { WeaponSeasonPerformance, WeaponStatsType } from '@types';
-import { aggregateWeaponStatsForAllActs, getAllWeaponSeasonNames, getSupabaseImageUrl } from '@utils';
+import { mergeWeaponSeasonalStats, getAllSeasonNames, getSupabaseImageUrl } from '@utils';
 import { useTranslation } from 'react-i18next';
 import {DropDown, HitsTab, OverviewTab, TabBar} from '@components';
 
@@ -18,7 +18,7 @@ const WeaponInfoScreen = () => {
   const weapon: WeaponStatsType = routeParams.weapon;
   const selectedSeasonName = routeParams.seasonName;
   const [seasonStat, setSeasonStat] = useState<WeaponSeasonPerformance>();
-  const seasonNames = getAllWeaponSeasonNames([weapon]);
+  const seasonNames = getAllSeasonNames([weapon]);
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const WeaponInfoScreen = () => {
     if (selectedSeasonData) {
       setSeasonStat(selectedSeasonData);
     } else {
-      setSeasonStat(aggregateWeaponStatsForAllActs(weapon));
+      setSeasonStat(mergeWeaponSeasonalStats(weapon));
     }
   }, [selectedSeason]);
 

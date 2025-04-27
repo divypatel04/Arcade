@@ -1,4 +1,4 @@
-import { AgentStatType, AgentSeasonPerformance } from "./AgentStatsType";
+import { AgentStatType, AgentSeasonPerformance, AgentAbility, AgentMapStat, AgentAbilityCastDetails } from "./AgentStatsType";
 import { MapStatsType, MapSeasonPerformance } from "./MapStatsType";
 import { WeaponStatsType, WeaponSeasonPerformance } from "./WeaponStatsType";
 import { SeasonStatsType } from "./SeasonStatsType";
@@ -9,6 +9,9 @@ import { MatchDetails } from "./MatchDetails";
 export type {
   AgentStatType,
   AgentSeasonPerformance,
+  AgentAbility,
+  AgentMapStat,
+  AgentAbilityCastDetails,
   MapStatsType,
   MapSeasonPerformance,
   WeaponStatsType,

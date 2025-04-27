@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { AgentStatType, AgentSeasonPerformance } from '@types';
-import { aggregateAgentStatsForAllActs, convertMillisToReadableTime, getAllAgentSeasonNames, getSupabaseImageUrl } from '@utils';
+import { mergeAgentSeasonalStats, convertMillisToReadableTime, getAllSeasonNames, getSupabaseImageUrl } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { BestMapTab, DropDown, OverviewTab, SiteTab, TabBar, UtilityTab } from '@components';
 
@@ -17,7 +17,7 @@ const AgentInfoScreen = () => {
   const agent: AgentStatType = routeParams.agent;
   const selectedSeasonName = routeParams.seasonName;
   const [seasonStat, setSeasonStat] = useState<AgentSeasonPerformance>();
-  const seasonNames = getAllAgentSeasonNames([agent]);
+  const seasonNames = getAllSeasonNames([agent]);
   const [selectedSeason, setSeason] = useState(selectedSeasonName);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const AgentInfoScreen = () => {
     if (selectedSeasonData) {
       setSeasonStat(selectedSeasonData);
     } else {
-      setSeasonStat(aggregateAgentStatsForAllActs(agent));
+      setSeasonStat(mergeAgentSeasonalStats(agent));
     }
   }, [selectedSeason]);
 
