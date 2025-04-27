@@ -29,7 +29,7 @@ export type AgentSeasonPerformance = {
   mapStats: AgentMapStat[];
   attackStats: SideStats;
   defenseStats: SideStats;
-  abilityAndUltimateImpact: AbilityAndUltimateImpact;
+  abilityAndUltimateImpact: AgentAbilityCastDetails[];
 };
 
 type Season = {
@@ -78,18 +78,10 @@ type ClutchStats = {
   "1v5Wins": number;
 };
 
-type AbilityAndUltimateImpact = AgentAbilityCastDetails[];
-
 export type AgentAbilityCastDetails = {
   type: string;
   id: string;
   count: number;
   kills: number;
   damage: number;
-};
-
-type UltimateImpact = {
-  killsUsingUltimate: number;
-  roundsWonUsingUltimate: number;
-  damageUsingUltimate: number;
 };
