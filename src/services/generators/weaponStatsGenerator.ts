@@ -1,10 +1,10 @@
-import { WeaponStatType, SeasonPerformance } from "../../types/WeaponStatsType";
+import { WeaponStatsType, SeasonPerformance } from "../../types/WeaponStatsType";
 
 /**
  * Processes weapon stats from match data
  */
 export function processWeaponStats(
-  weaponMap: Map<string, WeaponStatType>,
+  weaponMap: Map<string, WeaponStatsType>,
   match: any,
   seasonId: string,
   puuid: string

@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from './lcon';
 import { colors, fonts, sizes } from '../theme';
-import { WeaponStatType } from '../types/WeaponStatsType';
+import { WeaponStatsType } from '../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';
 import { getSupabaseImageUrl } from '../utils';
 
@@ -10,7 +10,7 @@ import { getSupabaseImageUrl } from '../utils';
 interface GunBoxProps {
   isPremium: boolean,
   item: {
-    weapon: WeaponStatType,
+    weapon: WeaponStatsType,
     seasonName: string,
     numberOfKills: number,
   },

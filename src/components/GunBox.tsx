@@ -3,12 +3,12 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '../theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { WeaponStatType } from '../types/WeaponStatsType';
+import { WeaponStatsType } from '../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';
 import { getSupabaseImageUrl } from '../utils';
 
 type GunBoxProps = {
-  bestWeapon: WeaponStatType;
+  bestWeapon: WeaponStatsType;
 }
 
 const GunBox = ({bestWeapon}:GunBoxProps) => {

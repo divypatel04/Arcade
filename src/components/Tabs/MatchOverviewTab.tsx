@@ -4,10 +4,10 @@ import { colors, fonts, sizes } from '../../theme';
 import { convertMillisToReadableTime, getSupabaseImageUrl } from '../../utils';
 import StatsSummary from '../StatsSummary';
 import DetailedStats from '../DetailedStats';
-import { MatchStatType } from '../../types/MatchStatsType';
+import { MatchStatsType } from '../../types/MatchStatsType';
 
 interface MatchOverviewTabProps {
-  matchStats: MatchStatType;
+  matchStats: MatchStatsType;
 }
 
 const MatchOverviewTab = ({matchStats}:MatchOverviewTabProps) => {

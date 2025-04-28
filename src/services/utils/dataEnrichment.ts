@@ -2,7 +2,7 @@ import { supabase } from "../../lib/supabase";
 import { AgentStatType } from "../../types/AgentStatsType";
 import { MapStatsType } from "../../types/MapStatsType";
 import { SeasonStatsType } from "../../types/SeasonStatsType";
-import { WeaponStatType } from "../../types/WeaponStatsType";
+import { WeaponStatsType } from "../../types/WeaponStatsType";
 
 /**
  * Main function to enrich all stats with details
@@ -10,7 +10,7 @@ import { WeaponStatType } from "../../types/WeaponStatsType";
 export async function enrichStatsWithDetails(stats: {
   agentStats: AgentStatType[],
   mapStats: MapStatsType[],
-  weaponStats: WeaponStatType[],
+  weaponStats: WeaponStatsType[],
   seasonStats: SeasonStatsType[],
   matchStats?: any[] // Add optional matchStats parameter
 }) {

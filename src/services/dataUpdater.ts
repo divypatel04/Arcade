@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabase";
 import { AgentStatType } from "../types/AgentStatsType";
 import { MapStatsType } from "../types/MapStatsType";
 import { SeasonStatsType } from "../types/SeasonStatsType";
-import { WeaponStatType } from "../types/WeaponStatsType";
+import { WeaponStatsType } from "../types/WeaponStatsType";
 import { MatchDetails } from "../types/MatchDetails";
 
 /**
@@ -70,7 +70,7 @@ export async function upsertMapStats(mapStats: MapStatsType[]): Promise<void> {
 /**
  * Update or insert weapon stats
  */
-export async function upsertWeaponStats(weaponStats: WeaponStatType[]): Promise<void> {
+export async function upsertWeaponStats(weaponStats: WeaponStatsType[]): Promise<void> {
   if (!weaponStats.length) return;
 
   try {
@@ -229,7 +229,7 @@ export async function updatePlayerStats(
   puuid: string,
   agentStats: AgentStatType[],
   mapStats: MapStatsType[],
-  weaponStats: WeaponStatType[],
+  weaponStats: WeaponStatsType[],
   seasonStats: SeasonStatsType[],
   matchStats: any[] = []
 ): Promise<void> {

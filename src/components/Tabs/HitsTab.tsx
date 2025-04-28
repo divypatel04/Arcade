@@ -3,7 +3,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
 import DetailedStats from '../DetailedStats'
 import { colors, fonts, sizes } from '../../theme';
-import { SeasonPerformance, WeaponStatType } from '../../types/WeaponStatsType';
+import { SeasonPerformance, WeaponStatsType } from '../../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';
 
 

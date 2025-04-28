@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabase";
 import { AgentStatType } from "../types/AgentStatsType";
 import { MapStatsType } from "../types/MapStatsType";
 import { SeasonStatsType } from "../types/SeasonStatsType";
-import { WeaponStatType } from "../types/WeaponStatsType";
+import { WeaponStatsType } from "../types/WeaponStatsType";
 import { MatchDetails } from "../types/MatchDetails";
 
 /**
@@ -68,7 +68,7 @@ export async function fetchMapStats(puuid: string): Promise<MapStatsType[]> {
 /**
  * Fetch weapon stats from database
  */
-export async function fetchWeaponStats(puuid: string): Promise<WeaponStatType[]> {
+export async function fetchWeaponStats(puuid: string): Promise<WeaponStatsType[]> {
   try {
     const { data, error } = await supabase
       .from('weaponstats')

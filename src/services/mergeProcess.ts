@@ -1,20 +1,20 @@
 import { AgentStatType } from "../types/AgentStatsType";
 import { MapStatsType } from "../types/MapStatsType";
 import { SeasonStatsType } from "../types/SeasonStatsType";
-import { WeaponStatType } from "../types/WeaponStatsType";
+import { WeaponStatsType } from "../types/WeaponStatsType";
 
 interface ProcessDataInput {
   oldData: {
     agentStats: AgentStatType[];
     mapStats: MapStatsType[];
-    weaponStats: WeaponStatType[];
+    weaponStats: WeaponStatsType[];
     seasonStats: SeasonStatsType[];
     matchStats: any[]; // Add matchStats
   };
   newData: {
     agentStats: AgentStatType[];
     mapStats: MapStatsType[];
-    weaponStats: WeaponStatType[];
+    weaponStats: WeaponStatsType[];
     seasonStats: SeasonStatsType[];
     matchStats: any[]; // Add matchStats
   };
@@ -23,7 +23,7 @@ interface ProcessDataInput {
 interface ProcessDataOutput {
   mergedAgentStats: AgentStatType[];
   mergedMapStats: MapStatsType[];
-  mergedWeaponStats: WeaponStatType[];
+  mergedWeaponStats: WeaponStatsType[];
   mergedSeasonStats: SeasonStatsType[];
   mergedMatchStats: any[]; // Add mergedMatchStats
 }
@@ -220,7 +220,7 @@ const mergeMapStats = (oldStats: MapStatsType[], newStats: MapStatsType[]): MapS
 };
 
 // Helper function to merge weapon stats
-const mergeWeaponStats = (oldStats: WeaponStatType[], newStats: WeaponStatType[]): WeaponStatType[] => {
+const mergeWeaponStats = (oldStats: WeaponStatsType[], newStats: WeaponStatsType[]): WeaponStatsType[] => {
   const mergedStats = [...oldStats];
 
   // Process each weapon from new stats

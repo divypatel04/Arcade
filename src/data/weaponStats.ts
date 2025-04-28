@@ -1,6 +1,6 @@
-import { WeaponStatType } from "../types/WeaponStatsType";
+import { WeaponStatsType } from "../types/WeaponStatsType";
 
-const weaponStats: WeaponStatType[] = [
+const weaponStats: WeaponStatsType[] = [
   {
     playerId: "player-001",
     weapon: {

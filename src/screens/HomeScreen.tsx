@@ -6,7 +6,7 @@ import { getCurrentorRecentSeasonStats, getTopAgentByKills, getTopMapByWinRate, 
 import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@context';
-import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatType } from '@types';
+import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatsType } from '@types';
 
 
 const HomeScreen = () => {
@@ -16,7 +16,7 @@ const HomeScreen = () => {
 
   const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
   const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
-  const bestWeaponStats: WeaponStatType = getTopWeaponByKills(weaponStats);
+  const bestWeaponStats: WeaponStatsType = getTopWeaponByKills(weaponStats);
   const currentSeason: SeasonStatsType = getCurrentorRecentSeasonStats(seasonStats);
 
   if (isLoading) {

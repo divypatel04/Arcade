@@ -1,8 +1,8 @@
 import { AgentStatType } from "../types/AgentStatsType";
 import { MapStatsType } from "../types/MapStatsType";
-import { MatchStatType } from "../types/MatchStatsType";
+import { MatchStatsType } from "../types/MatchStatsType";
 import { SeasonStatsType } from "../types/SeasonStatsType";
-import { WeaponStatType } from "../types/WeaponStatsType";
+import { WeaponStatsType } from "../types/WeaponStatsType";
 
 
 export const AgentStats: AgentStatType[] = [
@@ -659,7 +659,7 @@ export const MapStats: MapStatsType[] = [
 ];
 
 
-export const weaponStats: WeaponStatType[] = [
+export const weaponStats: WeaponStatsType[] = [
   {
     "playerId": "-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA",
     "weapon": {
@@ -722,7 +722,7 @@ export const seasonStats: SeasonStatsType[] = [
 ]
 
 
-export const matchStats: MatchStatType[] = [
+export const matchStats: MatchStatsType[] = [
   {
     general: {
       matchId: "match1234",

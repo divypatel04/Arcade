@@ -2,12 +2,8 @@ import React, { createContext, useContext, useState, useRef, useCallback, useEff
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { dataUpdateTracker } from '../services';
-import { AgentStatType } from '../types/AgentStatsType';
-import { MapStatsType } from '../types/MapStatsType';
-import { MatchStatType } from '../types/MatchStatsType';
-import { SeasonStatsType } from '../types/SeasonStatsType';
-import { WeaponStatType } from '../types/WeaponStatsType';
-import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '../utils/premiumUtils';
+import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '@utils';
+import { AgentStatType, MapStatsType, MatchStatsType, SeasonStatsType, WeaponStatsType } from '@types';
 
 type UserData = {
   puuid: string;
@@ -24,9 +20,9 @@ interface DataContextState {
   userData: UserData | null;
   agentStats: AgentStatType[];
   mapStats: MapStatsType[];
-  weaponStats: WeaponStatType[];
+  weaponStats: WeaponStatsType[];
   seasonStats: SeasonStatsType[];
-  matchStats: MatchStatType[];
+  matchStats: MatchStatsType[];
   isLoading: boolean;
   error: Error | null;
   isDataReady: boolean;

@@ -1,6 +1,6 @@
-import { MatchStatType } from "../types/MatchStatsType";
+import { MatchStatsType } from "../types/MatchStatsType";
 
-const matchStats: MatchStatType[] = [
+const matchStats: MatchStatsType[] = [
   {
     general: {
       matchId: "m-001",

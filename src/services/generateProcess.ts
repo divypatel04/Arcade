@@ -1,7 +1,7 @@
 import { AgentStatType, SeasonPerformance as AgentSeasonPerformance } from "../types/AgentStatsType";
 import { MapStatsType, SeasonPerformance as MapSeasonPerformance } from "../types/MapStatsType";
 import { SeasonStatsType } from "../types/SeasonStatsType";
-import { WeaponStatType, SeasonPerformance as WeaponSeasonPerformance } from "../types/WeaponStatsType";
+import { WeaponStatsType, SeasonPerformance as WeaponSeasonPerformance } from "../types/WeaponStatsType";
 import { supabase } from "../lib/supabase";
 import { ClutchEvent, CombatStats, Coordinate, EconomyStats, KillEvent, MapData, PlayerVsPlayerStat, PositioningStats, RoundPerformance, TeamStat, UtilityStats } from "../types/MatchStatsType";
 import { processAgentStats } from "./generators/agentStatsGenerator";
@@ -28,7 +28,7 @@ export const generateStats = async (matchDetails: MatchDetails[], puuid: string)
 
   const agentMap = new Map<string, AgentStatType>();
   const mapMap = new Map<string, MapStatsType>();
-  const weaponMap = new Map<string, WeaponStatType>();
+  const weaponMap = new Map<string, WeaponStatsType>();
   const seasonMap = new Map<string, SeasonStatsType>();
 
   // Process each match
@@ -223,7 +223,7 @@ export const generateStats = async (matchDetails: MatchDetails[], puuid: string)
 // }
 
 // function processWeaponStats(
-//   weaponMap: Map<string, WeaponStatType>,
+//   weaponMap: Map<string, WeaponStatsType>,
 //   match: MatchDetails,
 //   seasonId: string,
 //   puuid: string
@@ -860,7 +860,7 @@ export const generateStats = async (matchDetails: MatchDetails[], puuid: string)
 // async function enrichStatsWithDetails(stats: {
 //   agentStats: AgentStatType[],
 //   mapStats: MapStatsType[],
-//   weaponStats: WeaponStatType[],
+//   weaponStats: WeaponStatsType[],
 //   seasonStats: SeasonStatsType[],
 //   matchStats?: any[] // Add optional matchStats parameter
 // }) {
