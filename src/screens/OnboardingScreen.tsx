@@ -71,6 +71,8 @@ const OnboardingScreen = () => {
 
   const onLogin = async () => {
     console.log('Login with Riot ID');
+    // -6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA
+    // VZJtaru0pLtckkjdbAgFyQaJJDi466dzsg7cXBIhYTou4I0AFBgewDmJflGhK7el2FIv5DweUfpadg
     const puuid = '-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA';
 
     const success = await login(puuid);
@@ -83,7 +85,7 @@ const OnboardingScreen = () => {
   }
 
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
-  const ref = useRef();
+  const ref = useRef("");
   const updateCurrentSlideIndex = (e: any) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);

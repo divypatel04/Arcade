@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '../../theme';
 import { Icon } from '../lcon';
 import { RoundPerformance } from '../../types/MatchStatsType';
 import PremiumModal from '../PremiumModal';
-import { isPremiumUser } from '../../utils/userUtils';
+import { isPremiumUser } from '@utils';
 import { useDataContext } from '../../context/DataContext';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';

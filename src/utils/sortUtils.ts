@@ -13,7 +13,12 @@ interface resultArray {
 }
 
 
-export const getTopAgentByKills = (agentStats: AgentStatType[]): AgentStatType => {
+export const getTopAgentByKills = (agentStats: AgentStatType[]): AgentStatType | null => {
+  // Check if agentStats is undefined or empty
+  if (!agentStats || agentStats.length === 0) {
+    return null;
+  }
+
   const agentHighestKills: {agent: AgentStatType; kills: number}[] = [];
 
   // Loop through each agent to find the active season and calculate the highest kills
@@ -39,10 +44,20 @@ export const getTopAgentByKills = (agentStats: AgentStatType[]): AgentStatType =
   // Sort the agents by highest kills in descending order
   agentHighestKills.sort((a, b) => b.kills - a.kills);
 
+  // Return null if no agents with kills were found
+  if (agentHighestKills.length === 0) {
+    return null;
+  }
+
   return agentHighestKills[0].agent;
 };
 
-export const getTopMapByWinRate = (mapStats: MapStatsType[]): MapStatsType => {
+export const getTopMapByWinRate = (mapStats: MapStatsType[]): MapStatsType | null => {
+  // Check if mapStats is undefined or empty
+  if (!mapStats || mapStats.length === 0) {
+    return null;
+  }
+
   let bestMap: MapStatsType | undefined;
   let highestWinRate: number = 0;
 
@@ -82,15 +97,21 @@ export const getTopMapByWinRate = (mapStats: MapStatsType[]): MapStatsType => {
     }
   }
 
+  // If no best map was found, return null instead of throwing an error
   if (!bestMap) {
-    throw new Error('No best map found');
+    return null;
   }
   return bestMap;
 };
 
 export const getTopWeaponByKills = (
   weaponStats: WeaponStatsType[],
-): WeaponStatsType => {
+): WeaponStatsType | null => {
+  // Check if weaponStats is undefined or empty
+  if (!weaponStats || weaponStats.length === 0) {
+    return null;
+  }
+
   let bestWeapon: WeaponStatsType | null = null;
   let highestKills: number = 0;
 
@@ -129,6 +150,11 @@ export const getTopWeaponByKills = (
 };
 
 export const getMatchQueueTypes = (matchStats: MatchStatsType[]) => {
+  // Default return value if matchStats is undefined or empty
+  if (!matchStats || matchStats.length === 0) {
+    return ['All'];
+  }
+
   const MatchTypeSet: any = {};
 
   if (matchStats) {
@@ -157,6 +183,11 @@ export function sortAgentsByMatches(
   agentStats: AgentStatType[],
   seasonName: string,
 ) {
+  // Return empty array if agentStats is undefined or empty
+  if (!agentStats || agentStats.length === 0) {
+    return [];
+  }
+
   let allSortedStats = [];
 
   if (seasonName === 'All Act') {
@@ -212,6 +243,11 @@ export function sortMapsByMatches(
   mapStats: MapStatsType[],
   seasonName: string,
 ) {
+  // Return empty array if mapStats is undefined or empty
+  if (!mapStats || mapStats.length === 0) {
+    return [];
+  }
+
   let allSortedStats = [];
 
   if (seasonName === 'All Act') {
@@ -269,6 +305,11 @@ export function sortWeaponsByMatches(
   weaponStats: WeaponStatsType[],
   seasonName: string,
 ) {
+  // Return empty array if weaponStats is undefined or empty
+  if (!weaponStats || weaponStats.length === 0) {
+    return [];
+  }
+
   let allSortedStats = [];
 
   if (seasonName === 'All Act') {
@@ -317,6 +358,11 @@ export function sortWeaponsByMatches(
 export function sortAndGroupMatchHistory(
   matchStats: MatchStatsType[],
 ): resultArray[] {
+  // Return empty array if matchStats is undefined or empty
+  if (!matchStats || matchStats.length === 0) {
+    return [];
+  }
+
   // Create an empty array to store the result
   const resultArray: resultArray[] = [];
 
