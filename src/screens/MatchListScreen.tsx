@@ -8,6 +8,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { useTranslation } from 'react-i18next'
 import { useDataContext } from '@context'
 import { DropDown, PremiumModal, MatchBox } from '@components'
+import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 
 interface resultArray {
   data: MatchStatsType[];
@@ -18,7 +19,12 @@ const MatchListScreen = () => {
   const {matchStats, userData} = useDataContext();
   const {t} = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const gameType = getMatchQueueTypes(matchStats);
+
+  // Check if matchStats is empty or undefined
+  const hasMatchStats = matchStats && matchStats.length > 0;
+
+  // Only get game types if we have match stats
+  const gameType = hasMatchStats ? getMatchQueueTypes(matchStats) : ['All'];
   const [selectedGameType, setSelectedGameType] = React.useState(gameType[0]);
   const [finalMatchArray, setFinalMatchArray] = React.useState<resultArray[]>([]);
   const [premiumModalVisible, setPremiumModalVisible] = React.useState(false);
@@ -29,17 +35,20 @@ const MatchListScreen = () => {
     setRefreshing(true);
     setTimeout(() => {
       // fetch data
+      setRefreshing(false);
     }, 1000);
   }, []);
 
   useEffect(() => {
-  if (selectedGameType == 'All') {
-    setFinalMatchArray(sortAndGroupMatchHistory(matchStats));
-  } else {
-    let filterArray = matchStats.filter((m) => m.stats.general.queueId == selectedGameType);
-    setFinalMatchArray(sortAndGroupMatchHistory(filterArray));
-  }
-  }, [selectedGameType]);
+    if (hasMatchStats) {
+      if (selectedGameType == 'All') {
+        setFinalMatchArray(sortAndGroupMatchHistory(matchStats));
+      } else {
+        let filterArray = matchStats.filter((m) => m.stats.general.queueId == selectedGameType);
+        setFinalMatchArray(sortAndGroupMatchHistory(filterArray));
+      }
+    }
+  }, [selectedGameType, hasMatchStats]);
 
   const handleMatchPress = (match: MatchStatsType) => {
     if (match.isPremiumStats && !isPremiumUser(userData)) {
@@ -62,8 +71,9 @@ const MatchListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headertitle}>{t('common.matches')}</Text>
+      <Text style={styles.headertitle}>{t('common.matches')}</Text>
+
+      {hasMatchStats && (
         <View style={styles.filtersection}>
           <DropDown
             list={gameType}
@@ -72,36 +82,54 @@ const MatchListScreen = () => {
             onSelect={item => setSelectedGameType(item)}
           />
         </View>
+      )}
+
+      {hasMatchStats ? (
         <SectionList
-        sections={finalMatchArray}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            progressBackgroundColor={colors.primary}
-            colors={[colors.black]}
-            tintColor={colors.win}
-            onRefresh={onRefresh}
+          contentContainerStyle={{ flexGrow: 1 }}
+          sections={finalMatchArray}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              progressBackgroundColor={colors.primary}
+              colors={[colors.black]}
+              tintColor={colors.win}
+              onRefresh={onRefresh}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          renderSectionHeader={({section: {title}}) => (
+            <Text style={styles.SectionTitle}>{formatDateString(title)}</Text>
+          )}
+          renderItem={({item}) => (
+            <MatchBox
+              isPremium={item.isPremiumStats ?? false}
+              match={item}
+              onPress={() => handleMatchPress(item)}
+            />
+          )}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <FontAwesome
+            name="gamepad"
+            color={colors.darkGray}
+            size={64}
+            style={styles.emptyIcon}
           />
-        }
-        showsVerticalScrollIndicator={false}
-        renderSectionHeader={({section: {title}}) => (
-          <Text style={styles.SectionTitle}>{formatDateString(title)}</Text>
-        )}
-        renderItem={({item}) => (
-          <MatchBox
-            isPremium={item.isPremiumStats ?? false}
-            match={item}
-            onPress={() => handleMatchPress(item)}
-          />
-        )}
-      />
+          <Text style={styles.emptyTitle}>{t('common.noDataAvailable')}</Text>
+          <Text style={styles.emptyMessage}>
+            {t('common.noMatchesPlayed')}
+          </Text>
+        </View>
+      )}
+
       <PremiumModal
         visible={premiumModalVisible}
         onClose={() => setPremiumModalVisible(false)}
         onWatchAd={handleWatchAd}
         onBuyPremium={handleBuyPremium}
       />
-      </View>
     </View>
   )
 }
@@ -109,7 +137,6 @@ const MatchListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: sizes['2xl'],
-    paddingBottom: 0,
     flex: 1,
     backgroundColor: colors.white,
   },
@@ -136,6 +163,31 @@ const styles = StyleSheet.create({
     color: colors.black,
     paddingBottom: sizes.xl,
     paddingTop: sizes['2xl'],
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: sizes['6xl'],
+  },
+  emptyIcon: {
+    marginBottom: sizes['4xl'],
+    opacity: 0.6,
+  },
+  emptyTitle: {
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes['7xl'],
+    color: colors.black,
+    marginBottom: sizes.xl,
+    textAlign: 'center',
+    textTransform: 'lowercase',
+  },
+  emptyMessage: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xl,
+    color: colors.darkGray,
+    textAlign: 'center',
+    lineHeight: fonts.sizes['4xl'],
   },
 });
 

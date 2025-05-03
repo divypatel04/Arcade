@@ -67,7 +67,9 @@
     "type": "Type",
     "losses": "Losses",
     "killsR": "Kills/R",
-    "headshots%": "Headshots %"
+    "headshots%": "Headshots %",
+    "noDataAvailable": "No Data Available",
+    "noMatchesPlayed": "You haven't played any matches. Play some matches to see your statistics here."
   },
   "tabs": {
     "overview": "Overview",

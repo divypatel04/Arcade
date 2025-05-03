@@ -8,13 +8,16 @@ import { useTranslation } from 'react-i18next';
 import { getSupabaseImageUrl } from '../utils';
 
 type GunBoxProps = {
-  bestWeapon: WeaponStatsType;
+  bestWeapon: WeaponStatsType | null;
 }
 
 const GunBox = ({bestWeapon}:GunBoxProps) => {
   const { t } = useTranslation();
-
   const navigation = useNavigation<StackNavigationProp<any>>();
+
+  // Placeholder values when bestWeapon is null
+  const weaponName = bestWeapon?.weapon?.name ?? 'Weapon';
+  const weaponImage = bestWeapon?.weapon?.image ? getSupabaseImageUrl(bestWeapon.weapon.image) : '';
 
   return (
     <TouchableOpacity
@@ -23,7 +26,8 @@ const GunBox = ({bestWeapon}:GunBoxProps) => {
       style={styles.weaponcontainer}>
       <View style={styles.weaponimagecontainer}>
         <Image
-          source={{ uri: getSupabaseImageUrl(bestWeapon.weapon.image) }}
+          source={{ uri: weaponImage }}
+          defaultSource={require('../assets/images/raze.png')}
           resizeMode="contain"
           style={styles.weaponimage}
         />
@@ -34,7 +38,7 @@ const GunBox = ({bestWeapon}:GunBoxProps) => {
           style={styles.weaponname}
           numberOfLines={1}
           adjustsFontSizeToFit={true}>
-          {bestWeapon.weapon.name}
+          {weaponName}
         </Text>
       </View>
     </TouchableOpacity>
@@ -81,6 +85,5 @@ const styles = StyleSheet.create({
     textTransform: 'lowercase',
   },
 });
-
 
 export default GunBox

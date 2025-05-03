@@ -21,16 +21,22 @@ const WeaponListScreen = () => {
   const {userData, weaponStats} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getAllSeasonNames(weaponStats);
-  const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
+  // Check if weaponStats is empty or undefined
+  const hasWeaponStats = weaponStats && weaponStats.length > 0;
+
+  // Only get season names if we have weapon stats
+  const seasonNames = hasWeaponStats ? getAllSeasonNames(weaponStats) : [''];
+  const [selectedSeason, setSelectedSeason] = useState(hasWeaponStats ? seasonNames[1] : '');
   const [weaponList,setWeaponList] = useState<WeaponListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [selectedPremiumWeapon, setSelectedPremiumWeapon] = useState<WeaponStatsType | null>(null);
 
   useEffect(() => {
-    const weaponlist = sortWeaponsByMatches(weaponStats, selectedSeason);
-    setWeaponList(weaponlist);
-  }, [selectedSeason]);
+    if (hasWeaponStats) {
+      const weaponlist = sortWeaponsByMatches(weaponStats, selectedSeason);
+      setWeaponList(weaponlist);
+    }
+  }, [selectedSeason, hasWeaponStats]);
 
   const handleWeaponPress = (weapon: WeaponStatsType) => {
     if (weapon.isPremiumStats && !isPremiumUser(userData)) {
@@ -64,28 +70,45 @@ const WeaponListScreen = () => {
           />
         </TouchableOpacity>
         <Text style={styles.headertitle}>{t('listScreen.weapons')}</Text>
-        <View style={styles.dropdowncontainer}>
-          <DropDown
-            list={seasonNames}
-            name={t('common.season')}
-            value={selectedSeason}
-            onSelect={item => setSelectedSeason(item)}
-          />
-        </View>
+        {hasWeaponStats && (
+          <View style={styles.dropdowncontainer}>
+            <DropDown
+              list={seasonNames}
+              name={t('common.season')}
+              value={selectedSeason}
+              onSelect={item => setSelectedSeason(item)}
+            />
+          </View>
+        )}
       </View>
 
-      <FlatList
-        data={weaponList}
-        renderItem={({ item }) => (
-          <GunCard
-            isPremium={item.weapon.isPremiumStats ?? false}
-            item={item}
-            onPress={() => handleWeaponPress(item.weapon)}
+      {hasWeaponStats ? (
+        <FlatList
+          data={weaponList}
+          renderItem={({ item }) => (
+            <GunCard
+              isPremium={item.weapon.isPremiumStats ?? false}
+              item={item}
+              onPress={() => handleWeaponPress(item.weapon)}
+            />
+          )}
+          keyExtractor={(item) => item.weapon.id}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <FontAwesome
+            name="gun"
+            color={colors.darkGray}
+            size={64}
+            style={styles.emptyIcon}
           />
-        )}
-        keyExtractor={(item) => item.weapon.id}
-        showsVerticalScrollIndicator={false}
-      />
+          <Text style={styles.emptyTitle}>{t('common.noDataAvailable')}</Text>
+          <Text style={styles.emptyMessage}>
+            {t('common.noMatchesPlayed')}
+          </Text>
+        </View>
+      )}
 
       <PremiumModal
         visible={premiumModalVisible}
@@ -122,6 +145,31 @@ const styles = StyleSheet.create({
   backicon: {
     paddingTop: sizes.md,
     paddingBottom: sizes.md,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: sizes['6xl'],
+  },
+  emptyIcon: {
+    marginBottom: sizes['4xl'],
+    opacity: 0.6,
+  },
+  emptyTitle: {
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes['7xl'],
+    color: colors.black,
+    marginBottom: sizes.xl,
+    textAlign: 'center',
+    textTransform: 'lowercase',
+  },
+  emptyMessage: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xl,
+    color: colors.darkGray,
+    textAlign: 'center',
+    lineHeight: fonts.sizes['4xl'],
   },
 });
 

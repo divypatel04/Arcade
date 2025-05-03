@@ -8,15 +8,21 @@ import { getCurrentOrMostRecentSeason, getSupabaseImageUrl } from '../utils';
 import { useTranslation } from 'react-i18next';
 
 interface AgentBoxType {
-  bestAgent: AgentStatType;
+  bestAgent: AgentStatType | null;
 }
 
 const AgentBox = ({bestAgent}: AgentBoxType) => {
   const { t } = useTranslation();
-
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const currentStats = getCurrentOrMostRecentSeason(bestAgent);
 
+  // If bestAgent exists, get current stats, otherwise set to null
+  const currentStats = bestAgent ? getCurrentOrMostRecentSeason(bestAgent) : null;
+
+  // Placeholder values for when bestAgent is null
+  const agentName = bestAgent?.agent?.name ?? 'Agent';
+  const agentImage = bestAgent?.agent?.image ? getSupabaseImageUrl(bestAgent.agent.image) : '';
+  const matchesPlayed = (currentStats?.stats?.matchesWon ?? 0) + (currentStats?.stats?.matchesLost ?? 0);
+  const kills = currentStats?.stats?.kills ?? 0;
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate('AgentListScreen')} activeOpacity={0.6} style={styles.agentcontainer}>
@@ -26,18 +32,19 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
           style={styles.agentname}
           numberOfLines={1}
           adjustsFontSizeToFit={true}>
-          {bestAgent.agent.name}
+          {agentName}
         </Text>
         <View style={styles.agentmetadetails}>
-          <Text style={styles.agentmetatitle}>{t('home.matchPlayed')}:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.matchesWon + currentStats.stats.matchesLost}</Text>
+          <Text style={styles.agentmetatitle}>{t('home.matchPlayed')}:</Text><Text style={styles.agentmetavalue}>{matchesPlayed}</Text>
         </View>
         <View style={styles.agentmetadetails}>
-          <Text style={styles.agentmetatitle}>{t('home.kills')}:</Text><Text style={styles.agentmetavalue}>{currentStats.stats.kills}</Text>
+          <Text style={styles.agentmetatitle}>{t('home.kills')}:</Text><Text style={styles.agentmetavalue}>{kills}</Text>
         </View>
       </View>
       <Image
         style={styles.agentimage}
-        source={{uri: getSupabaseImageUrl(bestAgent.agent.image)}}
+        source={{uri: agentImage}}
+        defaultSource={require('../assets/images/jett.png')}
       />
     </TouchableOpacity>
   )

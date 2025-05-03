@@ -21,16 +21,22 @@ const MapListScreen = () => {
   const {mapStats, userData} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getAllSeasonNames(mapStats);
-  const [selectedSeason, setSelectedSeason] = useState(seasonNames[1]);
+  // Check if mapStats is empty or undefined
+  const hasMapStats = mapStats && mapStats.length > 0;
+
+  // Only get season names if we have map stats
+  const seasonNames = hasMapStats ? getAllSeasonNames(mapStats) : [''];
+  const [selectedSeason, setSelectedSeason] = useState(hasMapStats ? seasonNames[1] : '');
   const [mapList,setMapList] = useState<MapListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [selectedPremiumMap, setSelectedPremiumMap] = useState<MapStatsType | null>(null);
 
   useEffect(() => {
-    const maplist = sortMapsByMatches(mapStats, selectedSeason);
-    setMapList(maplist);
-  }, [selectedSeason]);
+    if (hasMapStats) {
+      const maplist = sortMapsByMatches(mapStats, selectedSeason);
+      setMapList(maplist);
+    }
+  }, [selectedSeason, hasMapStats]);
 
   const handleMapPress = (map: MapStatsType) => {
     if (map.isPremiumStats && !isPremiumUser(userData)) {
@@ -63,28 +69,45 @@ const MapListScreen = () => {
           />
         </TouchableOpacity>
         <Text style={styles.headertitle}>{t('listScreen.maps')}</Text>
-        <View style={styles.dropdowncontainer}>
-          <DropDown
-            list={seasonNames}
-            name={t('common.season')}
-            value={selectedSeason}
-            onSelect={item => setSelectedSeason(item)}
-          />
-        </View>
+        {hasMapStats && (
+          <View style={styles.dropdowncontainer}>
+            <DropDown
+              list={seasonNames}
+              name={t('common.season')}
+              value={selectedSeason}
+              onSelect={item => setSelectedSeason(item)}
+            />
+          </View>
+        )}
       </View>
 
-      <FlatList
-        data={mapList}
-        renderItem={({ item }) => (
-          <MapCard
-            isPremium={item.mapStat.isPremiumStats ?? false}
-            item={item}
-            onPress={() => handleMapPress(item.mapStat)}
+      {hasMapStats ? (
+        <FlatList
+          data={mapList}
+          renderItem={({ item }) => (
+            <MapCard
+              isPremium={item.mapStat.isPremiumStats ?? false}
+              item={item}
+              onPress={() => handleMapPress(item.mapStat)}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <FontAwesome
+            name="map-location-dot"
+            color={colors.darkGray}
+            size={64}
+            style={styles.emptyIcon}
           />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-      />
+          <Text style={styles.emptyTitle}>{t('common.noDataAvailable')}</Text>
+          <Text style={styles.emptyMessage}>
+            {t('common.noMatchesPlayed')}
+          </Text>
+        </View>
+      )}
 
       <PremiumModal
         visible={premiumModalVisible}
@@ -121,6 +144,31 @@ const styles = StyleSheet.create({
   backicon: {
     paddingTop: sizes.md,
     paddingBottom: sizes.md,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: sizes['6xl'],
+  },
+  emptyIcon: {
+    marginBottom: sizes['4xl'],
+    opacity: 0.6,
+  },
+  emptyTitle: {
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes['7xl'],
+    textTransform: 'lowercase',
+    color: colors.black,
+    marginBottom: sizes.xl,
+    textAlign: 'center',
+  },
+  emptyMessage: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xl,
+    color: colors.darkGray,
+    textAlign: 'center',
+    lineHeight: fonts.sizes['4xl'],
   },
 });
 

@@ -6,10 +6,9 @@ import { SeasonStatsType } from '@types';
 import { useTranslation } from 'react-i18next';
 import { useDataContext } from '@context';
 import { DetailedStats, DropDown, StatsSummary } from '@components';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 
 const SeasonInfoScreen = () => {
-
   const ranks = [
     {
       id: 0,
@@ -184,32 +183,48 @@ const SeasonInfoScreen = () => {
 
   const {t} = useTranslation();
   const {seasonStats} = useDataContext();
-  const seasonName = getSortedSeasonNames(seasonStats);
-  const [selectedSeason, setSelectedSeason] = useState(seasonName[1]);
+
+  // Check if seasonStats exists and has data
+  const hasSeasonStats = seasonStats && seasonStats.length > 0;
+
+  // Only get season names if we have season stats
+  const seasonName = hasSeasonStats ? getSortedSeasonNames(seasonStats) : ['All'];
+  const [selectedSeason, setSelectedSeason] = useState(hasSeasonStats ? seasonName[1] : 'All');
   const [mainSeasonStats, setMainSeasonStats] = useState<SeasonStatsType>();
 
   useEffect(() => {
-    const selectedseason = seasonStats.find(
-      (season: SeasonStatsType) => season.season.name === selectedSeason,
-    );
-    if (selectedseason) {
-      setMainSeasonStats(selectedseason);
-    } else {
-      setMainSeasonStats(mergeActSeasonalStats(seasonStats));
+    if (hasSeasonStats) {
+      const selectedseason = seasonStats.find(
+        (season: SeasonStatsType) => season.season.name === selectedSeason,
+      );
+      if (selectedseason) {
+        setMainSeasonStats(selectedseason);
+      } else {
+        setMainSeasonStats(mergeActSeasonalStats(seasonStats));
+      }
     }
+  }, [selectedSeason, hasSeasonStats]);
 
-  }, [selectedSeason]);
+  // Helper function to prevent NaN values
+  const safeCalculate = (calculation: () => number, defaultValue: number = 0): number => {
+    try {
+      const result = calculation();
+      return isNaN(result) || !isFinite(result) ? defaultValue : result;
+    } catch (e) {
+      return defaultValue;
+    }
+  };
 
   const firstStats = [
     {
       name: t('common.winRate'),
-      value:
-        (
-          ((mainSeasonStats?.stats.matchesWon ?? 0) /
-            ((mainSeasonStats?.stats.matchesWon ?? 0) +
-              (mainSeasonStats?.stats.matchesLost ?? 0))) *
-          100
-        ).toFixed(1) + '%',
+      value: safeCalculate(() => {
+        const wins = mainSeasonStats?.stats.matchesWon ?? 0;
+        const losses = mainSeasonStats?.stats.matchesLost ?? 0;
+        const total = wins + losses;
+        if (total === 0) return 0;
+        return (wins / total) * 100;
+      }).toFixed(1) + '%',
     },
     {
       name: t('common.hours'),
@@ -217,9 +232,12 @@ const SeasonInfoScreen = () => {
     },
     {
       name: t('common.kd'),
-      value: ((mainSeasonStats?.stats.kills ?? 0) / (mainSeasonStats?.stats.deaths ?? 0)).toFixed(
-        2,
-      ),
+      value: safeCalculate(() => {
+        const kills = mainSeasonStats?.stats.kills ?? 0;
+        const deaths = mainSeasonStats?.stats.deaths ?? 0;
+        if (deaths === 0) return 0;
+        return kills / deaths;
+      }).toFixed(2),
     },
   ];
 
@@ -227,9 +245,12 @@ const SeasonInfoScreen = () => {
     {name: t('common.kills'), value: mainSeasonStats?.stats.kills ?? 0},
     {
       name: t('common.damageR'),
-      value: (
-        (mainSeasonStats?.stats.damage ?? 0) / (mainSeasonStats?.stats.totalRounds ?? 0)
-      ).toFixed(2),
+      value: safeCalculate(() => {
+        const damage = mainSeasonStats?.stats.damage ?? 0;
+        const rounds = mainSeasonStats?.stats.totalRounds ?? 0;
+        if (rounds === 0) return 0;
+        return damage / rounds;
+      }).toFixed(2),
     },
     {name: t('common.plants'), value: mainSeasonStats?.stats.plants ?? 0},
     {name: t('common.aces'), value: mainSeasonStats?.stats.aces ?? 0},
@@ -237,61 +258,81 @@ const SeasonInfoScreen = () => {
     {name: t('common.MVPS'), value: mainSeasonStats?.stats.mvps ?? 0},
   ];
 
-  const barWidth: number =
-    ((mainSeasonStats?.stats.matchesWon ?? 0) /
-      ((mainSeasonStats?.stats.matchesWon ?? 0) + (mainSeasonStats?.stats.matchesLost ?? 0))) *
-    100;
+  // Calculate bar width for win rate display
+  const barWidth: number = safeCalculate(() => {
+    const wins = mainSeasonStats?.stats.matchesWon ?? 0;
+    const losses = mainSeasonStats?.stats.matchesLost ?? 0;
+    const total = wins + losses;
+    if (total === 0) return 0;
+    return (wins / total) * 100;
+  });
 
   return (
     <View style={styles.container}>
-
       <View style={styles.header}>
         <Text style={styles.headertitle}>{t('infoScreen.statistics')}</Text>
-        <View style={styles.filtersection}>
-          <DropDown
-            list={seasonName}
-            name={t('common.season')}
-            value={selectedSeason}
-            onSelect={item => setSelectedSeason(item)}
-          />
-        </View>
+        {hasSeasonStats && (
+          <View style={styles.filtersection}>
+            <DropDown
+              list={seasonName}
+              name={t('common.season')}
+              value={selectedSeason}
+              onSelect={item => setSelectedSeason(item)}
+            />
+          </View>
+        )}
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} overScrollMode={'never'}>
-        <View style={styles.rankcontainer}>
-          <View style={styles.rankdetails}>
-            <Image
-              style={styles.rankimage}
-              source={{uri: ranks.find(rank => rank.id === mainSeasonStats?.stats.highestRank)?.largeicon || ranks[0].largeicon}}
-            />
-            <View style={styles.rankmeta}>
-              <Text style={styles.rankepisode}>{t('infoScreen.highestRank')}</Text>
-              <Text style={styles.ranktitle}>
-                {ranks.find(rank => rank.id === mainSeasonStats?.stats.highestRank)?.name || ranks[0].name}
-              </Text>
+      {hasSeasonStats ? (
+        <ScrollView showsVerticalScrollIndicator={false} overScrollMode={'never'}>
+          <View style={styles.rankcontainer}>
+            <View style={styles.rankdetails}>
+              <Image
+                style={styles.rankimage}
+                source={{uri: ranks.find(rank => rank.id === mainSeasonStats?.stats.highestRank)?.largeicon || ranks[0].largeicon}}
+              />
+              <View style={styles.rankmeta}>
+                <Text style={styles.rankepisode}>{t('infoScreen.highestRank')}</Text>
+                <Text style={styles.ranktitle}>
+                  {ranks.find(rank => rank.id === mainSeasonStats?.stats.highestRank)?.name || ranks[0].name}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.rankprogress}>
+              <View>
+                <View style={styles.rankprogresscontainer}>
+                  <View style={[styles.rankbar, {width: `${barWidth}%`}]} />
+                </View>
+                <View style={styles.rankmetatexts}>
+                  <Text style={styles.ranktext}>
+                    {mainSeasonStats?.stats.matchesWon ?? 0} {t('common.wins')}
+                  </Text>
+                  <Text style={styles.ranktext2}>
+                    {mainSeasonStats?.stats.matchesLost ?? 0} {t('common.losses')}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
 
-          <View style={styles.rankprogress}>
-            <View>
-              <View style={styles.rankprogresscontainer}>
-                <View style={[styles.rankbar, {width: `${barWidth}%`}]} />
-              </View>
-              <View style={styles.rankmetatexts}>
-                <Text style={styles.ranktext}>
-                  {mainSeasonStats?.stats.matchesWon} {t('common.wins')}
-                </Text>
-                <Text style={styles.ranktext2}>
-                {mainSeasonStats?.stats.matchesLost} {t('common.losses')}
-                </Text>
-              </View>
-            </View>
-          </View>
+          <StatsSummary stats={firstStats} />
+          <DetailedStats stats={secondStats} />
+        </ScrollView>
+      ) : (
+        <View style={styles.emptyContainer}>
+          <FontAwesome
+            name="trophy"
+            color={colors.darkGray}
+            size={64}
+            style={styles.emptyIcon}
+          />
+          <Text style={styles.emptyTitle}>{t('common.noDataAvailable')}</Text>
+          <Text style={styles.emptyMessage}>
+            {t('common.noMatchesPlayed')}
+          </Text>
         </View>
-
-        <StatsSummary stats={firstStats} />
-        <DetailedStats stats={secondStats} />
-      </ScrollView>
+      )}
     </View>
   );
 };
@@ -386,6 +427,31 @@ const styles = StyleSheet.create({
     fontFamily: fonts.family.proximaBold,
     color: colors.black,
     fontSize: fonts.sizes.md + 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: sizes['6xl'],
+  },
+  emptyIcon: {
+    marginBottom: sizes['4xl'],
+    opacity: 0.6,
+  },
+  emptyTitle: {
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes['7xl'],
+    color: colors.black,
+    marginBottom: sizes.xl,
+    textAlign: 'center',
+    textTransform: 'lowercase',
+  },
+  emptyMessage: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xl,
+    color: colors.darkGray,
+    textAlign: 'center',
+    lineHeight: fonts.sizes['4xl'],
   },
 });
 

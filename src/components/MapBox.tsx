@@ -8,13 +8,15 @@ import { useTranslation } from 'react-i18next';
 import { getSupabaseImageUrl } from '../utils';
 
 interface MapBoxProps {
-  bestMap: MapStatsType;
+  bestMap: MapStatsType | null;
 }
 
 const MapBox = ({bestMap}:MapBoxProps) => {
   const { t } = useTranslation();
-
   const navigation = useNavigation<StackNavigationProp<any>>();
+
+  const mapName = bestMap?.map?.name ?? 'Map';
+  const mapImage = bestMap?.map?.image ? getSupabaseImageUrl(bestMap.map.image) : '';
 
   return (
     <TouchableOpacity
@@ -23,7 +25,8 @@ const MapBox = ({bestMap}:MapBoxProps) => {
       style={styles.mapcontainer}>
       <View style={styles.mapimagecontainer}>
         <Image
-          source={{ uri: getSupabaseImageUrl(bestMap.map.image) }}
+          source={{ uri: mapImage }}
+          defaultSource={require('../assets/images/raze.png')}
           resizeMode="cover"
           style={styles.mapimage}
         />
@@ -34,7 +37,7 @@ const MapBox = ({bestMap}:MapBoxProps) => {
           style={styles.mapname}
           numberOfLines={1}
           adjustsFontSizeToFit={true}>
-          {bestMap.map.name}
+          {mapName}
         </Text>
       </View>
     </TouchableOpacity>

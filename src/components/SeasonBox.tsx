@@ -7,13 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 type SeasonBoxProps = {
-  season: SeasonStatsType;
+  season: SeasonStatsType | null;
 }
 
 const SeasonBox = ({season}: SeasonBoxProps) => {
-
   const { t } = useTranslation();
-
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const ranks = [
@@ -188,6 +186,16 @@ const SeasonBox = ({season}: SeasonBoxProps) => {
     },
   ];
 
+  // Create placeholder data when season is null
+  const highestRank = season?.stats?.highestRank ?? 0; // Default to UNRANKED (id: 0)
+  const matchesWon = season?.stats?.matchesWon ?? 0;
+  const matchesLost = season?.stats?.matchesLost ?? 0;
+  const kills = season?.stats?.kills ?? 0;
+  const mvps = season?.stats?.mvps ?? 0;
+
+  // Find rank information based on the highest rank
+  const currentRank = ranks.find(rank => rank.id === highestRank) || ranks[0];
+
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -196,33 +204,34 @@ const SeasonBox = ({season}: SeasonBoxProps) => {
       <View style={styles.rankdetails}>
         <Image
           style={styles.rankimage}
-          source={{ uri: ranks.find(rank => rank.id === season.stats.highestRank)?.largeicon || ranks[0].largeicon }}
+          source={{ uri: currentRank.largeicon }}
+          defaultSource={{uri: 'https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/0/largeicon.png'}}
         />
         <View style={styles.rankmeta}>
           <Text style={styles.rankepisode}>{t('home.currentSeason')}</Text>
           <Text style={styles.ranktitle}>
-            {ranks.find(rank => rank.id === season.stats.highestRank)?.name || ranks[0].name}
+            {currentRank.name}
           </Text>
         </View>
       </View>
 
       <View style={styles.statsdetails}>
         <View>
-          <Text style={styles.stattitle}>{season.stats.matchesWon}</Text>
+          <Text style={styles.stattitle}>{matchesWon}</Text>
           <Text style={styles.statsubtext}>{t('common.wins')}</Text>
         </View>
         <View>
-          <Text style={styles.stattitle}>{season.stats.matchesLost}</Text>
+          <Text style={styles.stattitle}>{matchesLost}</Text>
           <Text style={styles.statsubtext}>{t('common.lose')}</Text>
         </View>
         <View>
           <Text style={styles.stattitle}>
-            {season.stats.kills}
+            {kills}
           </Text>
           <Text style={styles.statsubtext}>{t('common.kills')}</Text>
         </View>
         <View>
-          <Text style={styles.stattitle}>{season.stats.mvps}</Text>
+          <Text style={styles.stattitle}>{mvps}</Text>
           <Text style={styles.statsubtext}>{t('common.MVPS')}</Text>
         </View>
       </View>

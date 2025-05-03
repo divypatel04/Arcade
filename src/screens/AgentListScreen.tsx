@@ -17,22 +17,26 @@ interface AgentListProps {
 }
 
 const AgentListScreen = () => {
-
   const { t } = useTranslation();
-
   const {agentStats, userData} = useDataContext();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const seasonNames = getAllSeasonNames(agentStats);
-  const [selectedSeason, setselectedSeason] = useState(seasonNames[1]);
+  // Check if agentStats is empty or undefined
+  const hasAgentStats = agentStats && agentStats.length > 0;
+
+  // Only get season names if we have agent stats
+  const seasonNames = hasAgentStats ? getAllSeasonNames(agentStats) : [''];
+  const [selectedSeason, setselectedSeason] = useState(hasAgentStats ? seasonNames[1] : '');
   const [agentList,setAgentList] = useState<AgentListProps[]>();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [selectedPremiumAgent, setSelectedPremiumAgent] = useState<AgentStatType | null>(null);
 
   useEffect(() => {
-    const agentList = sortAgentsByMatches(agentStats, selectedSeason);
-    setAgentList(agentList);
-  }, [selectedSeason]);
+    if (hasAgentStats) {
+      const agentList = sortAgentsByMatches(agentStats, selectedSeason);
+      setAgentList(agentList);
+    }
+  }, [selectedSeason, hasAgentStats]);
 
   const handleAgentPress = (agent: AgentStatType) => {
     if (agent.isPremiumStats && !isPremiumUser(userData)) {
@@ -66,28 +70,45 @@ const AgentListScreen = () => {
           />
         </TouchableOpacity>
         <Text style={styles.headertitle}>{t('listScreen.agents')}</Text>
-        <View style={styles.dropdowncontainer}>
-          <DropDown
-            list={seasonNames}
-            name={t('common.season')}
-            value={selectedSeason}
-            onSelect={item => setselectedSeason(item)}
-          />
-        </View>
+        {hasAgentStats && (
+          <View style={styles.dropdowncontainer}>
+            <DropDown
+              list={seasonNames}
+              name={t('common.season')}
+              value={selectedSeason}
+              onSelect={item => setselectedSeason(item)}
+            />
+          </View>
+        )}
       </View>
 
-      <FlatList
-        data={agentList}
-        renderItem={({ item }) => (
-          <AgentCard
-            isPremium={item.agentStat.isPremiumStats ?? false}
-            agent={item}
-            onPress={() => handleAgentPress(item.agentStat)}
+      {hasAgentStats ? (
+        <FlatList
+          data={agentList}
+          renderItem={({ item }) => (
+            <AgentCard
+              isPremium={item.agentStat.isPremiumStats ?? false}
+              agent={item}
+              onPress={() => handleAgentPress(item.agentStat)}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <FontAwesome
+            name="user-secret"
+            color={colors.darkGray}
+            size={64}
+            style={styles.emptyIcon}
           />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-      />
+          <Text style={styles.emptyTitle}>{t('common.noDataAvailable')}</Text>
+          <Text style={styles.emptyMessage}>
+            {t('common.noMatchesPlayed')}
+          </Text>
+        </View>
+      )}
 
       <PremiumModal
         visible={premiumModalVisible}
@@ -124,6 +145,31 @@ const styles = StyleSheet.create({
   backicon: {
     paddingTop: sizes.md,
     paddingBottom: sizes.md,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: sizes['6xl'],
+  },
+  emptyIcon: {
+    marginBottom: sizes['4xl'],
+    opacity: 0.6,
+  },
+  emptyTitle: {
+    fontFamily: fonts.family.novecentoUltraBold,
+    fontSize: fonts.sizes['7xl'],
+    textTransform:'lowercase',
+    color: colors.black,
+    marginBottom: sizes.xl,
+    textAlign: 'center',
+  },
+  emptyMessage: {
+    fontFamily: fonts.family.proximaRegular,
+    fontSize: fonts.sizes.xl,
+    color: colors.darkGray,
+    textAlign: 'center',
+    lineHeight: fonts.sizes['4xl'],
   },
 });
 
