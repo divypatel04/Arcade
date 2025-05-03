@@ -12,6 +12,7 @@ import { Platform } from 'react-native';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 import { REVENUECAT_ANDROID_API_KEY, REVENUECAT_IOS_API_KEY } from '@env';
 import mobileAds from 'react-native-google-mobile-ads';
+import { checkUpdateNeeded } from '@utils';
 
 const queryClient = new QueryClient()
 
@@ -30,6 +31,7 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     configPurchases();
+    checkUpdateNeeded();
 
     // Initialize mobile ads
     mobileAds()
