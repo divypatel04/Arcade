@@ -1,4 +1,6 @@
+import { Alert, BackHandler, Linking } from "react-native";
 import { supabase } from "../lib/supabase";
+import VersionCheck from 'react-native-version-check';
 
 
 export function formatDateString(dateString: string) {
@@ -72,3 +74,28 @@ export function isPremiumUser(userData: any): boolean {
   // Fallback to checking payment records
   return Boolean(userData.payments && userData.payments.length > 0);
 }
+
+
+export const checkUpdateNeeded = async () => {
+  VersionCheck.needUpdate({ignoreErrors: true}).then(async (res: any) => {
+    if (res.isNeeded) {
+      Alert.alert(
+        'Please Update',
+        'You will have to update your app to the latest version to continue using.',
+        [
+          {
+            text: 'Update Now',
+            onPress: () => {
+              BackHandler.exitApp();
+              Linking.openURL(res.storeUrl);
+            },
+          },
+          {
+            text: 'ok',
+            onPress: () => {},
+          },
+        ],
+      );
+    }
+  });
+};
