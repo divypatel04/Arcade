@@ -38,6 +38,12 @@
     "statistics": "Statistics",
     "highestRank": "Highest Rank"
   },
+  "user": {
+    "premium": "Premium",
+    "managePremium": "Manage Premium",
+    "buyPremium": "Buy Premium"
+
+  },
   "common": {
     "wins": "Wins",
     "lose": "Lose",
@@ -69,7 +75,10 @@
     "killsR": "Kills/R",
     "headshots%": "Headshots %",
     "noDataAvailable": "No Data Available",
-    "noMatchesPlayed": "You haven't played any matches. Play some matches to see your statistics here."
+    "noMatchesPlayed": "You haven't played any matches. Play some matches to see your statistics here.",
+    "fetchingData": "Fetching Data...",
+    "loading": "Loading...",
+    "welcome": "Welcome Back"
   },
   "tabs": {
     "overview": "Overview",
