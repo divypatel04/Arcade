@@ -86,7 +86,7 @@ const OnboardingScreen = () => {
   }
 
 
-  const urlOpener = async () => {
+  const openAuth = async () => {
     let authUrl =
       'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcadebackend.onrender.com/oauth&response_type=code&scope=openid+offline_access';
     let authRedirectUrl = 'arcadeauth://oauth2redirect';

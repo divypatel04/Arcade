@@ -6,6 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   authStatusChecked: boolean;
   userPuuid: string | null;
+  setIsAuthenticated: (value: boolean) => void;
   login: (puuid: string) => Promise<boolean>;
   logout: () => Promise<void>;
 }
@@ -69,6 +70,7 @@ export const AuthProvider = ({children}: any) => {
         isAuthenticated,
         authStatusChecked,
         userPuuid,
+        setIsAuthenticated,
         login,
         logout,
       }}>
