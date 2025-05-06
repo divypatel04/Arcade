@@ -78,7 +78,17 @@
     "noMatchesPlayed": "You haven't played any matches. Play some matches to see your statistics here.",
     "fetchingData": "Fetching Data...",
     "loading": "Loading...",
-    "welcome": "Welcome Back"
+    "welcome": "Welcome Back",
+    "roundwin%": "Round Win %",
+    "atkkills": "Attack Kills",
+    "AtkKD": "Attack K/D",
+    "defkills": "Defence Kills",
+    "DefKD": "Defence K/D",
+    "rounds": "Rounds",
+    "rwins": "Round Win",
+    "rlost": "Round Lost",
+    "utilityR": "Utility/R",
+    "ability": "Ability"
   },
   "tabs": {
     "overview": "Overview",

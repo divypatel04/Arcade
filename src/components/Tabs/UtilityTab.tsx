@@ -11,6 +11,7 @@ import { colors, fonts, sizes } from '../../theme';
 import DropDown from '../DropDown';
 import StatsSummary from '../StatsSummary';
 import { getSupabaseImageUrl } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 interface AbilityData {
   id: string;
@@ -35,6 +36,8 @@ const mergeUtilitiesAndAbilities = (abilitiesData: AbilityData[], utilities: { i
 };
 
 const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) => {
+
+  const { t } = useTranslation();
   const abilities = mergeUtilitiesAndAbilities(abilitiesData, utilities ?? []);
 
   const abilitiesType = abilities.map((ability) => ability.name);
@@ -47,9 +50,9 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
 
   console.log('currentAbility', currentAbility);
   const Stats = [
-    { name: 'Usage/R', value: String(((currentAbility?.data.count ?? 0) / totalRounds).toFixed(2)) },
-    { name: 'Damage/R', value: String(((currentAbility?.data.damage ?? 0) / totalRounds).toFixed(2)) },
-    { name: 'Kills', value: String((currentAbility?.data.kills ?? 0)) },
+    { name: t('common.utilityR'), value: String(((currentAbility?.data.count ?? 0) / totalRounds).toFixed(2)) },
+    { name: t('common.damageR'), value: String(((currentAbility?.data.damage ?? 0) / totalRounds).toFixed(2)) },
+    { name: t('common.kills'), value: String((currentAbility?.data.kills ?? 0)) },
   ];
 
   return (
@@ -57,7 +60,7 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
       <View style={styles.dropdowncontainer}>
         <DropDown
           list={abilitiesType}
-          name="Ability"
+          name={t('common.ability')}
           value={selectedAbilityType}
           onSelect={(item) => setSelectedAbilityType(item)}
         />
@@ -68,7 +71,7 @@ const UtilityTab = ({ utilities, totalRounds, abilitiesData }: UtilityTabProps) 
           source={{ uri: getSupabaseImageUrl(currentAbility?.image) }}
         />
         <View style={styles.abilityMeta}>
-          <Text style={styles.abilitySubText}>Ability</Text>
+          <Text style={styles.abilitySubText}>{t('common.ability')}</Text>
           <Text style={styles.abilityTitle}>{currentAbility.name}</Text>
         </View>
       </View>

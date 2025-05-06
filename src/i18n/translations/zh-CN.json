@@ -38,6 +38,11 @@
     "statistics": "统计",
     "highestRank": "最高排名"
   },
+  "user": {
+    "premium": "高级版",
+    "managePremium": "管理高级版",
+    "buyPremium": "购买高级版"
+  },
   "common": {
     "kills": "击杀",
     "deaths": "死亡",
@@ -67,7 +72,22 @@
     "type": "类型",
     "losses": "失败",
     "killsR": "击杀/回合",
-    "headshots%": "爆头率"
+    "headshots%": "爆头率",
+    "noDataAvailable": "无可用数据",
+    "noMatchesPlayed": "您尚未进行任何比赛。请进行一些比赛以在此处查看您的统计数据。",
+    "fetchingData": "获取数据中...",
+    "loading": "加载中...",
+    "welcome": "欢迎回来",
+    "roundwin%": "回合胜率",
+    "atkkills": "进攻击杀",
+    "AtkKD": "进攻 K/D",
+    "defkills": "防守击杀",
+    "DefKD": "防守 K/D",
+    "rounds": "回合",
+    "rwins": "回合胜利",
+    "rlost": "回合失败",
+    "utilityR": "技能/回合",
+    "ability": "能力"
   },
   "tabs": {
     "overview": "概览",

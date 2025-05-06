@@ -38,6 +38,11 @@
     "statistics": "Estatísticas",
     "highestRank": "Maior Rank"
   },
+  "user": {
+    "premium": "Premium",
+    "managePremium": "Gerenciar Premium",
+    "buyPremium": "Comprar Premium"
+  },
   "common": {
     "kills": "Abates",
     "deaths": "Mortes",
@@ -67,7 +72,22 @@
     "type": "Tipo",
     "losses": "Derrotas",
     "killsR": "Abates/R",
-    "headshots%": "% Tiros na Cabeça"
+    "headshots%": "% Tiros na Cabeça",
+    "noDataAvailable": "Nenhum Dado Disponível",
+    "noMatchesPlayed": "Você não jogou nenhuma partida. Jogue algumas partidas para ver suas estatísticas aqui.",
+    "fetchingData": "Buscando Dados...",
+    "loading": "Carregando...",
+    "welcome": "Bem-vindo de Volta",
+    "roundwin%": "% Vitórias de Round",
+    "atkkills": "Abates em Ataque",
+    "AtkKD": "K/D em Ataque",
+    "defkills": "Abates em Defesa",
+    "DefKD": "K/D em Defesa",
+    "rounds": "Rounds",
+    "rwins": "Rounds Ganhos",
+    "rlost": "Rounds Perdidos",
+    "utilityR": "Utilidade/R",
+    "ability": "Habilidade"
   },
   "tabs": {
     "overview": "Visão Geral",

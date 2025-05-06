@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
 import { colors, fonts, sizes } from '../../theme';
 import DropDown from '../DropDown';
+import { useTranslation } from 'react-i18next';
 
 
 type Stats = {
@@ -28,14 +29,16 @@ type AttackDefenseStats = {
 
 const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
 
+  const { t } = useTranslation();
+
   const siteNames = ['Attack','Defence'];
   const [siteStat, setSiteStat] = useState<Stats>();
   const [selectedSite, setSelectedSite] = useState(siteNames[0]);
 
   const Stats = [
-    { name: 'Round Win%', value: String(((siteStat?.roundsWon ?? 0)  / ((siteStat?.roundsWon ?? 0) + (siteStat?.roundsLost ?? 0)) * 100).toFixed(1)) + '%' },
-    { name: 'Atk. Kills', value: String(siteStat?.kills ?? 0) },
-    { name: 'Atk. K/D', value: String(((siteStat?.kills ?? 0) / (siteStat?.deaths ?? 1)).toFixed(1)) },
+    { name: t('roundwin%'), value: String(((siteStat?.roundsWon ?? 0)  / ((siteStat?.roundsWon ?? 0) + (siteStat?.roundsLost ?? 0)) * 100).toFixed(1)) + '%' },
+    { name: selectedSite === 'Attack' ? t('common.atkkills') : t('common.defkills'), value: String(siteStat?.kills ?? 0) },
+    { name: selectedSite === 'Attack' ? t('common.AtkKD') : t('common.DefKD'), value: String(((siteStat?.kills ?? 0) / (siteStat?.deaths ?? 1)).toFixed(1)) },
   ];
 
   const Stats2 = siteStat?.clutchStats ? [
@@ -71,7 +74,7 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
           />
         </View>
       <View style={styles.container}>
-        <Text style={styles.roundText}>Rounds</Text>
+        <Text style={styles.roundText}>{t('common.rounds')}</Text>
         <View style={styles.progressContainer}>
           <View
             style={[
@@ -82,10 +85,10 @@ const SiteTab = ({attackStats, defenceStats}:AttackDefenseStats) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.roundResult}>
-            {siteStat?.roundsWon} R.Wins
+            {siteStat?.roundsWon} {t('common.rwins')}
           </Text>
           <Text style={styles.roundResult}>
-            {siteStat?.roundsLost} R.Lose
+            {siteStat?.roundsLost} {t('common.rlost')}
           </Text>
         </View>
       </View>

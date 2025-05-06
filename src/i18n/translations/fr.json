@@ -38,6 +38,11 @@
     "statistics": "Statistiques",
     "highestRank": "Rang le Plus Élevé"
   },
+  "user": {
+    "premium": "Premium",
+    "managePremium": "Gérer Premium",
+    "buyPremium": "Acheter Premium"
+  },
   "common": {
     "wins": "Victoires",
     "lose": "Défaites",
@@ -67,7 +72,22 @@
     "type": "Type",
     "losses": "Défaites",
     "killsR": "Élim/R",
-    "headshots%": "% Tirs à la Tête"
+    "headshots%": "% Tirs à la Tête",
+    "noDataAvailable": "Pas de Données Disponibles",
+    "noMatchesPlayed": "Vous n'avez pas encore joué de matchs. Jouez quelques matchs pour voir vos statistiques ici.",
+    "fetchingData": "Récupération des Données...",
+    "loading": "Chargement...",
+    "welcome": "Bienvenue à Nouveau",
+    "roundwin%": "% Victoires de Round",
+    "atkkills": "Éliminations en Attaque",
+    "AtkKD": "K/D en Attaque",
+    "defkills": "Éliminations en Défense",
+    "DefKD": "K/D en Défense",
+    "rounds": "Rounds",
+    "rwins": "Rounds Gagnés",
+    "rlost": "Rounds Perdus",
+    "utilityR": "Utilités/R",
+    "ability": "Compétence"
   },
   "tabs": {
     "overview": "Aperçu",

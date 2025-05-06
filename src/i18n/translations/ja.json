@@ -37,7 +37,22 @@
     "type": "タイプ",
     "losses": "敗北",
     "killsR": "キル/R",
-    "headshots%": "ヘッドショット %"
+    "headshots%": "ヘッドショット %",
+    "noDataAvailable": "データがありません",
+    "noMatchesPlayed": "まだ試合をプレイしていません。いくつかの試合をプレイして、ここで統計を確認しましょう。",
+    "fetchingData": "データを取得中...",
+    "loading": "読み込み中...",
+    "welcome": "お帰りなさい",
+    "roundwin%": "ラウンド勝率 %",
+    "atkkills": "攻撃側キル",
+    "AtkKD": "攻撃側 K/D",
+    "defkills": "防御側キル",
+    "DefKD": "防御側 K/D",
+    "rounds": "ラウンド",
+    "rwins": "ラウンド勝利",
+    "rlost": "ラウンド敗北",
+    "utilityR": "アビリティ/R",
+    "ability": "アビリティ"
   },
   "settings": {
     "language": "言語",
@@ -89,5 +104,10 @@
     "accessPremiumFeatures": "プレミアム機能にアクセスするには、広告を視聴するかプレミアムプランに加入してください",
     "watchAd": "広告を視聴",
     "buyPremium": "プレミアムを購入"
+  },
+  "user": {
+    "premium": "プレミアム",
+    "managePremium": "プレミアム管理",
+    "buyPremium": "プレミアム購入"
   }
 }

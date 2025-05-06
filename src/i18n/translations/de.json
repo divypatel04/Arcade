@@ -38,6 +38,11 @@
     "statistics": "Statistiken",
     "highestRank": "Höchster Rang"
   },
+  "user": {
+    "premium": "Premium",
+    "managePremium": "Premium verwalten",
+    "buyPremium": "Premium kaufen"
+  },
   "common": {
     "kills": "Kills",
     "deaths": "Tode",
@@ -67,7 +72,22 @@
     "type": "Typ",
     "losses": "Niederlagen",
     "killsR": "Kills/R",
-    "headshots%": "% Kopftreffer"
+    "headshots%": "% Kopftreffer",
+    "noDataAvailable": "Keine Daten verfügbar",
+    "noMatchesPlayed": "Du hast noch keine Matches gespielt. Spiele einige Matches, um deine Statistiken hier zu sehen.",
+    "fetchingData": "Daten werden geladen...",
+    "loading": "Wird geladen...",
+    "welcome": "Willkommen zurück",
+    "roundwin%": "Rundenerfolg %",
+    "atkkills": "Angriff Kills",
+    "AtkKD": "Angriff K/D",
+    "defkills": "Verteidigungs Kills",
+    "DefKD": "Verteidigungs K/D",
+    "rounds": "Runden",
+    "rwins": "Runden gewonnen",
+    "rlost": "Runden verloren",
+    "utilityR": "Fähigkeiten/R",
+    "ability": "Fähigkeit"
   },
   "tabs": {
     "overview": "Übersicht",

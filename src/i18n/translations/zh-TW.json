@@ -37,7 +37,22 @@
     "type": "類型",
     "losses": "失敗",
     "killsR": "擊殺/回合",
-    "headshots%": "爆頭率"
+    "headshots%": "爆頭率",
+    "noDataAvailable": "無可用數據",
+    "noMatchesPlayed": "您尚未進行任何比賽。請進行一些比賽以在此處查看您的統計數據。",
+    "fetchingData": "獲取數據中...",
+    "loading": "載入中...",
+    "welcome": "歡迎回來",
+    "roundwin%": "回合勝率",
+    "atkkills": "進攻擊殺",
+    "AtkKD": "進攻 K/D",
+    "defkills": "防守擊殺",
+    "DefKD": "防守 K/D",
+    "rounds": "回合",
+    "rwins": "回合勝利",
+    "rlost": "回合失敗",
+    "utilityR": "技能/回合",
+    "ability": "能力"
   },
   "settings": {
     "language": "語言",
@@ -88,6 +103,11 @@
     "notPremiumUser": "您不是高級用戶",
     "accessPremiumFeatures": "要訪問高級功能，您可以觀看廣告或訂閱我們的高級計劃",
     "watchAd": "觀看廣告",
+    "buyPremium": "購買高級版"
+  },
+  "user": {
+    "premium": "高級版",
+    "managePremium": "管理高級版",
     "buyPremium": "購買高級版"
   }
 }

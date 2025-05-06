@@ -37,7 +37,22 @@
     "type": "Tipo",
     "losses": "Derrotas",
     "killsR": "Eliminaciones/R",
-    "headshots%": "% Tiros a la Cabeza"
+    "headshots%": "% Tiros a la Cabeza",
+    "noDataAvailable": "No hay datos disponibles",
+    "noMatchesPlayed": "No has jugado ninguna partida. Juega algunas partidas para ver tus estadísticas aquí.",
+    "fetchingData": "Obteniendo datos...",
+    "loading": "Cargando...",
+    "welcome": "Bienvenido de nuevo",
+    "roundwin%": "% Victoria de Ronda",
+    "atkkills": "Eliminaciones en Ataque",
+    "AtkKD": "K/D en Ataque",
+    "defkills": "Eliminaciones en Defensa",
+    "DefKD": "K/D en Defensa",
+    "rounds": "Rondas",
+    "rwins": "Rondas Ganadas",
+    "rlost": "Rondas Perdidas",
+    "utilityR": "Habilidades/R",
+    "ability": "Habilidad"
   },
   "settings": {
     "language": "Idioma",
@@ -88,6 +103,11 @@
     "notPremiumUser": "No eres usuario premium",
     "accessPremiumFeatures": "Para acceder a las funciones premium, puedes ver un anuncio o suscribirte a nuestro plan premium",
     "watchAd": "Ver Anuncio",
+    "buyPremium": "Comprar Premium"
+  },
+  "user": {
+    "premium": "Premium",
+    "managePremium": "Administrar Premium",
     "buyPremium": "Comprar Premium"
   }
 }

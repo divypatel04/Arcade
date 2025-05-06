@@ -77,7 +77,17 @@
     "noMatchesPlayed": "Henüz hiç maç oynamadınız. İstatistiklerinizi görmek için biraz maç oynayın.",
     "fetchingData": "Veriler Getiriliyor...",
     "loading": "Yükleniyor...",
-    "welcome": "Tekrar Hoşgeldiniz"
+    "welcome": "Tekrar Hoşgeldiniz",
+    "roundwin%": "Raunt Kazanma %",
+    "atkkills": "Saldırı Öldürmeleri",
+    "AtkKD": "Saldırı K/D",
+    "defkills": "Savunma Öldürmeleri",
+    "DefKD": "Savunma K/D",
+    "rounds": "Rauntlar",
+    "rwins": "Kazanılan Raunt",
+    "rlost": "Kaybedilen Raunt",
+    "utilityR": "Yetenek/R",
+    "ability": "Yetenek"
   },
   "tabs": {
     "overview": "Genel Bakış",
