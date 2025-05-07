@@ -2,7 +2,7 @@ import { mergeAgentSeasonalStats, mergeMapSeasonalStats, mergeWeaponSeasonalStat
 import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumWeaponStats, determinePremiumSeasonStats, determinePremiumMatchStats } from './premiumUtils';
 import { getTopAgentByKills, getTopMapByWinRate, getTopWeaponByKills, getMatchQueueTypes, sortAgentsByMatches, sortMapsByMatches, sortWeaponsByMatches, sortAndGroupMatchHistory } from './sortUtils'
 import { getAllSeasonNames, getCurrentOrMostRecentSeason, getCurrentorRecentSeasonStats, getSortedSeasonNames } from './seasonalUtils';
-import { formatDateString, convertMillisToReadableTime, isPremiumUser, getSupabaseImageUrl, checkUpdateNeeded } from './generalUtils';
+import { formatDateString, convertMillisToReadableTime, isPremiumUser, getSupabaseImageUrl, checkUpdateNeeded, updateAnonymousUserName, signInAnonymously  } from './generalUtils';
 import {loadRewardedAd, getAdUnitId} from './adUtils';
 
 export {
@@ -34,7 +34,9 @@ export {
   loadRewardedAd,
   getAdUnitId,
   getSupabaseImageUrl,
-  checkUpdateNeeded
+  checkUpdateNeeded,
+  updateAnonymousUserName,
+  signInAnonymously
 };
 
 

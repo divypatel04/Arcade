@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   StatusBar,
-  useColorScheme,
 } from 'react-native';
 import { AuthProvider } from './src/context/AuthContext';
 import Navigation from './src/navigation';
@@ -13,6 +12,7 @@ import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 import { REVENUECAT_ANDROID_API_KEY, REVENUECAT_IOS_API_KEY } from '@env';
 import mobileAds from 'react-native-google-mobile-ads';
 import { checkUpdateNeeded } from '@utils';
+import { signInAnonymously } from '@utils/generalUtils';
 
 const queryClient = new QueryClient()
 
@@ -29,9 +29,12 @@ function App(): React.JSX.Element {
     } catch (r) {}
   };
 
+
+
   useEffect(() => {
     configPurchases();
     checkUpdateNeeded();
+    signInAnonymously();
 
     // Initialize mobile ads
     mobileAds()

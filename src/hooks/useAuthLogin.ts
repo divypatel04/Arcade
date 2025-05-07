@@ -6,7 +6,8 @@ import { fetchRiotAccount } from '@services/api/fetchRiotAccount';
 import { fetchUserRegion } from '@services/api/fetchUserRegion';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { supabase } from '../lib/supabase'; // Import supabase client
+import { supabase } from '../lib/supabase';
+import { updateAnonymousUserName } from '@utils';
 
 const useDeepLinking = () => {
   const {setIsAuthenticated} = useAuth();
@@ -65,6 +66,12 @@ const useDeepLinking = () => {
 
             // Update the user database after successful login
             await updateUserDatabase(userData);
+
+            const userDetails = supabase.auth.getUser();
+            const userId = (await userDetails).data.user?.id;
+            if (userId) {
+              updateAnonymousUserName(userId, `${userData.name}#${userData.tagline}`);
+            }
 
             if (success) {
               navigation.navigate('Loading');

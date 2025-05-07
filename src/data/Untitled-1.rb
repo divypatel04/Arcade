@@ -21,6 +21,8 @@ CREATE TABLE maps (
 );
 
 
+
+
 CREATE TABLE weapons (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -28,16 +30,6 @@ CREATE TABLE weapons (
     type TEXT,
     description TEXT,
     image TEXT
-);
-
-INSERT INTO weapons (id, name, localizedNames, type, description, image)
-VALUES (
-    'weapon-id',
-    'Vandal',
-    '{"en": "Vandal", "es": "Vándalo"}',
-    'Rifle',
-    'Fully automatic rifle with high damage and recoil control.',
-    '/weapon/(weaponName).png'
 );
 
 
@@ -115,21 +107,23 @@ CREATE TABLE Payments (
 
 
 
-
-# Dummy Data
-
-
-INSERT INTO agents (id, name, localizedNames, role, abilities, description, image, icon)
-VALUES (
-    ''
-    'Agent Name',
-    '{"en": "Agent Name", "fr": "Nom de l\'Agent"}', -- JSONB for localizedNames
-    'Duelist', -- role
-    '[
-        {"ability": "Ability1", "description": "Ability1 description"},
-        {"ability": "Ability2", "description": "Ability2 description"}
-    ]', -- JSONB for abilities
-    'Agent description goes here.',
-    'https://example.com/image.png', -- image URL
-    'https://example.com/icon.png' -- icon URL
-);
+DO $$
+DECLARE
+  tbl TEXT;
+BEGIN
+  FOREACH tbl IN ARRAY ARRAY[
+    'agents', 'maps', 'weapons', 'seasons',
+    'users', 'agentstats', 'mapstats', 'weaponstats',
+    'seasonstats', 'matchstats', 'payments'
+  ]
+  LOOP
+    EXECUTE format($sql$
+      CREATE POLICY "Authenticated users on %I"
+      ON %I
+      FOR ALL
+      TO authenticated
+      USING (auth.uid() IS NOT NULL)
+      WITH CHECK (auth.uid() IS NOT NULL);
+    $sql$, tbl, tbl);
+  END LOOP;
+END $$;

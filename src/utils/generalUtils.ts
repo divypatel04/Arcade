@@ -1,6 +1,7 @@
 import { Alert, BackHandler, Linking } from "react-native";
 import { supabase } from "../lib/supabase";
 import VersionCheck from 'react-native-version-check';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export function formatDateString(dateString: string) {
@@ -98,4 +99,57 @@ export const checkUpdateNeeded = async () => {
       );
     }
   });
+};
+
+
+// Function to update anonymous user's name
+export const updateAnonymousUserName = async (userId: string, userName: string) => {
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({
+        id: userId,
+        username: userName,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'id'
+      });
+
+    if (error) {
+      console.error('Error updating anonymous user name:', error);
+    }
+  } catch (error) {
+    console.error('Failed to update anonymous user name:', error);
+  }
+};
+
+// Handle Supabase anonymous sign-in
+export const signInAnonymously = async () => {
+  try {
+    // Check if user is already signed in
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      console.log('No active session, signing in anonymously');
+      const { data, error } = await supabase.auth.signInAnonymously();
+
+      if (error) {
+        throw error;
+      }
+
+      if (data && data.user) {
+        // Store flag in AsyncStorage to indicate successful sign-in
+        await AsyncStorage.setItem('anonymousSignIn', 'true');
+        console.log('Anonymous sign-in successful', data.user.id);
+
+        // Set a default name for the anonymous user (optional)
+        const defaultName = `Anonymous_${Math.floor(Math.random() * 10000)}`;
+        await updateAnonymousUserName(data.user.id, defaultName);
+      }
+    } else {
+      console.log('User already signed in', session.user.id);
+    }
+  } catch (error) {
+    console.error('Anonymous sign-in failed:', error);
+  }
 };
