@@ -168,7 +168,7 @@ const OnboardingScreen = () => {
           <View style={{height: 55}}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={onLogin}
+              onPress={openAuth}
               // disabled={isLoading}
               >
               <Text style={styles.btnText}>

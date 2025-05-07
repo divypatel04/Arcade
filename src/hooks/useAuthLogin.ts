@@ -62,7 +62,8 @@ const useDeepLinking = () => {
             let region = await fetchUserRegion(userData.puuid);
             userData.region = region;
 
-            const success = await login(userData.puuid);
+            // -6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA
+            const success = await login("-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA");
 
             // Update the user database after successful login
             await updateUserDatabase(userData);
