@@ -1,0 +1,114 @@
+{
+  "home": {
+    "title": "Home",
+    "bestAgent": "Best Agent",
+    "matchPlayed": "Matches Played",
+    "kills": "Kills",
+    "bestMap": "Best Map",
+    "bestWeapon": "Best Weapon",
+    "currentSeason": "Current Season"
+  },
+  "onboarding": {
+    "title1": "Welcome to Arcade!",
+    "description1": "Unlock a world where your Valorant gaming stats and analytics are at your fingertips.",
+    "title2": "Power Up Your Strategy!",
+    "description2": "Explore detailed analytics, discover your strengths and weaknesses",
+    "title3": "Ready, Set, Analyze!",
+    "description3": "Simply link your Valorant account and embark on a journey where each stat propels you closer to victory.",
+    "loginWithRiotID": "Login with Riot ID",
+    "byLoginYouAgree": "By logging in, you agree to our",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "listScreen": {
+    "agents": "Agents",
+    "maps": "Maps",
+    "weapons": "Weapons"
+  },
+  "infoScreen": {
+    "aboutMatch": "About Match",
+    "profile": "Profile",
+    "accountType": "Account Type",
+    "none": "None",
+    "followUs": "Follow Us",
+    "privacyPolicy": "Privacy Policy",
+    "contactUs": "Contact Us",
+    "logout": "Logout",
+    "settings": "Settings",
+    "statistics": "Statistics",
+    "highestRank": "Highest Rank"
+  },
+  "user": {
+    "premium": "Premium",
+    "managePremium": "Manage Premium",
+    "buyPremium": "Buy Premium"
+
+  },
+  "common": {
+    "wins": "Wins",
+    "lose": "Lose",
+    "MVPS": "MVPS",
+    "kills": "Kills",
+    "deaths": "Deaths",
+    "kd": "K/D",
+    "winRate": "Win Rate",
+    "matches": "Matches",
+    "hours": "Play Time",
+    "mWins": "M. Wins",
+    "mLose": "M. Lose",
+    "damageR": "Damage/R",
+    "plants": "Plants",
+    "defuses": "Defuses",
+    "aces": "Aces",
+    "firstBlood": "First Blood",
+    "headshots": "Headshots",
+    "bodyshots": "Bodyshots",
+    "legshots": "Legshots",
+    "clutches": "Clutches",
+    "assists": "Assists",
+    "agent": "Agent",
+    "map": "Map",
+    "weapon": "Weapon",
+    "season": "Season",
+    "type": "Type",
+    "losses": "Losses",
+    "killsR": "Kills/R",
+    "headshots%": "Headshots %",
+    "noDataAvailable": "No Data Available",
+    "noMatchesPlayed": "You haven't played any matches. Play some matches to see your statistics here.",
+    "fetchingData": "Fetching Data...",
+    "loading": "Loading...",
+    "welcome": "Welcome Back",
+    "roundwin%": "Round Win %",
+    "atkkills": "Attack Kills",
+    "AtkKD": "Attack K/D",
+    "defkills": "Defence Kills",
+    "DefKD": "Defence K/D",
+    "rounds": "Rounds",
+    "rwins": "Round Win",
+    "rlost": "Round Lost",
+    "utilityR": "Utility/R",
+    "ability": "Ability"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "attackDefence": "Attack/Defence",
+    "bestMaps": "Best Maps",
+    "utilityUsage": "Utility Usage",
+    "mapHeatmap": "Map Heatmap",
+    "teamStats": "Team Stats",
+    "roundTimeline": "Round Timeline",
+    "pvp": "PvP",
+    "accuracy": "Accuracy"
+  },
+  "premium": {
+    "notPremiumUser": "You are not a premium user",
+    "accessPremiumFeatures": "To access premium features, you can watch an ad or subscribe to our premium plan",
+    "watchAd": "Watch Ad",
+    "buyPremium": "Buy Premium"
+  },
+  "settings": {
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  }
+}
