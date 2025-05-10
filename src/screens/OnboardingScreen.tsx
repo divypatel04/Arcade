@@ -16,7 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
+// import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const {width, height} = Dimensions.get('window');
 
@@ -86,25 +86,25 @@ const OnboardingScreen = () => {
   }
 
 
-  const openAuth = async () => {
-    let authUrl =
-      'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcadebackend.onrender.com/oauth&response_type=code&scope=openid+offline_access';
-    let authRedirectUrl = 'arcadeauth://oauth2redirect';
-    await InAppBrowser.isAvailable();
-    // setIsLoading(true);
-    const response = await InAppBrowser.openAuth(authUrl, authRedirectUrl, {
-      showTitle: false,
-      enableUrlBarHiding: true,
-      enableDefaultShare: false,
-      ephemeralWebSession: false,
-    });
+  // const openAuth = async () => {
+  //   let authUrl =
+  //     'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcadebackend.onrender.com/oauth&response_type=code&scope=openid+offline_access';
+  //   let authRedirectUrl = 'arcadeauth://oauth2redirect';
+  //   await InAppBrowser.isAvailable();
+  //   // setIsLoading(true);
+  //   const response = await InAppBrowser.openAuth(authUrl, authRedirectUrl, {
+  //     showTitle: false,
+  //     enableUrlBarHiding: true,
+  //     enableDefaultShare: false,
+  //     ephemeralWebSession: false,
+  //   });
 
-    if (response.type === 'success') {
-      Linking.openURL(response.url);
-    } else {
-      Linking.openURL(authUrl);
-    }
-  };
+  //   if (response.type === 'success') {
+  //     Linking.openURL(response.url);
+  //   } else {
+  //     Linking.openURL(authUrl);
+  //   }
+  // };
 
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = useRef("");
@@ -168,7 +168,7 @@ const OnboardingScreen = () => {
           <View style={{height: 55}}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={openAuth}
+              onPress={onLogin}
               // disabled={isLoading}
               >
               <Text style={styles.btnText}>

@@ -1,13 +1,70 @@
 {
   "name": "Arcade",
   "displayName": "Arcade",
-  "extra": {
-    "eas": {
-      "projectId": "73c51238-8b20-48f4-9ba5-4abe27508619"
-    }
+  "expo": {
+    "name": "Arcade",
+    "slug": "arcade",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/ac063ef9-cbd5-45f3-8396-73e4fc49c809"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "jsEngine": "hermes",
+    "android": {
+      "jsEngine": "hermes",
+      "package": "com.yourusername.arcade",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [],
+      "softwareKeyboardLayoutMode": "pan",
+      "intentFilters": [
+        {
+          "action": "android.intent.action.VIEW",
+          "category": [
+            "android.intent.category.DEFAULT",
+            "android.intent.category.BROWSABLE"
+          ],
+          "data": [
+            {
+              "scheme": "https",
+              "host": "yourdomain.com",
+              "pathPrefix": "/app"
+            }
+          ]
+        }
+      ]
+    },
+    "ios": {
+      "jsEngine": "hermes",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourusername.arcade"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ac063ef9-cbd5-45f3-8396-73e4fc49c809"
+      }
+    },
+    "runtimeVersion": "1.0.0"
   },
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-8137963668346387~8707998135",
     "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+  },
+  "extra": {
+    "eas": {
+      "projectId": "ac063ef9-cbd5-45f3-8396-73e4fc49c809"
+    }
   }
 }

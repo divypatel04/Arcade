@@ -1,5 +1,5 @@
 import { Alert, BackHandler, Linking } from "react-native";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@lib/supabase";
 import VersionCheck from 'react-native-version-check';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
