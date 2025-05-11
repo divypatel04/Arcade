@@ -5,7 +5,7 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth } from '@context';
+import { useAuth, useLanguage } from '@context';
 import { View, Image, StatusBar, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import LoadingScreen from '@screens/LoadingScreen';
 import BottomTabs from './BottomTabs';
@@ -28,7 +28,9 @@ export default function Navigation() {
     useNavigationContainerRef<ReactNavigation.RootParamList>();
   const routeNameRef = useRef<any>("");
 
-  if (!authStatusChecked) {
+  const { isLoading } = useLanguage();
+
+  if (!authStatusChecked || isLoading) {
     return (
       <View style={styles.wrapper}>
         <StatusBar backgroundColor="white" barStyle={'dark-content'} />
