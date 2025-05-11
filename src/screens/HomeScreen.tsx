@@ -14,10 +14,10 @@ const HomeScreen = () => {
   const { isLoading } = useLanguage();
   const {agentStats, mapStats, weaponStats, seasonStats} = useDataContext();
 
-  const bestAgentStats: AgentStatType = getTopAgentByKills(agentStats);
-  const bestMapStats: MapStatsType = getTopMapByWinRate(mapStats);
-  const bestWeaponStats: WeaponStatsType = getTopWeaponByKills(weaponStats);
-  const currentSeason: SeasonStatsType = getCurrentorRecentSeasonStats(seasonStats);
+  const bestAgentStats: AgentStatType | null = getTopAgentByKills(agentStats);
+  const bestMapStats: MapStatsType | null = getTopMapByWinRate(mapStats);
+  const bestWeaponStats: WeaponStatsType | null = getTopWeaponByKills(weaponStats);
+  const currentSeason: SeasonStatsType | null = getCurrentorRecentSeasonStats(seasonStats);
 
   if (isLoading) {
     return (

@@ -29,8 +29,6 @@ function App(): React.JSX.Element {
     } catch (r) {}
   };
 
-
-
   useEffect(() => {
     configPurchases();
     checkUpdateNeeded();

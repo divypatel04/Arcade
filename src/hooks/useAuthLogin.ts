@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { supabase } from '../lib/supabase';
 import { updateAnonymousUserName } from '@utils';
 
-const useDeepLinking = () => {
+const useAuthLogin = () => {
   const {setIsAuthenticated} = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -62,8 +62,7 @@ const useDeepLinking = () => {
             let region = await fetchUserRegion(userData.puuid);
             userData.region = region;
 
-            // -6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA
-            const success = await login("-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA");
+
 
             // Update the user database after successful login
             await updateUserDatabase(userData);
@@ -74,15 +73,19 @@ const useDeepLinking = () => {
               updateAnonymousUserName(userId, `${userData.name}#${userData.tagline}`);
             }
 
+            // -6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA
+            // VZJtaru0pLtckkjdbAgFyQaJJDi466dzsg7cXBIhYTou4I0AFBgewDmJflGhK7el2FIv5DweUfpadg
+            const success = await login("-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA");
+
             if (success) {
+              setIsAuthenticated(true);
               navigation.navigate('Loading');
             } else {
               // Handle login failure
               console.error('Failed to login');
             }
-            setIsAuthenticated(true);
           } catch (error: any) {
-            // console.error('Error: ', error);
+            console.error('Error: ', error);
             ToastAndroid.showWithGravity(
               'Something Went Wrong. Try Again',
               ToastAndroid.SHORT,
@@ -104,4 +107,4 @@ const useDeepLinking = () => {
   return {isLoading, setIsLoading};
 };
 
-export default useDeepLinking;
+export default useAuthLogin;
