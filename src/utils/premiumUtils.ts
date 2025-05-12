@@ -1,4 +1,4 @@
-import { AgentStatType, MapStatsType, MatchStatsType, AgentSeasonPerformance, MapSeasonPerformance, SeasonStatsType, WeaponStatsType, WeaponSeasonPerformance } from "@types";
+import { AgentStatType, MapStatsType, MatchStatsType, AgentSeasonPerformance, MapSeasonPerformance, SeasonStatsType, WeaponStatsType, WeaponSeasonPerformance } from "../types";
 /**
  * Determines which agent stats should be marked as premium based on performance metrics.
  * Takes the top third of agents based on a scoring system.

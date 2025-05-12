@@ -1,13 +1,13 @@
 import {useEffect, useState} from 'react';
 import {Linking, ToastAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useAuth} from '@context';
-import { fetchRiotAccount } from '@services/api/fetchRiotAccount';
-import { fetchUserRegion } from '@services/api/fetchUserRegion';
+import {useAuth} from '../context';
+import { fetchRiotAccount } from '../services/api/fetchRiotAccount';
+import { fetchUserRegion } from '../services/api/fetchUserRegion';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { supabase } from '../lib/supabase';
-import { updateAnonymousUserName } from '@utils';
+import { updateAnonymousUserName } from '../utils';
 
 const useDeepLinking = () => {
   const {setIsAuthenticated} = useAuth();

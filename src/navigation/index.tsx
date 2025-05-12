@@ -5,20 +5,20 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth } from '@context';
+import { useAuth } from '../context';
 import { View, Image, StatusBar, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import LoadingScreen from '@screens/LoadingScreen';
+import LoadingScreen from '../screens/LoadingScreen';
 import BottomTabs from './BottomTabs';
-import OnboardingScreen from '@screens/OnboardingScreen';
-import { colors, fonts } from '@theme';
-import AgentListScreen from '@screens/AgentListScreen';
-import MapListScreen from '@screens/MapListScreen';
-import WeaponListScreen from '@screens/WeaponListScreen';
-import AgentInfoScreen from '@screens/AgentInfoScreen';
-import MapInfoScreen from '@screens/MapInfoScreen';
-import WeaponInfoScreen from '@screens/WeaponInfoScreen';
-import MatchInfoScreen from '@screens/MatchInfoScreen';
-import PremiumSubscriptionScreen from '@screens/PremiumSubscriptionScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
+import { colors, fonts } from '../theme';
+import AgentListScreen from '../screens/AgentListScreen';
+import MapListScreen from '../screens/MapListScreen';
+import WeaponListScreen from '../screens/WeaponListScreen';
+import AgentInfoScreen from '../screens/AgentInfoScreen';
+import MapInfoScreen from '../screens/MapInfoScreen';
+import WeaponInfoScreen from '../screens/WeaponInfoScreen';
+import MatchInfoScreen from '../screens/MatchInfoScreen';
+import PremiumSubscriptionScreen from '../screens/PremiumSubscriptionScreen';
 
 const Stack = createStackNavigator();
 

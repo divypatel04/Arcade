@@ -4,7 +4,7 @@ import { colors, fonts, sizes } from '../../theme';
 import { convertMillisToReadableTime, getSupabaseImageUrl } from '../../utils';
 import StatsSummary from '../StatsSummary';
 import DetailedStats from '../DetailedStats';
-import { MatchStatsType } from '../../types/MatchStatsType';
+import { MatchStatsType } from '../../types';
 
 interface MatchOverviewTabProps {
   matchStats: MatchStatsType;

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '@theme'
+import { colors, fonts, sizes } from '../theme'
 import { useTranslation } from 'react-i18next';
-import { useDataContext, useAuth } from '@context';
+import { useDataContext, useAuth } from '../context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Purchases from 'react-native-purchases';
-import { Icon, LanguageSelector } from '@components';
+import { Icon, LanguageSelector } from '../components';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();

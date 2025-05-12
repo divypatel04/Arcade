@@ -1,4 +1,4 @@
-import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatsType } from "@types";
+import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatsType } from "../types";
 
 type StatsType = AgentStatType | MapStatsType | WeaponStatsType;
 

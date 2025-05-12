@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useRef, useCallback, useEff
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { dataUpdateTracker } from '../services';
-import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '@utils';
-import { AgentStatType, MapStatsType, MatchStatsType, SeasonStatsType, WeaponStatsType } from '@types';
+import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '../utils';
+import { AgentStatType, MapStatsType, MatchStatsType, SeasonStatsType, WeaponStatsType } from '../types';
 
 type UserData = {
   puuid: string;

@@ -1,4 +1,4 @@
-import { AgentStatType, AgentAbility, AgentMapStat, MapStatsType, MapSeasonPerformance, AgentSeasonPerformance, AgentAbilityCastDetails, WeaponStatsType, SeasonStatsType } from "@types";
+import { AgentStatType, AgentAbility, AgentMapStat, MapStatsType, MapSeasonPerformance, AgentSeasonPerformance, AgentAbilityCastDetails, WeaponStatsType, SeasonStatsType } from "../types";
 
 
 export const mergeAgentSeasonalStats = (agentStat: AgentStatType): AgentStatType => {

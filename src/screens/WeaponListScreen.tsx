@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '@theme';
+import { colors, fonts, sizes } from '../theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { getAllSeasonNames, isPremiumUser, sortWeaponsByMatches } from '@utils';
-import { WeaponStatsType } from '@types';
-import { useDataContext } from '@context';
+import { getAllSeasonNames, isPremiumUser, sortWeaponsByMatches } from '../utils';
+import { WeaponStatsType } from '../types';
+import { useDataContext } from '../context';
 import { useTranslation } from 'react-i18next';
-import { DropDown, GunCard, PremiumModal } from '@components';
+import { DropDown, GunCard, PremiumModal } from '../components';
 
 type WeaponListProps = {
   weapon: WeaponStatsType,

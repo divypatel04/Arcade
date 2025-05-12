@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {View, StyleSheet} from 'react-native';
-import { SeasonPerformance } from '../../types/MapStatsType';
+import { MapSeasonPerformance } from '../../types';
 import Map from '../Map';
 import DropDown from '../DropDown';
 import { sizes } from '../../theme';
 
 const MapHeatmap: React.FC<{
-  seasonStats: SeasonPerformance | undefined;
+  seasonStats: MapSeasonPerformance | undefined;
   mapImage: string;
   mapCoordinate: {
     xMultiplier: number;

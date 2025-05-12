@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { RefreshControl, SectionList, StyleSheet, Text, View } from 'react-native'
-import { colors, fonts, sizes } from '@theme'
-import { getMatchQueueTypes, formatDateString, sortAndGroupMatchHistory, isPremiumUser } from '@utils'
-import { MatchStatsType } from '@types'
+import { colors, fonts, sizes } from '../theme'
+import { getMatchQueueTypes, formatDateString, sortAndGroupMatchHistory, isPremiumUser } from '../utils'
+import { MatchStatsType } from '../types'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useTranslation } from 'react-i18next'
-import { useDataContext } from '@context'
-import { DropDown, PremiumModal, MatchBox } from '@components'
+import { useDataContext } from '../context'
+import { DropDown, PremiumModal, MatchBox } from '../components'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 
 interface resultArray {

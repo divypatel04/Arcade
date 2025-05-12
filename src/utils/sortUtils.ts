@@ -1,4 +1,4 @@
-import { AgentStatType, MapStatsType, MatchStatsType, WeaponStatsType } from "@types";
+import { AgentStatType, MapStatsType, MatchStatsType, WeaponStatsType } from "../types";
 
 
 interface MapListProps {

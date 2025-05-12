@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import { colors, fonts, sizes } from '@theme';
-import { mergeActSeasonalStats, convertMillisToReadableTime, getSortedSeasonNames } from '@utils';
-import { SeasonStatsType } from '@types';
+import { colors, fonts, sizes } from '../theme';
+import { mergeActSeasonalStats, convertMillisToReadableTime, getSortedSeasonNames } from '../utils';
+import { SeasonStatsType } from '../types';
 import { useTranslation } from 'react-i18next';
-import { useDataContext } from '@context';
-import { DetailedStats, DropDown, StatsSummary } from '@components';
+import { useDataContext } from '../context';
+import { DetailedStats, DropDown, StatsSummary } from '../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 
 const SeasonInfoScreen = () => {

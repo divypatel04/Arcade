@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '@theme'
+import { colors, fonts, sizes } from '../theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { WeaponSeasonPerformance, WeaponStatsType } from '@types';
-import { mergeWeaponSeasonalStats, getAllSeasonNames, getSupabaseImageUrl } from '@utils';
+import { WeaponSeasonPerformance, WeaponStatsType } from '../types';
+import { mergeWeaponSeasonalStats, getAllSeasonNames, getSupabaseImageUrl } from '../utils';
 import { useTranslation } from 'react-i18next';
-import {DropDown, HitsTab, OverviewTab, TabBar} from '@components';
+import {DropDown, HitsTab, OverviewTab, TabBar} from '../components';
 
 const WeaponInfoScreen = () => {
 

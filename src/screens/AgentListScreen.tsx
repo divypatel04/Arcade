@@ -4,11 +4,11 @@ import { colors, fonts, sizes } from '../theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { AgentStatType } from '@types';
-import { getAllSeasonNames, isPremiumUser, sortAgentsByMatches } from '@utils';
-import { useDataContext } from '@context';
+import { AgentStatType } from '../types';
+import { getAllSeasonNames, isPremiumUser, sortAgentsByMatches } from '../utils';
+import { useDataContext } from '../context';
 import { useTranslation } from 'react-i18next';
-import { AgentCard, DropDown, PremiumModal } from '@components';
+import { AgentCard, DropDown, PremiumModal } from '../components';
 
 interface AgentListProps {
   agentStat: AgentStatType,

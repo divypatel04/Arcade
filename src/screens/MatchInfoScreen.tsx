@@ -1,13 +1,13 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, fonts, sizes } from '@theme'
+import { colors, fonts, sizes } from '../theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { MatchStatsType } from '@types';
+import { MatchStatsType } from '../types';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
-import { MatchOverviewTab, PlayerVsTab, RoundPerfTab, TabBar, TeamStatsTab } from '@components';
+import { MatchOverviewTab, PlayerVsTab, RoundPerfTab, TabBar, TeamStatsTab } from '../components';
 
 
 const MatchInfoScreen = () => {
