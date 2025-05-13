@@ -7,6 +7,7 @@ import { useDataContext } from '@context';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@context';
 import { AgentStatType, MapStatsType, SeasonStatsType, WeaponStatsType } from '@types';
+import { supabase } from '@lib/supabase';
 
 
 const HomeScreen = () => {
@@ -24,6 +25,8 @@ const HomeScreen = () => {
       <></>
     );
   }
+
+  console.log(supabase.auth.getSession());
 
   return (
     <View style={styles.container}>

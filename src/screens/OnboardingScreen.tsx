@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef} from 'react';
 import {
   Image,
   StyleSheet,
@@ -12,10 +12,7 @@ import {
 } from 'react-native';
 import {colors, fonts} from '../theme';
 import {Icon} from '../components/lcon';
-import {useAuth} from '../context/AuthContext';
 import {useTranslation} from 'react-i18next';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useNavigation} from '@react-navigation/native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import useAuthLogin from '@hooks/useAuthLogin';
 
@@ -42,10 +39,7 @@ const Slide = ({item}: any) => {
 };
 
 const OnboardingScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<any>>();
-
   const {t} = useTranslation();
-
   const slides = [
     {
       id: '1',
@@ -69,9 +63,9 @@ const OnboardingScreen = () => {
 
   const {isLoading, setIsLoading} = useAuthLogin();
 
-  const openAuth = async () => {
+  const openOauthLogin = async () => {
     let authUrl =
-      'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcadebackend.onrender.com/oauth&response_type=code&scope=openid+offline_access';
+      'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcade-coral.vercel.app/oauth&response_type=code&scope=openid+offline_access';
     let authRedirectUrl = 'arcadeauth://oauth2redirect';
     await InAppBrowser.isAvailable();
     setIsLoading(true);
@@ -151,7 +145,7 @@ const OnboardingScreen = () => {
           <View style={{height: 55}}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={openAuth}
+              onPress={openOauthLogin}
               disabled={isLoading}>
               <Text style={styles.btnText}>
                 {isLoading ? (

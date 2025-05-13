@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts, sizes } from '@theme'
 import { useTranslation } from 'react-i18next';
 import { useDataContext, useAuth } from '@context';
@@ -104,12 +104,12 @@ const ProfileScreen = () => {
       <View>
         <Text style={styles.sectiontitle}>{t('infoScreen.settings')}</Text>
         {[
-          { name: t('infoScreen.followUs'), icon: 'twitter-line', fun: handleLogout },
+          { name: t('infoScreen.followUs'), icon: 'twitter-line', fun: ()=> { Linking.openURL('https://arcade-coral.vercel.app/') } },
           {
             name: t('infoScreen.privacyPolicy'),
-            icon: 'shield-line', fun: handleLogout
+            icon: 'shield-line', fun: ()=> { Linking.openURL('https://arcade-coral.vercel.app/privacy-policy') }
           },
-          { name: t('infoScreen.contactUs'), icon: 'mail-line', fun: handleLogout },
+          { name: t('infoScreen.contactUs'), icon: 'mail-line', fun: ()=> { Linking.openURL('https://arcade-coral.vercel.app/') } },
           { name: t('infoScreen.logout'), icon: 'logout-box-r-line', fun: handleLogout },
         ].map((item, index) => (
           <TouchableOpacity

@@ -26,7 +26,7 @@ const useAuthLogin = () => {
           region: userData.region,
           name: userData.name || userData.gameName,
           tagline: userData.tagline || userData.tagLine,
-          lastUpdated: new Date(),
+          lastupdated: new Date(),
           matchId: [] // Empty array as required
         }, {
           onConflict: 'puuid'
@@ -78,8 +78,10 @@ const useAuthLogin = () => {
             const success = await login("-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA");
 
             if (success) {
-              setIsAuthenticated(true);
-              navigation.navigate('Loading');
+              setTimeout(() => {
+                setIsAuthenticated(true);
+                navigation.navigate('Loading');
+              }, 1000);
             } else {
               // Handle login failure
               console.error('Failed to login');
