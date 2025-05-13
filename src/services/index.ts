@@ -6,11 +6,20 @@ import { processAllStatsData } from './processService';
 export const dataUpdateTracker = {
   lastProcessedPuuid: null as string | null,
   lastUpdateTimestamp: null as Date | null,
+  isUpdating: false,
+
+  // Update the tracker when processing starts
+  markUpdating: function(puuid: string) {
+    this.lastProcessedPuuid = puuid;
+    this.isUpdating = true;
+    console.log('[BACKGROUND_PROCESS] 🔄 Started data updating for PUUID:', puuid);
+  },
 
   // Update the tracker when processing is complete
   markUpdated: function(puuid: string) {
     this.lastProcessedPuuid = puuid;
     this.lastUpdateTimestamp = new Date();
+    this.isUpdating = false;
     console.log('[BACKGROUND_PROCESS] ✅ Data updated at:', this.lastUpdateTimestamp);
   }
 };
@@ -23,6 +32,8 @@ export const dataUpdateTracker = {
  */
 export const processUserData = async (puuid: string): Promise<void> => {
   console.log('[BACKGROUND_PROCESS] 🔄 Starting data processing for PUUID:', puuid);
+  // Mark that we're starting an update
+  dataUpdateTracker.markUpdating(puuid);
 
   try {
     // 1. Fetch the user data to get matchIds
