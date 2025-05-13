@@ -5,14 +5,14 @@ import { Platform } from 'react-native';
 const rewardedAdUnitId = __DEV__
   ? TestIds.REWARDED
   : Platform.OS === 'ios'
-    ? 'ca-app-pub-xxxxxxxx/yyyyyyyy'  // Replace with your iOS rewarded ad unit ID
-    : 'ca-app-pub-8137963668346387/yyyyyyyy'; // Replace with your Android rewarded ad unit ID
+    ? 'ca-app-pub-xxxxxxxx/yyyyyyyy'
+    : 'ca-app-pub-8137963668346387/1075077787';
 
 const bannerAdUnitId = __DEV__
   ? TestIds.BANNER
   : Platform.OS === 'ios'
-    ? 'ca-app-pub-xxxxxxxx/yyyyyyyy'  // Replace with your iOS banner ad unit ID
-    : 'ca-app-pub-8137963668346387/yyyyyyyy'; // Replace with your Android banner ad unit ID
+    ? 'ca-app-pub-xxxxxxxx/yyyyyyyy'
+    : 'ca-app-pub-8137963668346387/4976703898';
 
 export const loadRewardedAd = () => {
   // Create and load a rewarded ad
