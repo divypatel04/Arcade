@@ -44,7 +44,7 @@ const AgentBox = ({bestAgent}: AgentBoxType) => {
       <Image
         style={styles.agentimage}
         source={{uri: agentImage}}
-        defaultSource={require('../assets/images/jett.png')}
+        defaultSource={require('../assets/images/jett_image.png')}
       />
     </TouchableOpacity>
   )

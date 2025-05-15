@@ -26,7 +26,7 @@ const MapBox = ({bestMap}:MapBoxProps) => {
       <View style={styles.mapimagecontainer}>
         <Image
           source={{ uri: mapImage }}
-          defaultSource={require('../assets/images/raze.png')}
+          defaultSource={require('../assets/images/haven.png')}
           resizeMode="cover"
           style={styles.mapimage}
         />

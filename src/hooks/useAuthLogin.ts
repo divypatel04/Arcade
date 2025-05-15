@@ -70,7 +70,7 @@ const useAuthLogin = () => {
             const userDetails = supabase.auth.getUser();
             const userId = (await userDetails).data.user?.id;
             if (userId) {
-              updateAnonymousUserName(userId, `${userData.name}#${userData.tagline}`);
+              // updateAnonymousUserName(userId, `${userData.name}#${userData.tagline}`);
             }
 
             // -6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA
