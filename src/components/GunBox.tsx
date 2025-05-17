@@ -27,7 +27,7 @@ const GunBox = ({bestWeapon}:GunBoxProps) => {
       <View style={styles.weaponimagecontainer}>
         <Image
           source={{ uri: weaponImage }}
-          defaultSource={require('../assets/images/raze.png')}
+          defaultSource={require('../assets/images/phantom.png')}
           resizeMode="contain"
           style={styles.weaponimage}
         />

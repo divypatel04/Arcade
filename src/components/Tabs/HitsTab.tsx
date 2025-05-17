@@ -3,12 +3,12 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import StatsSummary from '../StatsSummary'
 import DetailedStats from '../DetailedStats'
 import { colors, fonts, sizes } from '../../theme';
-import { SeasonPerformance, WeaponStatsType } from '../../types/WeaponStatsType';
+import { WeaponSeasonPerformance, WeaponStatsType } from '../../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';
 
 
 interface HitStats {
-  stats: SeasonPerformance | undefined
+  stats: WeaponSeasonPerformance | undefined
 }
 
 const HitsTab = ({stats}:HitStats) => {

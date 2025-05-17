@@ -98,8 +98,52 @@
       "sha1": "c11e2709171f141e730e4e4b98dbc4d34ead5643"
     },
     {
+      "path": "src/assets/images/body1.png",
+      "sha1": "f3dedfe249d91c7eec237975d74335b88cb29149"
+    },
+    {
+      "path": "src/assets/images/body2.png",
+      "sha1": "e2f1faf1c93a6e4c9e1c0974fdf93b04d07f7aa7"
+    },
+    {
+      "path": "src/assets/images/body3.png",
+      "sha1": "21368ae7232444a90a18789b35ab8bd29c9f501d"
+    },
+    {
+      "path": "src/assets/images/haven.png",
+      "sha1": "cfd1bfc86660248b70dcb5c342e8bcb8607bb63c"
+    },
+    {
+      "path": "src/assets/images/jett.png",
+      "sha1": "2f7b27448755cee16fad1d362fb9c392c77b1661"
+    },
+    {
+      "path": "src/assets/images/jett_image.png",
+      "sha1": "8558c18caf66d45eaf5378bdf5553ed1b4d3c0f8"
+    },
+    {
+      "path": "src/assets/images/logo_black.png",
+      "sha1": "a6f3c6ce143848afe06666b34149c6de3b7e81ca"
+    },
+    {
+      "path": "src/assets/images/phantom.png",
+      "sha1": "18461715d5a83e4404d22ebf893bc0d0b7f7b51f"
+    },
+    {
       "path": "src/assets/images/raze.png",
       "sha1": "6d779d788d114f6cbe634f2ff713be1476bf6a79"
+    },
+    {
+      "path": "src/assets/images/screen1.png",
+      "sha1": "3b34cb03f09c1ff87e4c8844f2faf5c1aa77c647"
+    },
+    {
+      "path": "src/assets/images/screen2.png",
+      "sha1": "aadb22584640ce1180a81f304c9e6b0ef8e8e9fe"
+    },
+    {
+      "path": "src/assets/images/screen3.png",
+      "sha1": "7e3199b5a3198e09d5d3d4723e0818e8cf0b9efa"
     }
   ]
 }

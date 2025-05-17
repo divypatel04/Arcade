@@ -77,4 +77,4 @@ yarn-error.log
 
 # Custom
 # /src/lib/supabase.ts
-# .env
+.env

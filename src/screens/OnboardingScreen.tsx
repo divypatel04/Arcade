@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef} from 'react';
 import {
   Image,
   StyleSheet,
@@ -10,13 +10,11 @@ import {
   Dimensions,
   Linking,
 } from 'react-native';
-import { colors, fonts } from '../theme';
-import { Icon } from '../components/lcon';
-import { useAuth } from '../context/AuthContext';
-import { useTranslation } from 'react-i18next';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
-// import InAppBrowser from 'react-native-inappbrowser-reborn';
+import {colors, fonts} from '../theme';
+import {Icon} from '../components/lcon';
+import {useTranslation} from 'react-i18next';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+import useAuthLogin from '@hooks/useAuthLogin';
 
 const {width, height} = Dimensions.get('window');
 
@@ -41,11 +39,7 @@ const Slide = ({item}: any) => {
 };
 
 const OnboardingScreen = () => {
-
-  const navigation = useNavigation<StackNavigationProp<any>>();
-
   const {t} = useTranslation();
-
   const slides = [
     {
       id: '1',
@@ -67,47 +61,30 @@ const OnboardingScreen = () => {
     },
   ];
 
-  const {login} = useAuth();
+  const {isLoading, setIsLoading} = useAuthLogin();
 
+  const openOauthLogin = async () => {
+    let authUrl =
+      'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcade-coral.vercel.app/oauth&response_type=code&scope=openid+offline_access';
+    let authRedirectUrl = 'arcadeauth://oauth2redirect';
+    await InAppBrowser.isAvailable();
+    setIsLoading(true);
+    const response = await InAppBrowser.openAuth(authUrl, authRedirectUrl, {
+      showTitle: false,
+      enableUrlBarHiding: true,
+      enableDefaultShare: false,
+      ephemeralWebSession: false,
+    });
 
-  const onLogin = async () => {
-    console.log('Login with Riot ID');
-    // -6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA
-    // VZJtaru0pLtckkjdbAgFyQaJJDi466dzsg7cXBIhYTou4I0AFBgewDmJflGhK7el2FIv5DweUfpadg
-    const puuid = '-6KG-X-bb86rh70DxTjUWx9S6xayM0iYespoQ-2yKkgzhLgWD0gufwXj779nUGvPV9TNWviIp2fpZA';
-
-    const success = await login(puuid);
-    if (success) {
-      navigation.navigate('Loading');
+    if (response.type === 'success') {
+      Linking.openURL(response.url);
     } else {
-      // Handle login failure
-      console.error('Failed to login');
+      Linking.openURL(authUrl);
     }
-  }
-
-
-  // const openAuth = async () => {
-  //   let authUrl =
-  //     'https://auth.riotgames.com/authorize?client_id=0139d82a-3ffd-4047-a350-5f9e2da1ae79&redirect_uri=https://arcadebackend.onrender.com/oauth&response_type=code&scope=openid+offline_access';
-  //   let authRedirectUrl = 'arcadeauth://oauth2redirect';
-  //   await InAppBrowser.isAvailable();
-  //   // setIsLoading(true);
-  //   const response = await InAppBrowser.openAuth(authUrl, authRedirectUrl, {
-  //     showTitle: false,
-  //     enableUrlBarHiding: true,
-  //     enableDefaultShare: false,
-  //     ephemeralWebSession: false,
-  //   });
-
-  //   if (response.type === 'success') {
-  //     Linking.openURL(response.url);
-  //   } else {
-  //     Linking.openURL(authUrl);
-  //   }
-  // };
+  };
 
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
-  const ref = useRef("");
+  const ref = useRef('');
   const updateCurrentSlideIndex = (e: any) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
@@ -168,13 +145,12 @@ const OnboardingScreen = () => {
           <View style={{height: 55}}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={onLogin}
-              // disabled={isLoading}
-              >
+              onPress={openOauthLogin}
+              disabled={isLoading}>
               <Text style={styles.btnText}>
-                {/* {isLoading ? (
+                {isLoading ? (
                   'Loading...'
-                ) : ( */}
+                ) : (
                   <>
                     {t('onboarding.loginWithRiotID')}
                     <Icon
@@ -184,7 +160,7 @@ const OnboardingScreen = () => {
                       style={styles.btnIcon}
                     />
                   </>
-                {/* )} */}
+                )}
               </Text>
             </TouchableOpacity>
           </View>
@@ -247,7 +223,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     height: 55,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
@@ -260,7 +236,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,

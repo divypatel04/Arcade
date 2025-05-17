@@ -144,7 +144,7 @@ export const signInAnonymously = async () => {
 
         // Set a default name for the anonymous user (optional)
         const defaultName = `Anonymous_${Math.floor(Math.random() * 10000)}`;
-        await updateAnonymousUserName(data.user.id, defaultName);
+        // await updateAnonymousUserName(data.user.id, defaultName);
       }
     } else {
       console.log('User already signed in', session.user.id);

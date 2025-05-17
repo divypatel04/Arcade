@@ -1,14 +1,79 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🎮 Arcade - Valorant Stats Tracker
 
-# Getting Started
+![Version](https://img.shields.io/badge/version-2.1.1-blue)
+![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-green)
+![License](https://img.shields.io/badge/license-MIT-yellow)
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+A comprehensive Valorant statistics tracking app built with [**React Native**](https://reactnative.dev), providing players with detailed insights about their performance.
 
-## Step 1: Start the Metro Server
+## 📱 Screenshots
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="[ADD_SCREENSHOT_URL_HERE]" width="200" alt="Dashboard"/>
+        <br />
+        <em>Dashboard</em>
+      </td>
+      <td align="center">
+        <img src="[ADD_SCREENSHOT_URL_HERE]" width="200" alt="Agent Stats"/>
+        <br />
+        <em>Agent Stats</em>
+      </td>
+      <td align="center">
+        <img src="[ADD_SCREENSHOT_URL_HERE]" width="200" alt="Match History"/>
+        <br />
+        <em>Match History</em>
+      </td>
+    </tr>
+  </table>
+</div>
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## ✨ Features
+
+- 📊 Comprehensive player statistics and performance metrics
+- 🕵️ Detailed agent performance and usage analysis
+- 🗺️ Map-specific statistics and win rates
+- 🔫 Weapon accuracy and elimination data
+- 📜 Match history and detailed match breakdowns
+- 🌙 Dark mode support
+- 🔄 Offline data viewing capabilities
+- 🎨 Customizable dashboard and stat displays
+
+## 🚀 Getting Started
+
+>**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions before proceeding.
+
+### Prerequisites
+
+- Node.js >= 14
+- npm or yarn
+- iOS: XCode 12+ (for iOS development)
+- Android: Android Studio (for Android development)
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/your-username/arcade.git
+cd arcade
+```
+
+2. Install dependencies
+```bash
+# using npm
+npm install
+
+# OR using Yarn
+yarn install
+```
+
+## 📱 Running the App
+
+### Start Metro Server
+
+First, start Metro, the JavaScript bundler:
 
 ```bash
 # using npm
@@ -18,11 +83,9 @@ npm start
 yarn start
 ```
 
-## Step 2: Start your Application
+### Launch on Device/Simulator
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
+#### For Android
 
 ```bash
 # using npm
@@ -32,7 +95,7 @@ npm run android
 yarn android
 ```
 
-### For iOS
+#### For iOS
 
 ```bash
 # using npm
@@ -42,38 +105,63 @@ npm run ios
 yarn ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## 🛠️ Development
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+### Modifying the App
 
-## Step 3: Modifying your App
+1. Open `App.tsx` in your text editor and make your changes
+2. For **Android**: Press <kbd>R</kbd> twice or select "Reload" from the Developer Menu
+3. For **iOS**: Press <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in the iOS Simulator
 
-Now that you have successfully run the app, let's modify it.
+### Running Tests
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+```bash
+# using npm
+npm test
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+# OR using Yarn
+yarn test
+```
 
-## Congratulations! :tada:
+## 📋 Project Structure
 
-You've successfully run and modified your React Native App. :partying_face:
+```
+arcade/
+├── android/          # Android native code
+├── ios/              # iOS native code
+├── src/
+│   ├── assets/       # Images, fonts, etc.
+│   ├── components/   # Reusable components
+│   ├── screens/      # Screen components
+│   ├── navigation/   # Navigation configurations
+│   ├── services/     # API services for Valorant data
+│   ├── utils/        # Utility functions
+│   └── App.tsx       # Entry point
+├── __tests__/        # Test files
+└── README.md         # This file
+```
 
-### Now what?
+## 📝 Changelog
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+See the [CHANGELOG.md](CHANGELOG.md) file for details on version updates.
 
-# Troubleshooting
+## 🤝 Contributing
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-# Learn More
+## 📄 License
 
-To learn more about React Native, take a look at the following resources:
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 🙏 Acknowledgments
+
+- [React Native](https://reactnative.dev) for the amazing framework
+- [React Navigation](https://reactnavigation.org) for the navigation solution
+- [Valorant API](https://valorant-api.com) for providing game data
+- All our contributors and supporters
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by the Arcade Team</sub>
+</div>
