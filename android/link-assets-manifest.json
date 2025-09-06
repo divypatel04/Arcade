@@ -1,0 +1,101 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-Bold.ttf",
+      "sha1": "8fb499e850c19f1d77f0b5cbc9f27ac286c119c2"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-Book.ttf",
+      "sha1": "cc661db36b6b5423d84d601cf06c7e252953d1f7"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-DemiBold.ttf",
+      "sha1": "c6ccb06cf745745783e340a0ec489cb7b1159e55"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-Light.ttf",
+      "sha1": "4a032887e9d3d7493b7e11d0d8f72646ef10e682"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-Medium.ttf",
+      "sha1": "064189053b61242216bf354d7c4e3118af4f5506"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-Normal.ttf",
+      "sha1": "07ae3afbdc5c30d89c2c70420e1366bd1e77cc24"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-UltraBold.ttf",
+      "sha1": "ed93a5df0466cccc65b8210a87f1b0ffaf99f5d6"
+    },
+    {
+      "path": "src/assets/fonts/Novecentosansnarrow-UltrLt.ttf",
+      "sha1": "bc25a4967cccd9ad448592c8438aa2592cc24113"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-Black.ttf",
+      "sha1": "c42bcf76a014d584d8c26aa89b7b13de18331746"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-BlackIt.ttf",
+      "sha1": "7586bd8284a92447875fadaebfefa617d8f50434"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-Bold.ttf",
+      "sha1": "0174da82e711e62140e5e0dc9cc9222b8025de99"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-BoldIt.ttf",
+      "sha1": "154a30a59c5cdffcfd07dd062de288d4e147eeb6"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-Extrabld.ttf",
+      "sha1": "9a9b71bbb0e5b0f4234462fd6fd18219a00c8737"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-ExtrabldIt.ttf",
+      "sha1": "63a940fe01981b5a3ebee50f1aaaa2c1d9924997"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-Light.ttf",
+      "sha1": "cf2cd378870f1d9df74aa37d30d9f3025c600afc"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-LightIt.ttf",
+      "sha1": "5d4bc79df2b7ab8eec1404aa27903edc3d27964e"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-Regular.ttf",
+      "sha1": "346ca038dfe67cd3aef608fd8dccaa0ab04b8eea"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-RegularIt.ttf",
+      "sha1": "47a9a78964903e2d41691c377b76b82aa32a5bbe"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-Semibold.ttf",
+      "sha1": "106088d385e32a3b0379b78ec9f56fc684472d74"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-SemiboldIt.ttf",
+      "sha1": "b8fb8921128614ca2d66bc6840b46f9c64978595"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNova-ThinIt.ttf",
+      "sha1": "0589dcf8331ea4e67e734b14a653ab4ef6add3d7"
+    },
+    {
+      "path": "src/assets/fonts/ProximaNovaT-Thin.ttf",
+      "sha1": "50da793fbe00e865c4a0bb887aee4129154955fb"
+    },
+    {
+      "path": "src/assets/icons/gylphmap.json",
+      "sha1": "3f810e42264eab7e6a048184bf939b7b54759e24"
+    },
+    {
+      "path": "src/assets/icons/remixicon.ttf",
+      "sha1": "c11e2709171f141e730e4e4b98dbc4d34ead5643"
+    }
+  ]
+}
