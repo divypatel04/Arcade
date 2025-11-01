@@ -63,16 +63,34 @@ export const convertMillisToReadableTime = (ms: number) => {
  *
  * @param userData - The user data object from DataContext
  * @returns boolean - True if user has premium access
+ * 
+ * @example
+ * ```ts
+ * const hasPremium = isPremiumUser(userData);
+ * ```
  */
-export function isPremiumUser(userData: any): boolean {
+export async function isPremiumUser(userData?: any): Promise<boolean> {
   if (!userData) return false;
 
-  // Check if user has RevenueCat entitlements
+  try {
+    // First, try to check via RevenueCat subscription manager
+    // This is more reliable than cached data
+    const { subscriptionManager } = await import('../services/purchases');
+    const isPremiumActive = await subscriptionManager.isPremiumActive();
+    
+    if (isPremiumActive) {
+      return true;
+    }
+  } catch (error) {
+    console.log('[isPremiumUser] RevenueCat check failed, falling back to cached data:', error);
+  }
+
+  // Fallback: Check cached customer info from userData
   if (userData.customerInfo?.entitlements?.active?.premium) {
     return true;
   }
 
-  // Fallback to checking payment records
+  // Final fallback: Check payment records in database
   return Boolean(userData.payments && userData.payments.length > 0);
 }
 

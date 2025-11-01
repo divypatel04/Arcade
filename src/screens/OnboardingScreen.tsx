@@ -9,16 +9,24 @@ import {
   TouchableOpacity,
   Dimensions,
   Linking,
+  ImageSourcePropType,
 } from 'react-native';
 import {colors, fonts} from '../theme';
-import {Icon} from '../components/lcon';
+import {Icon} from '../components/Icon';
 import {useTranslation} from 'react-i18next';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import useAuthLogin from '@hooks/useAuthLogin';
 
 const {width, height} = Dimensions.get('window');
 
-const Slide = ({item}: any) => {
+interface SlideItem {
+  id: string;
+  image: ImageSourcePropType;
+  title: string;
+  subtitle: string;
+}
+
+const Slide = ({item}: {item: SlideItem}) => {
   return (
     <View style={{alignItems: 'center', width}}>
       <Image
@@ -85,7 +93,7 @@ const OnboardingScreen = () => {
 
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = useRef('');
-  const updateCurrentSlideIndex = (e: any) => {
+  const updateCurrentSlideIndex = (e: { nativeEvent: { contentOffset: { x: number } } }) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);

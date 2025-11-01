@@ -52,7 +52,7 @@ export const mergeAgentSeasonalStats = (agentStat: AgentStatType): AgentStatType
     abilityAndUltimateImpact: [] as AgentAbilityCastDetails[]
   };
 
-  const aggregatedStats: AgentStatType = agentStat.performanceBySeason.reduce((acc: any, curr) => {
+  const aggregatedSeasonStats = agentStat.performanceBySeason.reduce((acc, curr) => {
     acc.stats.kills += curr.stats.kills;
     acc.stats.deaths += curr.stats.deaths;
     acc.stats.roundsWon += curr.stats.roundsWon;
@@ -126,7 +126,10 @@ export const mergeAgentSeasonalStats = (agentStat: AgentStatType): AgentStatType
     return acc;
   }, seasonStat);
 
-  return aggregatedStats;
+  return {
+    ...agentStat,
+    performanceBySeason: [aggregatedSeasonStats]
+  };
 }
 
 export const mergeMapSeasonalStats = (mapStat: MapStatsType): MapStatsType => {
@@ -172,7 +175,7 @@ export const mergeMapSeasonalStats = (mapStat: MapStatsType): MapStatsType => {
     },
   };
 
-  const aggregatedStats: MapStatsType = mapStat.performanceBySeason.reduce((acc: any, curr) => {
+  const aggregatedSeasonStats = mapStat.performanceBySeason.reduce((acc, curr) => {
     acc.stats.matchesWon += curr.stats.matchesWon;
     acc.stats.matchesLost += curr.stats.matchesLost;
     acc.stats.roundsWon += curr.stats.roundsWon;
@@ -215,8 +218,10 @@ export const mergeMapSeasonalStats = (mapStat: MapStatsType): MapStatsType => {
     return acc;
   }, seasonStat);
 
-
-  return aggregatedStats
+  return {
+    ...mapStat,
+    performanceBySeason: [aggregatedSeasonStats]
+  };
 };
 
 export const mergeWeaponSeasonalStats = (weaponStats: WeaponStatsType): WeaponStatsType => {
@@ -241,7 +246,7 @@ export const mergeWeaponSeasonalStats = (weaponStats: WeaponStatsType): WeaponSt
 
   };
 
-  const aggregatedStats: WeaponStatsType = weaponStats.performanceBySeason.reduce((acc: any, curr) => {
+  const aggregatedSeasonStats = weaponStats.performanceBySeason.reduce((acc, curr) => {
     acc.stats.kills += curr.stats.kills;
     acc.stats.damage += curr.stats.damage;
     acc.stats.aces += curr.stats.aces;
@@ -255,12 +260,22 @@ export const mergeWeaponSeasonalStats = (weaponStats: WeaponStatsType): WeaponSt
 
   }, initialStats);
 
-
-  return aggregatedStats;
+  return {
+    ...weaponStats,
+    performanceBySeason: [aggregatedSeasonStats]
+  };
 };
 
 export const mergeActSeasonalStats = (seasonStats: SeasonStatsType[]): SeasonStatsType => {
-  const initialStats = {
+  if (seasonStats.length === 0) {
+    throw new Error('Cannot merge empty season stats array');
+  }
+
+  // Use first season stats as base, copy id and puuid
+  const firstSeason = seasonStats[0];
+  const initialStats: SeasonStatsType = {
+    id: firstSeason.id,
+    puuid: firstSeason.puuid,
     season: {
       id: "292f58db-4c17-89a7-b1c0-ba988f0e9d98",
       name: "EPISODE 9 - ACT 2",
@@ -284,10 +299,9 @@ export const mergeActSeasonalStats = (seasonStats: SeasonStatsType[]): SeasonSta
       aces: 0,
       mvps: 0,
     }
-  }
+  };
 
-  const aggregatedStats: SeasonStatsType = seasonStats.reduce((acc: any, curr) => {
-
+  const aggregatedStats = seasonStats.reduce((acc, curr) => {
     acc.stats.matchesPlayed += curr.stats.matchesPlayed;
     acc.stats.matchesWon += curr.stats.matchesWon;
     acc.stats.matchesLost += curr.stats.matchesLost;
@@ -298,24 +312,40 @@ export const mergeActSeasonalStats = (seasonStats: SeasonStatsType[]): SeasonSta
     acc.stats.totalRounds += curr.stats.totalRounds;
     acc.stats.playtimeMillis += curr.stats.playtimeMillis;
     acc.stats.damage += curr.stats.damage;
-    acc.stats.Firstkill += curr.stats.firstKill;
+    acc.stats.firstKill += curr.stats.firstKill;
     acc.stats.plants += curr.stats.plants;
-    acc.stats.defuse += curr.stats.defuses;
-    acc.stats.Aces += curr.stats.aces;
+    acc.stats.defuses += curr.stats.defuses;
+    acc.stats.aces += curr.stats.aces;
     acc.stats.mvps += curr.stats.mvps;
     acc.stats.highestRank =
       curr.stats.highestRank > acc.stats.highestRank ? curr.stats.highestRank : acc.stats.highestRank;
 
-      return acc;
+    return acc;
   }, initialStats);
 
   return aggregatedStats;
 }
 
-export const mergeUtilitiesAndAbilities = (abilitiesData: any, utilities: any) => {
-  // console.log(abilitiesData, utilities);
-  return abilitiesData.map((ability: any) => {
-    let data;
+interface AbilityData {
+  id: string;
+  count: number;
+  kills: number;
+  damage: number;
+}
+
+interface Utilities {
+  grenadeCasts: AbilityData;
+  ability1Casts: AbilityData;
+  ability2Casts: AbilityData;
+  ultimateCasts: AbilityData;
+}
+
+export const mergeUtilitiesAndAbilities = (
+  abilitiesData: AgentAbilityCastDetails[], 
+  utilities: Utilities
+) => {
+  return abilitiesData.map(ability => {
+    let data: AbilityData;
     switch (ability.id) {
       case utilities?.grenadeCasts.id:
         data = utilities.grenadeCasts;
@@ -330,7 +360,7 @@ export const mergeUtilitiesAndAbilities = (abilitiesData: any, utilities: any) =
         data = utilities.ultimateCasts;
         break;
       default:
-        data = { count: 0, kills: 0, damage: 0 };
+        data = { id: ability.id, count: 0, kills: 0, damage: 0 };
     }
     return { ...ability, data };
   });

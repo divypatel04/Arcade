@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
-import { Icon } from '../lcon';
+import { Icon } from '../Icon';
 import { useRoute } from '@react-navigation/native';
 import { TeamStat } from '../../types/MatchStatsType';
 

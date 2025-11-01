@@ -7,3 +7,18 @@ declare module '@env' {
   export const ADMOB_ANDROID_APP_ID: string;
   export const ADMOB_IOS_APP_ID: string;
 }
+
+declare const process: {
+  env: {
+    NODE_ENV: 'development' | 'production' | 'test';
+  };
+};
+
+declare const console: {
+  error(...args: any[]): void;
+  log(...args: any[]): void;
+  warn(...args: any[]): void;
+};
+
+declare function setTimeout(callback: (...args: any[]) => void, ms: number): number;
+declare function clearTimeout(id: number): void;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from '../theme';
-import { Icon } from '../components/lcon';
+import { Icon } from '../components/Icon';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SeasonInfoScreen from '../screens/SeasonInfoScreen';
@@ -26,7 +26,7 @@ const SCREEN_OPTIONS = {
 
 const createTabBarIcon =
   (focusedIconName: string, unfocusedIconName: string) =>
-  ({ color, focused }: any) =>
+  ({ color, focused }: { color: string; focused: boolean }) =>
     (
       <Icon
         name={focused ? focusedIconName : unfocusedIconName}

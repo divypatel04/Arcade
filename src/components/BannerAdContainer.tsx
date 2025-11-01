@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { View, Text, StyleSheet } from 'react-native';
+import { BannerAd } from 'react-native-google-mobile-ads';
 import { colors, fonts, sizes } from '../theme';
+import { getBannerAdUnitId, BANNER_SIZES, DEFAULT_AD_REQUEST_OPTIONS, ADS_ENABLED } from '../services/ads';
 
 interface BannerAdContainerProps {
   containerStyle?: object;
@@ -10,23 +11,19 @@ interface BannerAdContainerProps {
 const BannerAdContainer: React.FC<BannerAdContainerProps> = ({ containerStyle }) => {
   const [adLoaded, setAdLoaded] = useState(false);
 
-  // Use test IDs during development
-  const adUnitId = __DEV__
-    ? TestIds.BANNER
-    : Platform.OS === 'ios'
-      ? 'ca-app-pub-xxxxxxxx/yyyyyyyy'  // Replace with your iOS banner ad unit ID
-      : 'ca-app-pub-8137963668346387/yyyyyyyy'; // Replace with your Android banner ad unit ID
+  // Don't render anything if ads are disabled
+  if (!ADS_ENABLED) {
+    return null;
+  }
 
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={styles.adText}>Advertisement</Text>
       <View style={styles.bannerContainer}>
         <BannerAd
-          unitId={adUnitId}
-          size={BannerAdSize.BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
+          unitId={getBannerAdUnitId()}
+          size={BANNER_SIZES.STANDARD}
+          requestOptions={DEFAULT_AD_REQUEST_OPTIONS}
           onAdLoaded={() => setAdLoaded(true)}
           onAdFailedToLoad={(error) => {
             console.error('Banner ad failed to load:', error);

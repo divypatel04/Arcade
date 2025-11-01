@@ -4,6 +4,32 @@ import { supabase } from '../lib/supabase';
 import { dataUpdateTracker } from '../services';
 import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumMatchStats, determinePremiumSeasonStats, determinePremiumWeaponStats } from '@utils';
 import { AgentStatType, MapStatsType, MatchStatsType, SeasonStatsType, WeaponStatsType } from '@types';
+import { 
+  fetchAgentStats as fetchAgentStatsDb, 
+  fetchMapStats as fetchMapStatsDb,
+  fetchWeaponStats as fetchWeaponStatsDb,
+  fetchSeasonStats as fetchSeasonStatsDb,
+  fetchMatchStats as fetchMatchStatsDb 
+} from '@services/database';
+import { logError } from '@lib/errors';
+import { logger } from '../utils/logger';
+
+// Create scoped logger for DataContext
+const log = logger.scope('DataContext');
+/**
+ * Payment record from Supabase
+ */
+interface Payment {
+  id: string;
+  puuid: string;
+  productId: string;
+  transactionId: string;
+  purchaseDate: string;
+  expiryDate?: string;
+  status: 'active' | 'expired' | 'cancelled';
+  platform: 'ios' | 'android';
+  [key: string]: unknown;
+}
 
 type UserData = {
   puuid: string;
@@ -13,7 +39,7 @@ type UserData = {
   createdAt: string;
   lastUpdated: string;
   matchesId: string[];
-  payments: any[];
+  payments: Payment[];
 };
 
 interface DataContextState {
@@ -70,9 +96,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastDataCheck, setLastDataCheck] = useState<Date | null>(null);
 
   // Helper function to handle API errors consistently
-  const handleApiError = (error: any, resourceName: string) => {
-    if (error?.message?.includes('contains 0 rows') || !error) {
-      console.log(`No ${resourceName} found for this user`);
+  const handleApiError = (error: unknown, resourceName: string): null | never => {
+    if (error && typeof error === 'object' && 'message' in error) {
+      const errorMessage = String(error.message);
+      if (errorMessage.includes('contains 0 rows')) {
+        log.debug(`No ${resourceName} found for this user`);
+        return null;
+      }
+    }
+    if (!error) {
+      log.debug(`No ${resourceName} found for this user`);
       return null;
     }
     throw error;
@@ -92,7 +125,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           'postgres_changes',
           { event: '*', schema: 'public', table, filter: `puuid=eq.${puuid}` },
           (payload) => {
-            console.log(`[PROCESS] 📡 Received update for ${table}:`, payload);
+            log.debug(`📡 Received update for ${table}:`, payload);
 
             // When background service updates data, this subscription will trigger
             // a refetch of the specific changed data type
@@ -106,7 +139,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             if (refetchFunction) {
               refetchFunction(puuid);
-              console.log(`[PROCESS] 🔄 Auto-refetching ${table} after background update`);
+              log.debug(`🔄 Auto-refetching ${table} after background update`);
             }
           }
         )
@@ -133,7 +166,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         lastUpdateTimestamp &&
         (!lastDataCheck || lastUpdateTimestamp > lastDataCheck)
       ) {
-        console.log('[PROCESS] 🔔 Detected data update, refreshing data');
+        log.info('🔔 Detected data update, refreshing data');
 
         // Update our last check time
         setLastDataCheck(lastUpdateTimestamp);
@@ -146,7 +179,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           fetchSeasonStats(currentPuuid),
           fetchMatchStats(currentPuuid)
         ]).catch(error => {
-          console.error('[ERROR] Error refetching data after processing:', error);
+          log.error('Error refetching data after processing:', error);
         });
       }
     };
@@ -160,7 +193,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Fetch user data function
   const fetchUserData = useCallback(async (puuid: string) => {
-    console.log('[PROCESS] 🚀 Starting data fetch for PUUID:', puuid);
+    log.info('🚀 Starting data fetch for PUUID:', puuid);
 
     setState(prev => ({ ...prev, isLoading: true, error: null, isDataReady: false }));
     setCurrentPuuid(puuid);
@@ -173,10 +206,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('puuid', puuid)
         .single();
 
-      if (userError) throw new Error(`[ERROR] Failed to fetch user data: ${userError.message}`);
-      if (!userData) throw new Error('[ERROR] User not found');
+      if (userError) throw new Error(`Failed to fetch user data: ${userError.message}`);
+      if (!userData) throw new Error('User not found');
 
-      console.log('[PROCESS] ✅ User data fetched');
+      log.info('✅ User data fetched');
 
       // Update state with user data
       setState(prev => ({
@@ -204,7 +237,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
 
     } catch (error) {
-      console.error('[ERROR] ❌ Error fetching data:', error);
+      log.error('❌ Error fetching data:', error);
       setState(prev => ({
         ...prev,
         error: error as Error,
@@ -217,125 +250,100 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Individual data fetching functions
   const fetchAgentStats = async (puuid: string) => {
     try {
-      console.log('[PROCESS] 📊 Fetching agent stats...');
-      const { data, error } = await supabase
-        .from('agentstats')
-        .select('*')
-        .eq('puuid', puuid);
+      log.debug('📊 Fetching agent stats...');
+      
+      // Use new database service with automatic transformation
+      const agentStats = await fetchAgentStatsDb(puuid);
 
-      if (error || !data || data.length === 0) {
-        handleApiError(error, 'agent stats');
+      if (!agentStats || agentStats.length === 0) {
+        log.debug('No agent stats found for this user');
         setState(prev => ({ ...prev, agentStats: [] }));
         return;
       }
 
-      console.log('[PROCESS] ✅ Agent stats fetched:', data.length, 'records');
-
-      // Transform all records to correct the casing of performanceBySeason
-      const agentStats = data.map(item => ({
-        ...item,
-        performanceBySeason: item.performancebyseason,
-        // Remove the original lowercase field if needed
-        performancebyseason: undefined
-      }));
+      log.info('✅ Agent stats fetched:', agentStats.length, 'records');
 
       determinePremiumAgentStats(agentStats);
 
       setState(prev => ({ ...prev, agentStats }));
     } catch (error) {
-      console.error('[ERROR] Error fetching agent stats:', error);
+      log.error('Error fetching agent stats:', error);
+      logError(error, { operation: 'fetchAgentStats', puuid });
       setState(prev => ({ ...prev, agentStats: [] }));
     }
   };
 
   const fetchMapStats = async (puuid: string) => {
     try {
-      console.log('[PROCESS] 📊 Fetching map stats...');
-      const { data, error } = await supabase
-        .from('mapstats')
-        .select('*')
-        .eq('puuid', puuid);
+      log.debug('📊 Fetching map stats...');
+      
+      // Use new database service with automatic transformation
+      const mapStats = await fetchMapStatsDb(puuid);
 
-      if (error || !data || data.length === 0) {
-        handleApiError(error, 'map stats');
+      if (!mapStats || mapStats.length === 0) {
+        log.debug('No map stats found for this user');
         setState(prev => ({ ...prev, mapStats: [] }));
         return;
       }
 
-      console.log('[PROCESS] ✅ Map stats fetched:', data.length, 'records');
-
-      // Transform to correct the casing of performanceBySeason
-      const mapStats = data.map(item => ({
-        ...item,
-        performanceBySeason: item.performancebyseason,
-        performancebyseason: undefined
-      }));
+      log.info('✅ Map stats fetched:', mapStats.length, 'records');
 
       determinePremiumMapStats(mapStats);
 
       setState(prev => ({ ...prev, mapStats }));
     } catch (error) {
-      console.error('[ERROR] Error fetching map stats:', error);
+      log.error('Error fetching map stats:', error);
+      logError(error, { operation: 'fetchMapStats', puuid });
       setState(prev => ({ ...prev, mapStats: [] }));
     }
   };
 
   const fetchWeaponStats = async (puuid: string) => {
     try {
-      console.log('[PROCESS] 📊 Fetching weapon stats...');
-      const { data, error } = await supabase
-        .from('weaponstats')
-        .select('*')
-        .eq('puuid', puuid);
+      log.debug('📊 Fetching weapon stats...');
+      
+      // Use new database service with automatic transformation
+      const weaponStats = await fetchWeaponStatsDb(puuid);
 
-      if (error || !data || data.length === 0) {
-        handleApiError(error, 'weapon stats');
+      if (!weaponStats || weaponStats.length === 0) {
+        log.debug('No weapon stats found for this user');
         setState(prev => ({ ...prev, weaponStats: [] }));
         return;
       }
 
-      console.log('[Process] ✅ Weapon stats fetched:', data.length, 'records');
-
-      // Transform to correct the casing of performanceBySeason
-      const weaponStats = data.map(item => ({
-        ...item,
-        performanceBySeason: item.performancebyseason,
-        performancebyseason: undefined
-      }));
+      log.info('✅ Weapon stats fetched:', weaponStats.length, 'records');
 
       determinePremiumWeaponStats(weaponStats);
 
       setState(prev => ({ ...prev, weaponStats }));
     } catch (error) {
-      console.error('[ERROR] Error fetching weapon stats:', error);
+      log.error('Error fetching weapon stats:', error);
+      logError(error, { operation: 'fetchWeaponStats', puuid });
       setState(prev => ({ ...prev, weaponStats: [] }));
     }
   };
 
   const fetchSeasonStats = async (puuid: string) => {
     try {
-      console.log('[PROCESS] 📊 Fetching season stats...');
-      const { data, error } = await supabase
-        .from('seasonstats')
-        .select('*')
-        .eq('puuid', puuid);
+      log.debug('📊 Fetching season stats...');
+      
+      // Use new database service
+      const seasonStats = await fetchSeasonStatsDb(puuid);
 
-      if (error || !data || data.length === 0) {
-        handleApiError(error, 'season stats');
+      if (!seasonStats || seasonStats.length === 0) {
+        log.debug('No season stats found for this user');
         setState(prev => ({ ...prev, seasonStats: [] }));
         return;
       }
 
-      console.log('[PROCESS] ✅ Season stats fetched:', data.length, 'records');
-
-      // Transform the data to ensure correct casing
-      const seasonStats = data;
+      log.info('✅ Season stats fetched:', seasonStats.length, 'records');
 
       determinePremiumSeasonStats(seasonStats);
 
       setState(prev => ({ ...prev, seasonStats }));
     } catch (error) {
-      console.error('[ERROR] Error fetching season stats:', error);
+      log.error('Error fetching season stats:', error);
+      logError(error, { operation: 'fetchSeasonStats', puuid });
       setState(prev => ({ ...prev, seasonStats: [] }));
     }
   };
@@ -343,28 +351,25 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Transform match stats data similarly
   const fetchMatchStats = async (puuid: string) => {
     try {
-      console.log('[PROCESS] 📊 Fetching match stats...');
-      const { data, error } = await supabase
-        .from('matchstats')
-        .select('*')
-        .eq('puuid', puuid);
+      log.debug('📊 Fetching match stats...');
+      
+      // Use new database service
+      const matchStats = await fetchMatchStatsDb(puuid);
 
-      if (error || !data || data.length === 0) {
-        handleApiError(error, 'match stats');
+      if (!matchStats || matchStats.length === 0) {
+        log.debug('No match stats found for this user');
         setState(prev => ({ ...prev, matchStats: [] }));
         return;
       }
 
-      console.log('[PROCESS] ✅ Match stats fetched:', data.length, 'matches');
-
-      // Transform match stats to ensure consistent casing
-      const matchStats = data;
+      log.info('✅ Match stats fetched:', matchStats.length, 'matches');
 
       determinePremiumMatchStats(matchStats);
 
       setState(prev => ({ ...prev, matchStats }));
     } catch (error) {
-      console.error('[ERROR] Error fetching match stats:', error);
+      log.error('Error fetching match stats:', error);
+      logError(error, { operation: 'fetchMatchStats', puuid });
       setState(prev => ({ ...prev, matchStats: [] }));
     }
   };

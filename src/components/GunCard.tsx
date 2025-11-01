@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from './lcon';
+import { Icon } from './Icon';
 import { colors, fonts, sizes } from '../theme';
 import { WeaponStatsType } from '../types/WeaponStatsType';
 import { useTranslation } from 'react-i18next';

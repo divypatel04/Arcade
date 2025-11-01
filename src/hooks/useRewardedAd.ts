@@ -1,99 +1,80 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { RewardedAd, RewardedAdEventType, RewardedAdReward } from 'react-native-google-mobile-ads';
-import { loadRewardedAd } from '../utils/adUtils';
+/**
+ * useRewardedAd Hook
+ * 
+ * React hook wrapper around the rewarded ad service.
+ * This hook provides a simple interface for showing rewarded ads in React components.
+ * 
+ * @deprecated Consider using the service directly: `import { showRewardedAd, isRewardedAdReady } from '@/services/ads'`
+ * 
+ * @example
+ * ```tsx
+ * const { showRewardedAd, isRewardedAdReady } = useRewardedAd();
+ * 
+ * if (isRewardedAdReady) {
+ *   showRewardedAd(
+ *     (reward) => console.log('Rewarded!', reward),
+ *     () => console.log('Ad dismissed')
+ *   );
+ * }
+ * ```
+ */
+
+import { useState, useEffect } from 'react';
+import { RewardedAdReward } from 'react-native-google-mobile-ads';
+import {
+  showRewardedAd as showRewardedAdService,
+  isRewardedAdReady as checkRewardedAdReady,
+  preloadRewardedAd
+} from '../services/ads';
 
 type RewardCallback = (reward: RewardedAdReward) => void;
 type DismissCallback = () => void;
 
 export const useRewardedAd = () => {
-  const [loaded, setLoaded] = useState(false);
-  const [rewarded, setRewarded] = useState<RewardedAd | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
-  // Use a ref to track if we need to load a new ad
-  const needsNewAd = useRef(true);
+  // Poll the ad ready state
+  useEffect(() => {
+    const checkAdStatus = () => {
+      setIsReady(checkRewardedAdReady());
+    };
 
-  // Function to load a new ad
-  const loadNewAd = useCallback(() => {
-    console.log('Loading new rewarded ad');
-    // Reset state
-    setLoaded(false);
+    // Check immediately
+    checkAdStatus();
 
-    // Create and load a new ad
-    const newRewardedAd = loadRewardedAd();
-    setRewarded(newRewardedAd);
+    // Preload ad if not ready
+    if (!checkRewardedAdReady()) {
+      preloadRewardedAd();
+    }
 
-    // Set up the loaded event listener
-    const unsubscribeLoaded = newRewardedAd.addAdEventListener(
-      RewardedAdEventType.LOADED,
-      () => {
-        console.log('New ad loaded successfully');
-        setLoaded(true);
-        needsNewAd.current = false;
-      }
-    );
+    // Poll every second to update state
+    const interval = setInterval(checkAdStatus, 1000);
 
-    // Load the ad
-    newRewardedAd.load();
-
-    return unsubscribeLoaded;
+    return () => clearInterval(interval);
   }, []);
 
-  // Initial load and reload when needed
-  useEffect(() => {
-    // Only load a new ad when needed
-    if (needsNewAd.current) {
-      const unsubscribe = loadNewAd();
-      return () => {
-        unsubscribe();
-      };
-    }
-  }, [loadNewAd, needsNewAd.current]);
-
-  // Function to show the rewarded ad
-  const showRewardedAd = useCallback((onRewarded?: RewardCallback, onAdDismissed?: DismissCallback) => {
-    if (!rewarded || !loaded) {
-      console.log('Rewarded ad not ready yet');
-      onAdDismissed?.();
-      return;
-    }
-
-    console.log('Showing rewarded ad');
-
-    // Set up reward event listener
-    const unsubscribeEarned = rewarded.addAdEventListener(
-      RewardedAdEventType.EARNED_REWARD,
-      (reward) => {
-        console.log('User earned reward:', reward);
-        if (onRewarded) {
-          onRewarded(reward);
-        }
+  const showRewardedAd = (onRewarded?: RewardCallback, onAdDismissed?: DismissCallback) => {
+    showRewardedAdService({
+      onRewarded: (reward) => {
+        onRewarded?.(reward);
+        // Preload next ad
+        setTimeout(() => preloadRewardedAd(), 100);
+      },
+      onAdDismissed: () => {
+        onAdDismissed?.();
+        // Update ready state
+        setIsReady(checkRewardedAdReady());
+      },
+      onAdFailedToShow: (error) => {
+        console.error('Failed to show rewarded ad:', error);
+        onAdDismissed?.();
+        setIsReady(false);
       }
-    );
-
-    // Show the ad
-    rewarded.show().then(() => {
-      console.log('Ad displayed successfully');
-    }).catch(error => {
-      console.error('Error showing rewarded ad:', error);
-    }).finally(() => {
-      // Clean up
-      console.log('Ad display finished, cleaning up');
-      unsubscribeEarned();
-
-      // Set flag to load a new ad
-      needsNewAd.current = true;
-      setLoaded(false);
-
-      // After a short delay, load a new ad
-      setTimeout(() => {
-        loadNewAd();
-      }, 100);
-
-      // Call dismiss callback
-      if (onAdDismissed) onAdDismissed();
     });
+  };
 
-  }, [rewarded, loaded, loadNewAd]);
-
-  return { showRewardedAd, isRewardedAdReady: loaded };
+  return { 
+    showRewardedAd, 
+    isRewardedAdReady: isReady 
+  };
 };

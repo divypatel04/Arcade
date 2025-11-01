@@ -3,9 +3,16 @@
  * Contains pure functions that take raw data and return processed data
  */
 
-import { generateStats } from "./generateProcess";
+import { generateStats } from "./processors/statsGenerator";
 import { fetchMatchDetails } from "./api/fetchMatchDetails";
-import { mergeProcess } from "./mergeProcess";
+import { mergeAllStats } from "./processors/mergeOrchestrator";
+import type { 
+  AgentStatType, 
+  MapStatsType, 
+  WeaponStatsType, 
+  SeasonStatsType, 
+  MatchStatsType 
+} from "@types";
 
 /**
  * Interface for the data structure passed to processAllStatsData
@@ -13,11 +20,11 @@ import { mergeProcess } from "./mergeProcess";
 interface ProcessDataInput {
   region: string;
   puuid: string;
-  agentStats: any[];
-  mapStats: any[];
-  weaponStats: any[];
-  seasonStats: any[];
-  matchStats: any[];
+  agentStats: AgentStatType[];
+  mapStats: MapStatsType[];
+  weaponStats: WeaponStatsType[];
+  seasonStats: SeasonStatsType[];
+  matchStats: MatchStatsType[];
   newMatchIds: string[];
 }
 
@@ -25,11 +32,11 @@ interface ProcessDataInput {
  * Interface for the data structure returned from processAllStatsData
  */
 interface ProcessDataOutput {
-  agentStats: any[];
-  mapStats: any[];
-  weaponStats: any[];
-  seasonStats: any[];
-  matchStats: any[];
+  agentStats: AgentStatType[];
+  mapStats: MapStatsType[];
+  weaponStats: WeaponStatsType[];
+  seasonStats: SeasonStatsType[];
+  matchStats: MatchStatsType[];
 }
 
 /**
@@ -92,7 +99,7 @@ export async function processAllStatsData(data: ProcessDataInput): Promise<Proce
       mergedWeaponStats,
       mergedSeasonStats,
       mergedMatchStats // Add mergedMatchStats to the destructuring
-    } = await mergeProcess({
+    } = await mergeAllStats({
       oldData: {
         agentStats: data.agentStats || [],
         mapStats: data.mapStats || [],

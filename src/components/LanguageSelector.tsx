@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react
 import { useLanguage } from '../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 import { colors, fonts, sizes } from '../theme';
-import { Icon } from './lcon';
+import { Icon } from './Icon';
 import { LanguageCode } from '../i18n';
 
 interface LanguageSelectorProps {

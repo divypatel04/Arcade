@@ -18,7 +18,7 @@ import TeamStatsTab from './Tabs/TeamStatsTab';
 import RoundPerfTab from './Tabs/RoundPerfTab';
 import PlayerVsTab from './Tabs/PlayerVsTab';
 import MatchBox from './MatchBox';
-import { Icon } from './lcon';
+import { Icon } from './Icon';
 import LanguageSelector from './LanguageSelector';
 import StatsSummary from './StatsSummary';
 import DetailedStats from './DetailedStats';

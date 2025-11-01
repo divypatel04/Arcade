@@ -4,6 +4,8 @@ import { WeaponStatsType, WeaponSeasonPerformance } from "./WeaponStatsType";
 import { SeasonStatsType } from "./SeasonStatsType";
 import { MatchStatsType } from "./MatchStatsType";
 import { MatchDetails } from "./MatchDetails";
+import type * as DB from "./database";
+import type * as Common from "./common";
 
 
 export type {
@@ -19,4 +21,6 @@ export type {
   SeasonStatsType,
   MatchStatsType,
   MatchDetails,
+  DB,
+  Common,
 };

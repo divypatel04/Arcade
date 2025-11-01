@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fonts } from '../theme';
-import { Icon } from './lcon';
+import { Icon } from './Icon';
 import { MatchStatsType } from '../types/MatchStatsType';
 import { getSupabaseImageUrl } from '../utils';
 

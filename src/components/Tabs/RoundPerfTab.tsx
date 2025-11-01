@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { colors, fonts, sizes } from '../../theme';
-import { Icon } from '../lcon';
+import { Icon } from '../Icon';
 import { RoundPerformance } from '../../types/MatchStatsType';
 import PremiumModal from '../PremiumModal';
 import { isPremiumUser } from '@utils';
+import { showRewardedAd, isRewardedAdReady } from '../../services/ads';
 import { useDataContext } from '../../context/DataContext';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -19,7 +20,17 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
   const [selectedRound, setSelectedRound] = useState<number | null>(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [attemptedRound, setAttemptedRound] = useState<number | null>(null);
+  const [isPremium, setIsPremium] = useState(false);
   const screenWidth = Dimensions.get('window').width;
+
+  // Check premium status on component mount and when userData changes
+  React.useEffect(() => {
+    const checkPremiumStatus = async () => {
+      const premium = await isPremiumUser(userData);
+      setIsPremium(premium);
+    };
+    checkPremiumStatus();
+  }, [userData]);
 
   // Helper function for impact score color
   const getImpactScoreColor = (score: number) => {
@@ -31,7 +42,7 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
   const handleRoundSelection = (roundNumber: number) => {
     if (roundNumber <= 5) {
       setSelectedRound(roundNumber === selectedRound ? null : roundNumber);
-    } else if (isPremiumUser(userData)) {
+    } else if (isPremium) {
       setSelectedRound(roundNumber === selectedRound ? null : roundNumber);
     } else {
       setAttemptedRound(roundNumber); // Store the attempted round number
@@ -40,18 +51,70 @@ const RoundPerfTab = ({roundStats}:RoundPerfTabProps) => {
   };
 
   const handleWatchAd = () => {
-    // TODO: Implement ad watching logic
-    setShowPremiumModal(false);
-    if (attemptedRound) {
-      setSelectedRound(attemptedRound);
-      setAttemptedRound(null); // Clear the attempted round
+    // Check if ad is ready first
+    if (!isRewardedAdReady()) {
+      Alert.alert(
+        'Ad Not Available',
+        'No ads are currently available. Please try again later or purchase premium for unlimited access.',
+        [
+          { text: 'Try Again Later', style: 'cancel' },
+          { text: 'Get Premium', onPress: handleBuyPremium }
+        ]
+      );
+      setShowPremiumModal(false);
+      return;
     }
+
+    // Show rewarded ad
+    showRewardedAd({
+      onRewarded: (reward) => {
+        // Grant temporary access to premium content
+        console.log('[RoundPerfTab] User earned reward:', reward);
+        setShowPremiumModal(false);
+        if (attemptedRound) {
+          setSelectedRound(attemptedRound);
+          setAttemptedRound(null);
+        }
+        // Show success message
+        Alert.alert(
+          'Reward Earned!',
+          'You can now view this round\'s details. Thank you for watching!',
+          [{ text: 'OK' }]
+        );
+      },
+      onAdDismissed: () => {
+        setShowPremiumModal(false);
+      },
+      onAdFailedToLoad: (error) => {
+        console.error('[RoundPerfTab] Ad failed to load:', error);
+        Alert.alert(
+          'Ad Failed to Load',
+          'Unable to load the ad. Please try again later or purchase premium.',
+          [
+            { text: 'OK', style: 'cancel' },
+            { text: 'Get Premium', onPress: handleBuyPremium }
+          ]
+        );
+        setShowPremiumModal(false);
+      },
+      onAdFailedToShow: (error) => {
+        console.error('[RoundPerfTab] Ad failed to show:', error);
+        Alert.alert(
+          'Ad Error',
+          'Something went wrong. Please try again or purchase premium.',
+          [
+            { text: 'OK', style: 'cancel' },
+            { text: 'Get Premium', onPress: handleBuyPremium }
+          ]
+        );
+        setShowPremiumModal(false);
+      }
+    });
   };
 
   const handleBuyPremium = () => {
-    // TODO: Implement premium purchase logic
     setShowPremiumModal(false);
-    navigation.navigate('PremiumSubscriptionScreen'); // Assuming this screen exists
+    navigation.navigate('PremiumSubscriptionScreen');
   };
 
   // Get the selected round data

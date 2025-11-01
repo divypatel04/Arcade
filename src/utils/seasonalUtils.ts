@@ -34,20 +34,20 @@ export const getAllSeasonNames = <T extends StatsType>(stats: T[]) => {
 };
 
 export const getCurrentOrMostRecentSeason = (agentStat: AgentStatType) => {
-  let CurrentSeason = agentStat?.performanceBySeason?.find(
-    (seasonPerformace: any) => seasonPerformace.season.isActive,
+  let currentSeason = agentStat?.performanceBySeason?.find(
+    seasonPerformance => seasonPerformance.season.isActive
   );
-  if (!CurrentSeason) {
-    const sortedSeasons =
-      agentStat?.performanceBySeason?.slice().sort((a: any, b: any) => {
-        if (a.season.name > b.season.name) return -1;
-        if (a.season.name < b.season.name) return 1;
-        return 0;
-      }) || [];
-    CurrentSeason = sortedSeasons[0];
+  
+  if (!currentSeason) {
+    const sortedSeasons = agentStat?.performanceBySeason?.slice().sort((a, b) => {
+      if (a.season.name > b.season.name) return -1;
+      if (a.season.name < b.season.name) return 1;
+      return 0;
+    }) || [];
+    currentSeason = sortedSeasons[0];
   }
 
-  return CurrentSeason;
+  return currentSeason;
 }
 
 export const getCurrentorRecentSeasonStats = (seasonStats: SeasonStatsType[]) => {
@@ -70,7 +70,11 @@ export const getCurrentorRecentSeasonStats = (seasonStats: SeasonStatsType[]) =>
 
 
 export const getSortedSeasonNames = (seasonStats: SeasonStatsType[]) => {
-  const seasonSet: any = {};
+  const seasonSet: Record<string, {
+    seasonId: string;
+    seasonName: string;
+    seasonActive: boolean;
+  }> = {};
 
   for (const season of seasonStats) {
     if (!seasonSet[season.season.id]) {
@@ -85,9 +89,8 @@ export const getSortedSeasonNames = (seasonStats: SeasonStatsType[]) => {
   const seasonList = Object.values(seasonSet);
 
   const final = seasonList
-    .map((season: any) => season.seasonName)
+    .map(season => season.seasonName)
     .sort((a, b) => b.localeCompare(a));
-
 
   final.unshift('All Acts');
 

@@ -1,6 +1,9 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
+    "lib": ["ES2015", "ES2017"],
+    "target": "ES2015",
+    "moduleResolution": "bundler",
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],

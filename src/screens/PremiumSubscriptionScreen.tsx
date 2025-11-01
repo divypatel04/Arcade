@@ -16,8 +16,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome6';
 import { colors, fonts, sizes } from '../theme';
 import { useDataContext } from '../context/DataContext';
 import { supabase } from '../lib/supabase';
-import Purchases, { PurchasesPackage, CustomerInfo } from 'react-native-purchases';
-import { REVENUECAT_ANDROID_API_KEY, REVENUECAT_IOS_API_KEY } from '@env';
+import { PurchasesPackage } from 'react-native-purchases';
+import { subscriptionManager, ENTITLEMENTS } from '../services/purchases';
 
 interface SubscriptionOption {
   id: string;
@@ -37,7 +37,7 @@ const defaultOptions: SubscriptionOption[] = [
     price: '$4.99',
     pricePerMonth: '$4.99',
     duration: '1 month',
-    savings: 'Save 10%',  // Changed from 'Basic' to show discount
+    savings: 'Save 10%',
     isPopular: false,
     productId: 'arcade_premium:arcade-premium-monthly',
   },
@@ -67,19 +67,11 @@ const PremiumSubscriptionScreen = () => {
   useEffect(() => {
     const setupRevenueCat = async () => {
       try {
-        // Add your RevenueCat API keys
-        const apiKey = Platform.select({
-          ios: REVENUECAT_IOS_API_KEY,
-          android: REVENUECAT_ANDROID_API_KEY,
-        });
+        // Initialize subscription manager
+        await subscriptionManager.initialize(userData?.puuid);
 
-        if (!apiKey) return;
-
-        // Initialize RevenueCat SDK
-        await Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-        await Purchases.configure({ apiKey, appUserID: userData?.puuid });
         // Get available packages
-        const offerings = await Purchases.getOfferings();
+        const offerings = await subscriptionManager.getOfferings();
 
         if (offerings.current && offerings.current.availablePackages.length > 0) {
           setPackages(offerings.current.availablePackages);
@@ -103,7 +95,7 @@ const PremiumSubscriptionScreen = () => {
           setSubscriptionOptions(updatedOptions);
         }
       } catch (error) {
-        console.error('Failed to configure RevenueCat:', error);
+        console.error('Failed to setup RevenueCat:', error);
       } finally {
         setIsInitializing(false);
       }
@@ -127,11 +119,11 @@ const PremiumSubscriptionScreen = () => {
         throw new Error('Selected package not available');
       }
 
-      // Make the purchase
-      const { customerInfo, productIdentifier } = await Purchases.purchasePackage(packageToPurchase);
+      // Make the purchase using subscription manager
+      const customerInfo = await subscriptionManager.purchasePackage(packageToPurchase);
 
       // Check if the user is entitled to premium
-      if (customerInfo?.entitlements.active['premium']) {
+      if (customerInfo?.entitlements.active[ENTITLEMENTS.PREMIUM]) {
         // Update user's premium status in database
         await updateUserPremiumStatus(customerInfo);
 
@@ -153,7 +145,11 @@ const PremiumSubscriptionScreen = () => {
         }
       }
     } catch (error: any) {
-      if (!error.userCancelled) {
+      // Check if user cancelled
+      if (error.message?.includes('cancelled')) {
+        // User cancelled - don't show error
+        console.log('User cancelled purchase');
+      } else {
         Alert.alert(
           'Purchase Error',
           error.message || 'There was an error processing your purchase. Please try again.'
@@ -164,7 +160,7 @@ const PremiumSubscriptionScreen = () => {
     }
   };
 
-  const updateUserPremiumStatus = async (customerInfo: CustomerInfo) => {
+  const updateUserPremiumStatus = async (customerInfo: any) => {
     try {
       if (!userData?.puuid) return;
 

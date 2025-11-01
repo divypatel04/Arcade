@@ -1,5 +1,6 @@
 import { mergeAgentSeasonalStats, mergeMapSeasonalStats, mergeWeaponSeasonalStats, mergeActSeasonalStats, mergeUtilitiesAndAbilities } from './mergeUtils';
-import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumWeaponStats, determinePremiumSeasonStats, determinePremiumMatchStats } from './premiumUtils';
+// Premium stats determination - now using modular structure
+import { determinePremiumAgentStats, determinePremiumMapStats, determinePremiumWeaponStats, determinePremiumSeasonStats, determinePremiumMatchStats } from './premium';
 import { getTopAgentByKills, getTopMapByWinRate, getTopWeaponByKills, getMatchQueueTypes, sortAgentsByMatches, sortMapsByMatches, sortWeaponsByMatches, sortAndGroupMatchHistory } from './sortUtils'
 import { getAllSeasonNames, getCurrentOrMostRecentSeason, getCurrentorRecentSeasonStats, getSortedSeasonNames } from './seasonalUtils';
 import { formatDateString, convertMillisToReadableTime, isPremiumUser, getSupabaseImageUrl, checkUpdateNeeded, updateAnonymousUserName, signInAnonymously  } from './generalUtils';
